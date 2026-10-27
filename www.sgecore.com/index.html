@@ -17,12 +17,16 @@ html, body {
 .sge-home-banner {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 360px;
+  height: 180px;
   object-fit: cover;
   object-position: center;
 }
 
+@media (max-width: 768px) {
+  .sge-home-banner {
+    height: 110px;
+  }
+}
 @media (max-width: 768px) {
   .sge-home-banner {
     max-height: 190px;
