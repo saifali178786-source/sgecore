@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | SGE Core</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #07111f;
+      color: #f5f7fb;
+    }
+
+    .login-wrap {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 60px 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      box-sizing: border-box;
+      padding: 38px;
+      border: 1px solid rgba(217, 180, 93, .35);
+      background: #0d1a2b;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+    }
+
+    .login-card h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+    }
+
+    .login-intro {
+      color: #aeb9ca;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .login-card label {
+      display: block;
+      margin: 18px 0 8px;
+      color: #e8edf5;
+    }
+
+    .login-card input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #344359;
+      border-radius: 4px;
+      background: #07111f;
+      color: #fff;
+      font: inherit;
+    }
+
+    .login-card input:focus {
+      outline: 2px solid #d9b45d;
+      outline-offset: 2px;
+    }
+
+    .login-submit {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      border: 0;
+      border-radius: 4px;
+      background: #d9b45d;
+      color: #07111f;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .login-submit:hover {
+      background: #f0d58c;
+    }
+
+    .login-submit:disabled {
+      cursor: wait;
+      opacity: .7;
+    }
+
+    .login-note {
+      margin-top: 22px;
+      text-align: center;
+      color: #aeb9ca;
+      line-height: 1.8;
+    }
+
+    .login-note a {
+      color: #f0d58c;
+    }
+
+    .login-brand {
+      display: block;
+      margin-bottom: 26px;
+      color: #d9b45d;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+
+    .login-message {
+      margin-top: 16px;
+      color: #f0d58c;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 25px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="login-wrap">
+    <section class="login-card">
+      <a class="login-brand" href="../index.html">SGE CORE</a>
+
+      <h1>Welcome Back</h1>
+      <p class="login-intro">
+        Sign in to access your SGE Core account.
+      </p>
+
+      <form id="login-form">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          autocomplete="username"
+          required
+        >
+
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        >
+
+        <button class="login-submit" id="login-submit" type="submit">
+          Login
+        </button>
+
+        <p class="login-message" id="login-message" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="login-note">
+        Don't have an account?
+        <a href="register.html">Register here</a>
+        <br>
+        <a href="../index.html">← Back to homepage</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Load the Supabase library before your connection file -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+
+  <script>
+    const loginForm = document.getElementById("login-form");
+    const loginMessage = document.getElementById("login-message");
+    const loginButton = document.getElementById("login-submit");
+
+    loginForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+      loginMessage.textContent = "";
+
+      if (
+        typeof sgecoreSupabase === "undefined" ||
+        !sgecoreSupabase.auth
+      ) {
+        loginMessage.textContent =
+          "Supabase could not be loaded. Check your connection file and internet connection.";
+        return;
+      }
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in...";
+
+      try {
+        const { data, error } =
+          await sgecoreSupabase.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
+
+        if (error) {
+          loginMessage.textContent = error.message;
+          return;
+        }
+
+        if (data.user) {
+  loginMessage.textContent = "Login successful! Opening your dashboard...";
+
+  window.location.href = "dashboard.html";
+} else {
+          loginMessage.textContent =
+            "Sign-in could not be completed. Please try again.";
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        loginMessage.textContent =
+          "Unable to connect to Supabase. Check your internet connection and try again.";
+      } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = "Login";
+      }
+    });
+  </script>
+</body>
+</html>
