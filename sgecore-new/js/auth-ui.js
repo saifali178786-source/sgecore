@@ -8,10 +8,29 @@
       : null;
   }
 
+  function isPagesFolder() {
+    return /\/pages\/[^/]*$/i.test(window.location.pathname);
+  }
+
+  function getDashboardUrl() {
+    return new URL(
+      isPagesFolder() ? "dashboard.html" : "pages/dashboard.html",
+      window.location.href
+    ).href;
+  }
+
+  function showMessage(message, text) {
+    if (!message) return;
+
+    message.textContent = text;
+    message.hidden = false;
+  }
+
   // Add Show / Hide buttons to password fields.
   function setupPasswordVisibility() {
     document.querySelectorAll('input[type="password"]').forEach((input) => {
       if (input.dataset.visibilityReady === "true") return;
+
       input.dataset.visibilityReady = "true";
 
       const wrapper = document.createElement("div");
@@ -34,12 +53,13 @@
         "cursor:pointer;font:inherit;";
 
       button.addEventListener("click", () => {
-        const show = input.type === "password";
-        input.type = show ? "text" : "password";
-        button.textContent = show ? "Hide" : "Show";
+        const shouldShow = input.type === "password";
+
+        input.type = shouldShow ? "text" : "password";
+        button.textContent = shouldShow ? "Hide" : "Show";
         button.setAttribute(
           "aria-label",
-          show ? "Hide password" : "Show password"
+          shouldShow ? "Hide password" : "Show password"
         );
       });
 
@@ -47,10 +67,11 @@
     });
   }
 
-  // Start Google OAuth.
+  // Start Google OAuth and return to the dashboard on this deployment.
   function setupGoogleSignIn() {
     document.querySelectorAll("[data-google-signin]").forEach((button) => {
       if (button.dataset.googleReady === "true") return;
+
       button.dataset.googleReady = "true";
 
       button.addEventListener("click", async () => {
@@ -60,42 +81,40 @@
         );
 
         if (!supabase?.auth) {
-          if (message) {
-            message.textContent =
-              "Authentication is unavailable. Please try again.";
-          }
+          showMessage(
+            message,
+            "Authentication is unavailable. Please refresh and try again."
+          );
           return;
         }
 
         const originalText = button.textContent;
+
         button.disabled = true;
         button.textContent = "Connecting to Google...";
 
         try {
-          const isInPagesFolder =
-            /\/pages\/[^/]*$/i.test(window.location.pathname);
-
-          const redirectUrl = new URL(
-            isInPagesFolder ? "dashboard.html" : "pages/dashboard.html",
-            window.location.href
-          );
+          const redirectTo = getDashboardUrl();
 
           const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-              redirectTo: redirectUrl.href
+              redirectTo
             }
           });
 
           if (error) throw error;
+
+          // Supabase normally redirects the browser to Google automatically.
+          // Keep the button disabled while that navigation takes place.
         } catch (error) {
           console.error("Google sign-in error:", error);
 
-          if (message) {
-            message.textContent =
-              error.message ||
-              "Google sign-in could not be started. Please try again.";
-          }
+          showMessage(
+            message,
+            error?.message ||
+              "Google sign-in could not be started. Please try again."
+          );
 
           button.disabled = false;
           button.textContent = originalText;
@@ -104,7 +123,7 @@
     });
   }
 
-  // Update the homepage navigation according to authentication status.
+  // Add the My Account dropdown to the homepage navigation.
   function setupAccountMenu() {
     const navigation = document.querySelector(".main-nav");
     if (!navigation) return;
@@ -117,8 +136,7 @@
     const supabase = getSupabase();
     if (!supabase?.auth) return;
 
-    const isHomepage =
-      !/\/pages\/[^/]*$/i.test(window.location.pathname);
+    const isHomepage = !isPagesFolder();
 
     let accountMenu = null;
 
@@ -131,6 +149,7 @@
 
     function showSignedOut() {
       removeAccountMenu();
+
       if (loginLink) loginLink.hidden = false;
       if (registerLink) registerLink.hidden = false;
     }
@@ -143,7 +162,8 @@
 
       accountMenu = document.createElement("div");
       accountMenu.id = "sge-account-menu";
-      accountMenu.style.cssText = "position:relative;display:inline-block;";
+      accountMenu.style.cssText =
+        "position:relative;display:inline-block;";
 
       const toggle = document.createElement("button");
       toggle.type = "button";
@@ -174,7 +194,9 @@
       const links = [
         {
           label: "Dashboard",
-          href: isHomepage ? "pages/dashboard.html" : "dashboard.html"
+          href: isHomepage
+            ? "pages/dashboard.html"
+            : "dashboard.html"
         },
         {
           label: "Quick Recharge",
@@ -190,6 +212,7 @@
         link.textContent = item.label;
         link.style.cssText =
           "display:block;padding:10px;color:#f5f7fb;text-decoration:none;";
+
         dropdown.appendChild(link);
       });
 
@@ -214,7 +237,9 @@
             : "../index.html";
         } catch (error) {
           console.error("Logout error:", error);
+
           alert("Unable to log out. Please try again.");
+
           logoutButton.disabled = false;
           logoutButton.textContent = "Log Out";
         }
@@ -240,19 +265,24 @@
       navigation.appendChild(accountMenu);
     }
 
-    supabase.auth.getSession().then(({ data, error }) => {
-      if (error) {
-        console.error("Could not read session:", error);
-        showSignedOut();
-        return;
-      }
+    supabase.auth.getSession()
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("Could not read session:", error);
+          showSignedOut();
+          return;
+        }
 
-      if (data.session?.user) {
-        showSignedIn(data.session.user);
-      } else {
+        if (data.session?.user) {
+          showSignedIn(data.session.user);
+        } else {
+          showSignedOut();
+        }
+      })
+      .catch((error) => {
+        console.error("Session initialization error:", error);
         showSignedOut();
-      }
-    });
+      });
 
     supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
