@@ -1,0 +1,664 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+  <title>Quick Recharge | SGE Core</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --panel: #0d1a2b;
+      --panel-light: #112239;
+      --gold: #d9b45d;
+      --gold-light: #f0d58c;
+      --text: #f5f7fb;
+      --muted: #aeb9ca;
+      --border: rgba(217,180,93,.24);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+
+    a { color: inherit; }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px max(5%, calc((100% - 1080px) / 2));
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      color: var(--gold);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav a {
+      color: var(--muted);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .nav a:hover { color: var(--gold-light); }
+
+    .main {
+      width: min(900px, 92%);
+      margin: 38px auto 60px;
+    }
+
+    .intro { margin-bottom: 26px; }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 40px);
+      line-height: 1.2;
+    }
+
+    h1 span { color: var(--gold); }
+
+    .intro p:last-child {
+      max-width: 650px;
+      margin: 13px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .card {
+      margin-top: 20px;
+      padding: clamp(20px, 4vw, 30px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(ellipse at top right, rgba(217,180,93,.07), transparent 50%),
+        var(--panel);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .subtext {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .field { margin-top: 19px; }
+
+    .field label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid #304158;
+      border-radius: 7px;
+      outline: none;
+      background: var(--panel-light);
+      color: var(--text);
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(217,180,93,.1);
+    }
+
+    .field input::placeholder { color: #8290a5; }
+
+    .address-box {
+      margin-top: 20px;
+      padding: 18px;
+      border: 1px solid #304158;
+      border-radius: 9px;
+      background: rgba(17,34,57,.72);
+    }
+
+    .address-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .address-heading strong { font-size: 14px; }
+
+    .network-tag {
+      padding: 6px 9px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .address-value {
+      overflow-wrap: anywhere;
+      color: var(--gold-light);
+      font-size: 14px;
+      line-height: 1.7;
+      user-select: text;
+    }
+
+    .address-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 45px;
+      padding: 12px 17px;
+      border: 1px solid var(--gold);
+      border-radius: 7px;
+      background: var(--gold);
+      color: #07111f;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+
+    .button:hover:not(:disabled) {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--gold-light);
+    }
+
+    .button.secondary:hover:not(:disabled) {
+      background: rgba(217,180,93,.08);
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+      transform: none;
+    }
+
+    .form-button { width: 100%; margin-top: 24px; }
+
+    .notice {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border: 1px solid rgba(217,180,93,.2);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--gold-light);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 16px;
+      padding: 13px 15px;
+      border: 1px solid #304158;
+      border-radius: 7px;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .feedback.visible { display: block; }
+
+    .feedback.error {
+      border-color: rgba(239,119,119,.4);
+      color: #ffaaaa;
+    }
+
+    .feedback.success {
+      border-color: rgba(72,199,142,.35);
+      color: #8be0b5;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border: 1px solid #304158;
+      border-radius: 9px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .footer {
+      padding: 24px 5%;
+      border-top: 1px solid rgba(217,180,93,.12);
+      color: #8e9bad;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 520px) {
+      .header { padding: 16px 4%; }
+      .brand { font-size: 16px; letter-spacing: 1px; }
+      .nav { gap: 12px; }
+      .nav a { font-size: 12px; }
+      .main { margin-top: 27px; }
+      .address-actions .button { flex: 1; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <a class="brand" href="../index.html">SGE CORE</a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="intro">
+      <p class="eyebrow">Wallet services</p>
+      <h1>Quick <span>Recharge</span></h1>
+      <p>
+        Select a supported USDT network, send your deposit, and submit
+        the transaction details for review.
+      </p>
+    </section>
+
+    <section class="card" aria-labelledby="deposit-heading">
+      <h2 id="deposit-heading">USDT Deposit</h2>
+      <p class="subtext">
+        Choose a network to view its designated deposit address.
+      </p>
+
+      <div id="address-loading" class="empty-state">
+        Loading available networks...
+      </div>
+
+      <div id="deposit-interface" hidden>
+        <div class="field">
+          <label for="network-select">Deposit network</label>
+          <select id="network-select" required>
+            <option value="">Select a network</option>
+          </select>
+        </div>
+
+        <div class="address-box">
+          <div class="address-heading">
+            <strong>Deposit address</strong>
+            <span class="network-tag" id="selected-network">USDT</span>
+          </div>
+
+          <div class="address-value" id="deposit-address">
+            Select a network to view its address.
+          </div>
+
+          <div class="address-actions">
+            <button class="button" id="copy-address" type="button" disabled>
+              Copy address
+            </button>
+          </div>
+        </div>
+
+        <div class="notice">
+          <strong>Before sending</strong>
+          Make sure the sending network matches the selected network.
+          Transfers sent through an unsupported network may not be recoverable.
+        </div>
+
+        <form id="deposit-form">
+          <div class="field">
+            <label for="deposit-amount">Amount sent (USDT)</label>
+            <input
+              id="deposit-amount"
+              name="amount"
+              type="number"
+              min="0.000001"
+              max="1000000000"
+              step="any"
+              inputmode="decimal"
+              placeholder="Enter amount"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="transaction-hash">Transaction hash / TxID</label>
+            <input
+              id="transaction-hash"
+              name="transaction_hash"
+              type="text"
+              maxlength="200"
+              autocomplete="off"
+              placeholder="Enter the transaction hash"
+              required
+            >
+          </div>
+
+          <button class="button form-button" id="submit-deposit" type="submit">
+            Submit Deposit Request
+          </button>
+
+          <div class="feedback" id="form-feedback" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+
+      <div class="feedback" id="address-feedback" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    &copy; <span id="current-year"></span> SGE Core. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+
+  <script>
+    const loadingBox = document.getElementById("address-loading");
+    const depositInterface = document.getElementById("deposit-interface");
+    const networkSelect = document.getElementById("network-select");
+    const selectedNetwork = document.getElementById("selected-network");
+    const depositAddress = document.getElementById("deposit-address");
+    const copyAddressButton = document.getElementById("copy-address");
+    const depositForm = document.getElementById("deposit-form");
+    const submitButton = document.getElementById("submit-deposit");
+    const formFeedback = document.getElementById("form-feedback");
+    const addressFeedback = document.getElementById("address-feedback");
+
+    let currentUser = null;
+    let activeAddresses = [];
+    let selectedAddress = null;
+
+    document.getElementById("current-year").textContent =
+      String(new Date().getFullYear());
+
+    function showFeedback(element, message, type) {
+      element.textContent = message;
+      element.className = "feedback visible " + type;
+    }
+
+    function hideFeedback(element) {
+      element.textContent = "";
+      element.className = "feedback";
+    }
+
+    function normalizeNetwork(value) {
+      return String(value || "").trim().toUpperCase();
+    }
+
+    function getSelectedAddress() {
+      const selectedId = networkSelect.value;
+
+      return activeAddresses.find(
+        item => item.id === selectedId
+      ) || null;
+    }
+
+    function renderSelectedAddress() {
+      selectedAddress = getSelectedAddress();
+
+      hideFeedback(addressFeedback);
+
+      if (!selectedAddress) {
+        selectedNetwork.textContent = "USDT";
+        depositAddress.textContent = "Select a network to view its address.";
+        copyAddressButton.disabled = true;
+        return;
+      }
+
+      selectedNetwork.textContent = normalizeNetwork(selectedAddress.network);
+      depositAddress.textContent = selectedAddress.address;
+      copyAddressButton.disabled = false;
+    }
+
+    function renderNetworks() {
+      networkSelect.replaceChildren();
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Select a network";
+      networkSelect.appendChild(placeholder);
+
+      activeAddresses.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.id;
+        option.textContent = item.label
+          ? item.label + " (" + normalizeNetwork(item.network) + ")"
+          : "USDT (" + normalizeNetwork(item.network) + ")";
+        networkSelect.appendChild(option);
+      });
+
+      if (activeAddresses.length === 1) {
+        networkSelect.value = activeAddresses[0].id;
+      }
+
+      renderSelectedAddress();
+    }
+
+    async function loadDepositAddresses() {
+      const { data, error } = await sgecoreSupabase
+        .from("deposit_addresses")
+        .select("id, asset, network, address, label")
+        .eq("asset", "USDT")
+        .eq("is_active", true)
+        .order("network", { ascending: true });
+
+      if (error) throw error;
+
+      activeAddresses = (data || []).filter(item =>
+        item.id &&
+        item.network &&
+        typeof item.address === "string" &&
+        item.address.trim() !== ""
+      );
+
+      loadingBox.hidden = true;
+
+      if (activeAddresses.length === 0) {
+        depositInterface.hidden = true;
+        loadingBox.hidden = false;
+        loadingBox.textContent =
+          "Recharge is temporarily unavailable. Please contact customer support.";
+        return;
+      }
+
+      renderNetworks();
+      depositInterface.hidden = false;
+    }
+
+    async function initializePage() {
+      if (
+        typeof sgecoreSupabase === "undefined" ||
+        !sgecoreSupabase.auth
+      ) {
+        loadingBox.textContent =
+          "Unable to load recharge services. Please refresh and try again.";
+        return;
+      }
+
+      try {
+        const { data, error } = await sgecoreSupabase.auth.getUser();
+
+        if (error || !data.user) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        currentUser = data.user;
+        await loadDepositAddresses();
+      } catch (error) {
+        console.error("Recharge initialization error:", error);
+        loadingBox.hidden = false;
+        loadingBox.textContent =
+          "Unable to load recharge services. Please refresh and try again.";
+      }
+    }
+
+    networkSelect.addEventListener("change", renderSelectedAddress);
+
+    copyAddressButton.addEventListener("click", async function () {
+      const address = selectedAddress?.address;
+
+      if (!address) return;
+
+      try {
+        await navigator.clipboard.writeText(address);
+        showFeedback(addressFeedback, "Deposit address copied.", "success");
+      } catch (error) {
+        console.error("Copy address error:", error);
+        showFeedback(
+          addressFeedback,
+          "Copy is unavailable in this browser. Select and copy the address manually.",
+          "error"
+        );
+      }
+    });
+
+    depositForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      hideFeedback(formFeedback);
+
+      const address = getSelectedAddress();
+      const amountInput = document.getElementById("deposit-amount");
+      const hashInput = document.getElementById("transaction-hash");
+
+      const amount = Number(amountInput.value);
+      const transactionHash = hashInput.value.trim();
+
+      if (!currentUser) {
+        showFeedback(formFeedback, "Please sign in to continue.", "error");
+        return;
+      }
+
+      if (!address) {
+        showFeedback(formFeedback, "Please select a deposit network.", "error");
+        return;
+      }
+
+      if (!Number.isFinite(amount) || amount <= 0 || amount > 1000000000) {
+        showFeedback(formFeedback, "Enter a valid deposit amount.", "error");
+        return;
+      }
+
+      if (!transactionHash || transactionHash.length > 200) {
+        showFeedback(formFeedback, "Enter a valid transaction hash.", "error");
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Submitting...";
+
+      try {
+        const { data, error } = await sgecoreSupabase.rpc(
+          "submit_sge_crypto_deposit",
+          {
+            p_network: normalizeNetwork(address.network),
+            p_amount: amount,
+            p_transaction_hash: transactionHash
+          }
+        );
+
+        if (error) throw error;
+
+        showFeedback(
+          formFeedback,
+          "Your deposit request has been submitted successfully. Reference: " +
+            String(data),
+          "success"
+        );
+
+        depositForm.reset();
+        networkSelect.value = activeAddresses.length === 1
+          ? activeAddresses[0].id
+          : "";
+
+        renderSelectedAddress();
+      } catch (error) {
+        console.error("Deposit request error:", error);
+
+        let message =
+          "We couldn't submit your request. Check the details and try again.";
+
+        if (error.code === "23505") {
+          message = "This transaction has already been submitted.";
+        } else if (
+          /already been submitted/i.test(error.message || "")
+        ) {
+          message = "This transaction has already been submitted.";
+        } else if (
+          /network is not available/i.test(error.message || "")
+        ) {
+          message = "This deposit network is currently unavailable.";
+        } else if (
+          /Delivery Wallet not found/i.test(error.message || "")
+        ) {
+          message = "Your Delivery Wallet is not available. Please contact support.";
+        }
+
+        showFeedback(formFeedback, message, "error");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit Deposit Request";
+      }
+    });
+
+    initializePage();
+  </script>
+</body>
+</html>
+```

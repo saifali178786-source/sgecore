@@ -1,0 +1,1462 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGE Core | Admin Panel</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: #101d30;
+      --panel2: #15243a;
+      --gold: #d9b45b;
+      --gold2: #f0d58a;
+      --text: #edf2fa;
+      --muted: #9aaac0;
+      --border: #293a51;
+      --green: #42cf96;
+      --red: #ff747d;
+      --blue: #79b8ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    button {
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: var(--text);
+      padding: 10px 13px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--gold); }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .primary {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #101522;
+      font-weight: 700;
+    }
+
+    .danger {
+      border-color: #7f3944;
+      color: #ffabb0;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      color: var(--text);
+      background: #091626;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field { margin-bottom: 13px; }
+    .hidden { display: none !important; }
+
+    .login-wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 410px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--panel);
+    }
+
+    .brand {
+      color: var(--gold);
+      font-weight: 800;
+      letter-spacing: 2px;
+      font-size: 23px;
+    }
+
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    .message { margin-top: 12px; font-size: 13px; white-space: pre-wrap; }
+    .error { color: var(--red); }
+    .success { color: var(--green); }
+
+    .app { min-height: 100vh; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px;
+      background: rgba(7,17,31,.96);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0,1fr);
+      min-height: calc(100vh - 70px);
+    }
+
+    aside {
+      padding: 18px 12px;
+      border-right: 1px solid var(--border);
+      background: #091525;
+    }
+
+    .nav-button {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 6px;
+      background: transparent;
+      border-color: transparent;
+      color: var(--muted);
+    }
+
+    .nav-button.active {
+      color: var(--gold2);
+      background: #17263b;
+      border-color: #4b432e;
+    }
+
+    main { padding: 25px; min-width: 0; }
+
+    h1 { font-size: 26px; margin: 0 0 8px; }
+    h2 { font-size: 18px; margin: 0 0 16px; }
+    h3 { font-size: 15px; margin: 0 0 12px; }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      min-width: 0;
+      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      margin-bottom: 16px;
+    }
+
+    .stat-label { color: var(--muted); font-size: 12px; }
+    .stat-value { font-size: 25px; font-weight: 700; margin-top: 12px; overflow-wrap: anywhere; }
+    .stat-note { font-size: 12px; color: var(--muted); margin-top: 7px; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar input { max-width: 360px; }
+    .toolbar select { max-width: 210px; }
+
+    .table-wrap {
+      width: 100%;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 750px;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--gold2);
+      background: #142238;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    td { overflow-wrap: anywhere; }
+    tr:last-child td { border-bottom: 0; }
+
+    .badge {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 4px 8px;
+      font-size: 11px;
+      background: #27374c;
+      color: #dce6f5;
+    }
+
+    .badge.pending, .badge.under_review { color: #ffe09b; background: #4a3a20; }
+    .badge.approved, .badge.completed, .badge.active { color: #8de7bc; background: #153c32; }
+    .badge.rejected, .badge.failed, .badge.cancelled { color: #ffabb0; background: #48242e; }
+
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .actions button { padding: 7px 9px; font-size: 12px; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 16px;
+    }
+
+    .detail-list {
+      display: grid;
+      grid-template-columns: 140px minmax(0,1fr);
+      gap: 9px;
+      font-size: 13px;
+    }
+
+    .detail-list .key { color: var(--muted); }
+    .empty { padding: 24px; text-align: center; color: var(--muted); }
+    .notice { padding: 12px; border-radius: 8px; background: #17263b; color: var(--muted); font-size: 13px; }
+    .notice.warning { border: 1px solid #725c2b; color: #ffe09b; }
+    .loading { color: var(--muted); padding: 18px 0; }
+
+    .credit-form {
+      max-width: 760px;
+    }
+
+    .credit-form .field {
+      margin-bottom: 17px;
+    }
+
+    .credit-form textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .confirm-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 16px 0;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .confirm-row input {
+      width: auto;
+      margin-top: 2px;
+      flex: 0 0 auto;
+      accent-color: var(--gold);
+    }
+
+    .credit-result {
+      overflow-wrap: anywhere;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1050px) {
+      .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .layout { grid-template-columns: 180px minmax(0,1fr); }
+      main { padding: 18px; }
+    }
+
+    @media (max-width: 700px) {
+      header { padding: 13px; }
+      .layout { grid-template-columns: 1fr; }
+      aside {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+        padding: 10px;
+      }
+      .nav-button { width: auto; white-space: nowrap; margin: 0; }
+      main { padding: 14px; }
+      .grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+      .card { padding: 13px; }
+      .stat-value { font-size: 20px; }
+      .two-col { grid-template-columns: 1fr; }
+      .page-head { flex-direction: column; }
+      .detail-list { grid-template-columns: 105px minmax(0,1fr); }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="loginScreen" class="login-wrap">
+    <div class="login-card">
+      <div class="brand">SGE CORE</div>
+      <p class="muted">Administration portal</p>
+      <h2>Admin sign in</h2>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="primary" style="width:100%" type="submit">Sign in</button>
+      </form>
+      <div id="loginMessage" class="message"></div>
+    </div>
+  </section>
+
+  <div id="appScreen" class="app hidden">
+    <header>
+      <div>
+        <div class="brand">SGE CORE</div>
+        <div class="muted small">Admin control panel</div>
+      </div>
+      <div class="header-right">
+        <span id="adminEmail" class="muted small"></span>
+        <button id="logoutButton">Log out</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside id="navigation">
+        <button class="nav-button active" data-page="overview">Overview</button>
+        <button class="nav-button" data-page="customers">Customers</button>
+        <button class="nav-button" data-page="wallets">Wallets</button>
+        <button class="nav-button" data-page="transactions">Transactions</button>
+        <button class="nav-button" data-page="deposits">Deposits</button>
+        <button class="nav-button" data-page="manualcredit">Manual USDT Credit</button>
+        <button class="nav-button" data-page="withdrawals">Withdrawals</button>
+        <button class="nav-button" data-page="investments">Investments</button>
+        <button class="nav-button" data-page="plans">Investment plans</button>
+        <button class="nav-button" data-page="support">Support</button>
+        <button class="nav-button" data-page="addresses">Deposit addresses</button>
+        <button class="nav-button" data-page="audit">Audit log</button>
+      </aside>
+
+      <main>
+        <div class="page-head">
+          <div>
+            <h1 id="pageTitle">Overview</h1>
+            <div id="pageSubtitle" class="muted">Your platform at a glance.</div>
+          </div>
+          <button id="refreshButton">Refresh data</button>
+        </div>
+        <div id="globalMessage" class="message"></div>
+        <div id="pageContent"><div class="loading">Loading dashboard…</div></div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+      const content = $("pageContent");
+
+      const state = {
+        user: null,
+        page: "overview",
+        cache: {},
+        customerQuery: "",
+        depositFilter: "all",
+        ticketFilter: "all"
+      };
+
+      const pageInfo = {
+        overview: ["Overview", "Your platform at a glance."],
+        customers: ["Customers", "Search customer profiles and inspect account details."],
+        wallets: ["Wallets", "Inspect customer wallet balances."],
+        transactions: ["Transactions", "Review recorded wallet transactions."],
+        deposits: ["Deposits", "Review pending deposit requests."],
+        manualcredit: ["Manual USDT Credit", "Credit a customer's USDT wallet after verifying payment."],
+        withdrawals: ["Withdrawals", "Inspect withdrawal requests. Processing is disabled."],
+        investments: ["Investments", "Review customer investments."],
+        plans: ["Investment plans", "View active and inactive investment plans."],
+        support: ["Support", "Review tickets and their messages."],
+        addresses: ["Deposit addresses", "Inspect configured deposit addresses."],
+        audit: ["Audit log", "Review recorded administrative activity."]
+      };
+
+      function el(tag, text, className) {
+        const node = document.createElement(tag);
+        if (text !== undefined && text !== null) node.textContent = String(text);
+        if (className) node.className = className;
+        return node;
+      }
+
+      function clear(node) {
+        while (node.firstChild) node.removeChild(node.firstChild);
+      }
+
+      function message(target, text, type) {
+        const node = $(target);
+        node.textContent = text || "";
+        node.className = "message" + (type ? " " + type : "");
+      }
+
+      function money(value, currency = "USDT") {
+        const n = Number(value);
+        if (!Number.isFinite(n)) return "—";
+        return n.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) + " " + currency;
+      }
+
+      function date(value) {
+        if (!value) return "—";
+        const d = new Date(value);
+        return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString();
+      }
+
+      function shortId(value) {
+        return value ? String(value).slice(0, 8) + "…" : "—";
+      }
+
+      function badge(value) {
+        const text = value || "unknown";
+        return el("span", text, "badge " + String(text).toLowerCase().replace(/[^a-z0-9_-]/g, ""));
+      }
+
+      function button(text, action, className) {
+        const b = el("button", text, className || "");
+        b.type = "button";
+        b.addEventListener("click", action);
+        return b;
+      }
+
+      function card(label, value, note) {
+        const box = el("div", undefined, "card");
+        box.append(el("div", label, "stat-label"));
+        box.append(el("div", value, "stat-value"));
+        if (note) box.append(el("div", note, "stat-note"));
+        return box;
+      }
+
+      function table(headers, rows, renderRow) {
+        const wrap = el("div", undefined, "table-wrap");
+        const tbl = el("table");
+        const thead = el("thead");
+        const hr = el("tr");
+        headers.forEach((h) => hr.append(el("th", h)));
+        thead.append(hr);
+        tbl.append(thead);
+
+        const tbody = el("tbody");
+        if (!rows || !rows.length) {
+          const row = el("tr");
+          const td = el("td", "No records found.");
+          td.colSpan = headers.length;
+          td.className = "empty";
+          row.append(td);
+          tbody.append(row);
+        } else {
+          rows.forEach((row) => tbody.append(renderRow(row)));
+        }
+
+        tbl.append(tbody);
+        wrap.append(tbl);
+        return wrap;
+      }
+
+      function tr(cells) {
+        const row = el("tr");
+        cells.forEach((cell) => {
+          const td = el("td");
+          if (cell instanceof Node) td.append(cell);
+          else td.textContent = cell === undefined || cell === null ? "—" : String(cell);
+          row.append(td);
+        });
+        return row;
+      }
+
+      function actions(...buttons) {
+        const box = el("div", undefined, "actions");
+        buttons.forEach((b) => box.append(b));
+        return box;
+      }
+
+      function fieldLabel(labelText, value) {
+        const wrap = el("div", undefined, "detail-list");
+        wrap.append(el("div", labelText, "key"));
+        wrap.append(el("div", value === undefined || value === null ? "—" : String(value)));
+        return wrap;
+      }
+
+      async function query(tableName, select = "*", options = {}) {
+        let request = sgecoreSupabase.from(tableName).select(select);
+        if (options.order) {
+          request = request.order(options.order, {
+            ascending: options.ascending === true
+          });
+        }
+        if (options.limit) request = request.limit(options.limit);
+        if (options.eq) request = request.eq(options.eq[0], options.eq[1]);
+        if (options.ilike) request = request.ilike(options.ilike[0], options.ilike[1]);
+        if (options.in) request = request.in(options.in[0], options.in[1]);
+
+        const { data, error } = await request;
+        if (error) throw new Error(tableName + ": " + error.message);
+        return data || [];
+      }
+
+      async function countRows(tableName, options = {}) {
+        let request = sgecoreSupabase
+          .from(tableName)
+          .select("id", { count: "exact", head: true });
+
+        if (options.status) request = request.eq("status", options.status);
+        const { count, error } = await request;
+        if (error) throw new Error(tableName + ": " + error.message);
+        return count || 0;
+      }
+
+      async function ensureAdmin(user) {
+        if (!user) throw new Error("Please sign in.");
+
+        // The trusted admin claim is set in app_metadata.
+        // Database RLS policies and RPC authorization remain the security boundary.
+        if (user.app_metadata?.role !== "admin") {
+          await sgecoreSupabase.auth.signOut();
+          throw new Error("This account does not have the required admin role.");
+        }
+
+        state.user = user;
+        $("adminEmail").textContent = user.email || "Administrator";
+      }
+
+      async function checkSession() {
+        const { data, error } = await sgecoreSupabase.auth.getUser();
+        if (error) throw error;
+
+        if (!data.user) {
+          showLogin();
+          return;
+        }
+
+        try {
+          await ensureAdmin(data.user);
+          showApp();
+          await loadPage(state.page);
+        } catch (e) {
+          showLogin();
+          message("loginMessage", e.message, "error");
+        }
+      }
+
+      function showLogin() {
+        $("loginScreen").classList.remove("hidden");
+        $("appScreen").classList.add("hidden");
+      }
+
+      function showApp() {
+        $("loginScreen").classList.add("hidden");
+        $("appScreen").classList.remove("hidden");
+      }
+
+      async function loadPage(page) {
+        if (!pageInfo[page]) page = "overview";
+
+        state.page = page;
+        state.cache = {};
+        $("pageTitle").textContent = pageInfo[page][0];
+        $("pageSubtitle").textContent = pageInfo[page][1];
+        message("globalMessage", "");
+        clear(content);
+        content.append(el("div", "Loading " + pageInfo[page][0].toLowerCase() + "…", "loading"));
+
+        document.querySelectorAll(".nav-button").forEach((b) => {
+          b.classList.toggle("active", b.dataset.page === page);
+        });
+
+        try {
+          clear(content);
+          switch (page) {
+            case "overview": await renderOverview(); break;
+            case "customers": await renderCustomers(); break;
+            case "wallets": await renderWallets(); break;
+            case "transactions": await renderTransactions(); break;
+            case "deposits": await renderDeposits(); break;
+            case "manualcredit": await renderManualCredit(); break;
+            case "withdrawals": await renderWithdrawals(); break;
+            case "investments": await renderInvestments(); break;
+            case "plans": await renderPlans(); break;
+            case "support": await renderSupport(); break;
+            case "addresses": await renderAddresses(); break;
+            case "audit": await renderAudit(); break;
+            default: content.append(el("div", "Unknown page.", "empty"));
+          }
+        } catch (e) {
+          clear(content);
+          const box = el("div", undefined, "card");
+          box.append(el("h3", "Could not load this section"));
+          box.append(el("p", e.message, "error"));
+          box.append(el("p", "Check the table permissions and column names in Supabase. Your customer dashboard has not been changed.", "muted"));
+          box.append(button("Try again", () => loadPage(page), "primary"));
+          content.append(box);
+        }
+      }
+
+      async function renderOverview() {
+        const [customers, wallets, deposits, withdrawals, investments, plans] =
+          await Promise.all([
+            countRows("profiles"),
+            query("wallets", "balance,currency", { limit: 1000 }),
+            countRows("deposit_requests", { status: "pending" }),
+            countRows("withdrawal_requests", { status: "pending" }),
+            countRows("investments"),
+            query("investment_plans", "id,active", { limit: 1000 })
+          ]);
+
+        const balances = {};
+        wallets.forEach((w) => {
+          const currency = w.currency || "Unknown";
+          balances[currency] = (balances[currency] || 0) + (Number(w.balance) || 0);
+        });
+
+        const balanceText = Object.keys(balances).length
+          ? Object.entries(balances).map(([c, v]) => money(v, c)).join(" · ")
+          : "No wallet balances";
+
+        const grid = el("div", undefined, "grid");
+        grid.append(
+          card("Total customers", customers),
+          card("Pending deposits", deposits, "Awaiting review"),
+          card("Pending withdrawals", withdrawals, "Read-only"),
+          card("Investments", investments, "All visible records")
+        );
+        content.append(grid);
+
+        const second = el("div", undefined, "grid");
+        second.append(
+          card("Wallet balance totals", balanceText, "Sum of up to 1,000 returned wallet rows"),
+          card("Investment plans", plans.length, plans.filter((p) => p.active).length + " active")
+        );
+        content.append(second);
+
+        const note = el("div", undefined, "notice warning");
+        note.textContent = "Security note: these cards use authenticated client queries and RLS. Wallet totals are limited to the returned wallet rows and are not an accounting report.";
+        content.append(note);
+
+        const quick = el("div", undefined, "card");
+        quick.append(el("h2", "Quick actions"));
+        const row = el("div", undefined, "toolbar");
+        row.append(
+          button("Review deposits", () => loadPage("deposits"), "primary"),
+          button("Manual USDT credit", () => loadPage("manualcredit")),
+          button("Search customers", () => loadPage("customers")),
+          button("Open support", () => loadPage("support")),
+          button("View withdrawals", () => loadPage("withdrawals"))
+        );
+        quick.append(row);
+        content.append(quick);
+      }
+
+      async function renderCustomers() {
+        const toolbar = el("div", undefined, "toolbar");
+        const search = el("input");
+        search.type = "search";
+        search.placeholder = "Search name, email or member ID";
+        search.value = state.customerQuery;
+        const go = button("Search", async () => {
+          state.customerQuery = search.value.trim();
+          await loadPage("customers");
+        }, "primary");
+        search.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") go.click();
+        });
+        toolbar.append(search, go, button("Clear", () => {
+          state.customerQuery = "";
+          loadPage("customers");
+        }));
+        content.append(toolbar);
+
+        let rows = await query("profiles", "id,full_name,email,email_verified,member_id,created_at,updated_at", {
+          order: "created_at", limit: 500
+        });
+
+        if (state.customerQuery) {
+          const q = state.customerQuery.toLowerCase();
+          rows = rows.filter((p) =>
+            [p.full_name, p.email, p.member_id, p.id]
+              .some((v) => String(v ?? "").toLowerCase().includes(q))
+          );
+        }
+
+        content.append(table(
+          ["Member ID", "Name", "Email", "Verified", "Joined", "Actions"],
+          rows,
+          (p) => tr([
+            p.member_id ?? shortId(p.id),
+            p.full_name,
+            p.email,
+            p.email_verified ? "Yes" : "No",
+            date(p.created_at),
+            actions(button("View account", () => showCustomer(p), "primary"))
+          ])
+        ));
+        content.append(el("p", "Showing up to 500 customer profiles. Search filters the rows returned to this page.", "muted small"));
+      }
+
+      async function showCustomer(profile) {
+        try {
+          const [wallets, transactions, investments, deposits, withdrawals] = await Promise.all([
+            query("wallets", "id,user_id,wallet_type,currency,balance,created_at,updated_at", { eq: ["user_id", profile.id], limit: 100 }),
+            query("wallet_transactions", "id,transaction_type,amount,currency,status,description,reference_id,created_at", { eq: ["user_id", profile.id], order: "created_at", limit: 100 }),
+            query("investments", "id,plan_id,principal,currency,status,created_at", { eq: ["user_id", profile.id], order: "created_at", limit: 100 }),
+            query("deposit_requests", "id,method,currency,network,amount,status,created_at", { eq: ["user_id", profile.id], order: "created_at", limit: 100 }),
+            query("withdrawal_requests", "id,currency,network,amount,fee,status,created_at", { eq: ["user_id", profile.id], order: "created_at", limit: 100 })
+          ]);
+
+          clear(content);
+          const top = el("div", undefined, "page-head");
+          const title = el("div");
+          title.append(el("h2", profile.full_name || profile.email || "Customer"));
+          title.append(el("div", "Member ID: " + (profile.member_id ?? shortId(profile.id)), "muted small"));
+          top.append(title, button("Back to customers", () => loadPage("customers")));
+          content.append(top);
+
+          const details = el("div", undefined, "card");
+          details.append(el("h3", "Profile"));
+          details.append(fieldLabel("User UUID", profile.id));
+          details.append(fieldLabel("Email", profile.email));
+          details.append(fieldLabel("Email verified", profile.email_verified ? "Yes" : "No"));
+          details.append(fieldLabel("Created", date(profile.created_at)));
+          details.append(button("Manual USDT credit for this customer", () => {
+            loadPage("manualcredit", profile.id);
+          }, "primary"));
+          content.append(details);
+
+          const sections = [
+            ["Wallets", ["Type", "Currency", "Balance"], wallets, (w) => tr([w.wallet_type, w.currency, money(w.balance, w.currency)])],
+            ["Transactions", ["Type", "Amount", "Status", "Date"], transactions, (t) => tr([t.transaction_type, money(t.amount, t.currency), badge(t.status), date(t.created_at)])],
+            ["Investments", ["Plan ID", "Principal", "Status", "Date"], investments, (i) => tr([shortId(i.plan_id), money(i.principal, i.currency), badge(i.status), date(i.created_at)])],
+            ["Deposits", ["Method", "Network", "Amount", "Status"], deposits, (d) => tr([d.method, d.network, money(d.amount, d.currency), badge(d.status)])],
+            ["Withdrawals", ["Network", "Amount", "Fee", "Status"], withdrawals, (w) => tr([w.network, money(w.amount, w.currency), money(w.fee, w.currency), badge(w.status)])]
+          ];
+
+          sections.forEach(([titleText, headers, data, renderRow]) => {
+            const box = el("div", undefined, "card");
+            box.append(el("h2", titleText));
+            box.append(table(headers, data, renderRow));
+            content.append(box);
+          });
+        } catch (e) {
+          message("globalMessage", e.message, "error");
+        }
+      }
+
+      async function renderManualCredit(preselectedUserId = null) {
+        const box = el("div", undefined, "card credit-form");
+        box.append(el("h2", "Manual USDT Credit"));
+        box.append(el(
+          "p",
+          "Use this form only after confirming that the customer's payment has actually been received. The database operation credits the customer's delivery USDT wallet and records a wallet transaction and audit entry.",
+          "muted"
+        ));
+
+        const warning = el("div", undefined, "notice warning");
+        warning.textContent = "Important: this is a real balance adjustment, not a simulated transaction. Verify the bank/payment record, customer identity, amount, and reference before submitting. Do not use it to record an unreceived payment.";
+        box.append(warning);
+
+        const form = el("form");
+        form.className = "manual-credit-form";
+
+        const customerField = el("div", undefined, "field");
+        const customerLabel = el("label", "Customer");
+        customerLabel.htmlFor = "creditCustomer";
+        const customerSelect = el("select");
+        customerSelect.id = "creditCustomer";
+        customerSelect.required = true;
+
+        const defaultOption = el("option", "Loading customers…");
+        defaultOption.value = "";
+        customerSelect.append(defaultOption);
+        customerField.append(customerLabel, customerSelect);
+
+        const customerSearchField = el("div", undefined, "field");
+        const customerSearchLabel = el("label", "Find customer");
+        customerSearchLabel.htmlFor = "creditCustomerSearch";
+        const customerSearch = el("input");
+        customerSearch.id = "creditCustomerSearch";
+        customerSearch.type = "search";
+        customerSearch.placeholder = "Search name, email, member ID or UUID";
+        customerSearchField.append(customerSearchLabel, customerSearch);
+
+        const amountField = el("div", undefined, "field");
+        const amountLabel = el("label", "Amount (USDT)");
+        amountLabel.htmlFor = "creditAmount";
+        const amountInput = el("input");
+        amountInput.id = "creditAmount";
+        amountInput.type = "number";
+        amountInput.min = "0.000001";
+        amountInput.max = "1000000000";
+        amountInput.step = "0.000001";
+        amountInput.placeholder = "e.g. 100.000000";
+        amountInput.required = true;
+        amountField.append(amountLabel, amountInput);
+
+        const referenceField = el("div", undefined, "field");
+        const referenceLabel = el("label", "Bank / payment reference");
+        referenceLabel.htmlFor = "creditReference";
+        const referenceInput = el("input");
+        referenceInput.id = "creditReference";
+        referenceInput.type = "text";
+        referenceInput.maxLength = 200;
+        referenceInput.autocomplete = "off";
+        referenceInput.placeholder = "Enter the unique verified payment reference";
+        referenceInput.required = true;
+        referenceField.append(referenceLabel, referenceInput);
+
+        const noteField = el("div", undefined, "field");
+        const noteLabel = el("label", "Admin note (optional)");
+        noteLabel.htmlFor = "creditNote";
+        const noteInput = el("textarea");
+        noteInput.id = "creditNote";
+        noteInput.maxLength = 1000;
+        noteInput.placeholder = "Optional internal note about this payment";
+        noteField.append(noteLabel, noteInput);
+
+        const confirmLabel = el("label", undefined, "confirm-row");
+        const confirmCheckbox = el("input");
+        confirmCheckbox.type = "checkbox";
+        confirmCheckbox.required = true;
+        const confirmText = el(
+          "span",
+          "I have independently verified the payment was received and confirm that the customer, amount, and payment reference are correct."
+        );
+        confirmLabel.append(confirmCheckbox, confirmText);
+
+        const submit = el("button", "Credit USDT wallet", "primary");
+        submit.type = "submit";
+
+        const status = el("div", "", "message");
+        status.setAttribute("role", "status");
+        status.setAttribute("aria-live", "polite");
+
+        form.append(
+          customerField,
+          customerSearchField,
+          amountField,
+          referenceField,
+          noteField,
+          confirmLabel,
+          submit,
+          status
+        );
+
+        box.append(form);
+
+        const resultBox = el("div");
+        resultBox.className = "credit-result";
+        box.append(resultBox);
+
+        content.append(box);
+
+        let profiles = [];
+
+        try {
+          profiles = await query(
+            "profiles",
+            "id,full_name,email,member_id",
+            { order: "created_at", limit: 500 }
+          );
+
+          const selectedId = preselectedUserId || "";
+
+          function populateCustomers(filterText = "") {
+            const term = filterText.trim().toLowerCase();
+            const previousValue = customerSelect.value;
+            clear(customerSelect);
+
+            const placeholder = el(
+              "option",
+              term ? "Select a matching customer…" : "Select a customer…"
+            );
+            placeholder.value = "";
+            customerSelect.append(placeholder);
+
+            const matching = profiles.filter((p) => {
+              if (!term) return true;
+              return [
+                p.full_name,
+                p.email,
+                p.member_id,
+                p.id
+              ].some((v) => String(v ?? "").toLowerCase().includes(term));
+            });
+
+            matching.forEach((p) => {
+              const label = [
+                p.full_name || "Unnamed customer",
+                p.email || "No email",
+                p.member_id ? "Member " + p.member_id : "",
+                "ID " + shortId(p.id)
+              ].filter(Boolean).join(" · ");
+
+              const option = el("option", label);
+              option.value = p.id;
+              customerSelect.append(option);
+            });
+
+            const desired = selectedId || previousValue;
+            if (desired && matching.some((p) => p.id === desired)) {
+              customerSelect.value = desired;
+            } else {
+              customerSelect.value = "";
+            }
+
+            if (matching.length === 0) {
+              status.textContent = "No matching customers were found in the first 500 profiles returned.";
+              status.className = "message error";
+            } else if (status.textContent.startsWith("No matching customers")) {
+              status.textContent = "";
+              status.className = "message";
+            }
+          }
+
+          populateCustomers();
+
+          customerSearch.addEventListener("input", () => {
+            populateCustomers(customerSearch.value);
+          });
+
+          customerSelect.addEventListener("change", () => {
+            const selected = profiles.find((p) => p.id === customerSelect.value);
+            if (selected) {
+              status.textContent = "Selected: " +
+                (selected.full_name || selected.email || selected.id);
+              status.className = "message";
+            }
+          });
+
+          if (preselectedUserId && !profiles.some((p) => p.id === preselectedUserId)) {
+            status.textContent = "The selected customer was not found in the first 500 profiles. Search for the customer or select them manually.";
+            status.className = "message error";
+          }
+        } catch (e) {
+          customerSelect.replaceChildren();
+          const failedOption = el("option", "Could not load customers");
+          failedOption.value = "";
+          customerSelect.append(failedOption);
+          status.textContent = "Could not load customer profiles: " + e.message;
+          status.className = "message error";
+        }
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          status.textContent = "";
+          status.className = "message";
+          clear(resultBox);
+
+          const userId = customerSelect.value;
+          const amountText = amountInput.value.trim();
+          const amount = Number(amountText);
+          const bankReference = referenceInput.value.trim();
+          const note = noteInput.value.trim();
+
+          if (!userId) {
+            status.textContent = "Please select a customer.";
+            status.className = "message error";
+            return;
+          }
+
+          if (
+            !amountText ||
+            !Number.isFinite(amount) ||
+            amount <= 0 ||
+            amount > 1000000000 ||
+            Math.round(amount * 1000000) !== amount * 1000000
+          ) {
+            status.textContent = "Enter a valid positive USDT amount with no more than 6 decimal places.";
+            status.className = "message error";
+            return;
+          }
+
+          if (!bankReference || bankReference.length > 200) {
+            status.textContent = "Enter a valid payment reference of up to 200 characters.";
+            status.className = "message error";
+            return;
+          }
+
+          if (!confirmCheckbox.checked) {
+            status.textContent = "Confirm that you have verified the payment before continuing.";
+            status.className = "message error";
+            return;
+          }
+
+          const profile = profiles.find((p) => p.id === userId);
+          const customerName = profile
+            ? (profile.full_name || profile.email || profile.id)
+            : userId;
+
+          const confirmation = [
+            "CONFIRM REAL USDT CREDIT",
+            "",
+            "Customer: " + customerName,
+            "Customer UUID: " + userId,
+            "Amount: " + amount.toFixed(6) + " USDT",
+            "Payment reference: " + bankReference,
+            "",
+            "Have you verified that this payment was actually received?",
+            "This action will update the customer's delivery USDT wallet.",
+            "Do not continue unless all details are correct."
+          ].join("\n");
+
+          if (!confirm(confirmation)) return;
+
+          submit.disabled = true;
+          submit.textContent = "Processing…";
+          status.textContent = "Submitting the secured database request…";
+
+          try {
+            const { data, error } = await sgecoreSupabase.rpc(
+              "admin_credit_sge_usdt",
+              {
+                p_user_id: userId,
+                p_amount: amount,
+                p_bank_reference: bankReference,
+                p_note: note || null
+              }
+            );
+
+            if (error) throw error;
+
+            if (!data || data.success !== true || !data.credit_id) {
+              throw new Error(
+                "The database did not return a confirmed credit record. Check the wallet and transaction records before attempting another credit."
+              );
+            }
+
+            status.textContent = "USDT credit completed successfully.";
+            status.className = "message success";
+
+            const successCard = el("div", undefined, "card");
+            successCard.append(el("h3", "Credit confirmed"));
+            successCard.append(fieldLabel("Customer", customerName));
+            successCard.append(fieldLabel("Amount credited", Number(data.amount).toFixed(6) + " USDT"));
+            successCard.append(fieldLabel("Credit record ID", data.credit_id));
+            successCard.append(fieldLabel("Wallet ID", data.wallet_id));
+            successCard.append(fieldLabel("Payment reference", bankReference));
+            successCard.append(el(
+              "p",
+              "The database confirmed the operation. Verify the resulting wallet balance and transaction record as part of your reconciliation process.",
+              "muted small"
+            ));
+            resultBox.append(successCard);
+
+            amountInput.value = "";
+            referenceInput.value = "";
+            noteInput.value = "";
+            confirmCheckbox.checked = false;
+
+            // Keep the selected customer to make subsequent verified entries easier.
+            await refreshCreditRelatedData();
+          } catch (e) {
+            status.textContent =
+              "Credit failed: " +
+              (e && e.message ? e.message : "Unknown error") +
+              "\n\nBefore retrying, check the customer's wallet, transaction history, and payment reference to ensure the operation was not already completed.";
+            status.className = "message error";
+          } finally {
+            submit.disabled = false;
+            submit.textContent = "Credit USDT wallet";
+          }
+        });
+      }
+
+      async function refreshCreditRelatedData() {
+        // Refresh the current page's data only; never submit another credit here.
+        if (state.page === "wallets" || state.page === "transactions" || state.page === "audit") {
+          // Data refresh can be done manually using the page's Refresh data button.
+          return;
+        }
+      }
+
+      async function renderWallets() {
+        const rows = await query("wallets", "id,user_id,wallet_type,currency,balance,created_at,updated_at", {
+          order: "created_at", limit: 500
+        });
+        content.append(table(
+          ["Wallet", "Customer", "Type", "Currency", "Balance", "Updated"],
+          rows,
+          (w) => tr([shortId(w.id), shortId(w.user_id), w.wallet_type, w.currency, money(w.balance, w.currency), date(w.updated_at)])
+        ));
+      }
+
+      async function renderTransactions() {
+        const rows = await query("wallet_transactions", "id,user_id,wallet_id,transaction_type,amount,currency,status,reference_id,description,created_at", {
+          order: "created_at", limit: 500
+        });
+        content.append(table(
+          ["Date", "Customer", "Type", "Amount", "Status", "Description", "Reference"],
+          rows,
+          (t) => tr([date(t.created_at), shortId(t.user_id), t.transaction_type, money(t.amount, t.currency), badge(t.status), t.description, shortId(t.reference_id)])
+        ));
+      }
+
+      async function renderDeposits() {
+        const toolbar = el("div", undefined, "toolbar");
+        const filter = el("select");
+        [
+          ["all", "All statuses"],
+          ["pending", "Pending"],
+          ["under_review", "Under review"],
+          ["approved", "Approved"],
+          ["rejected", "Rejected"]
+        ].forEach(([value, label]) => {
+          const opt = el("option", label);
+          opt.value = value;
+          filter.append(opt);
+        });
+        filter.value = state.depositFilter;
+        filter.addEventListener("change", () => {
+          state.depositFilter = filter.value;
+          loadPage("deposits");
+        });
+        toolbar.append(filter);
+        content.append(toolbar);
+
+        let rows = await query("deposit_requests",
+          "id,user_id,wallet_id,method,currency,network,amount,transaction_hash,payment_reference,receipt_path,status,reviewed_by,reviewed_at,review_note,created_at",
+          { order: "created_at", limit: 500 }
+        );
+
+        if (state.depositFilter !== "all") {
+          rows = rows.filter((d) => d.status === state.depositFilter);
+        }
+
+        content.append(el("div", "Approvals use the existing review_sge_deposit database function. The database checks authorization, request status, duplicate transactions and wallet crediting.", "notice"));
+
+        content.append(table(
+          ["Date", "Customer", "Method / Network", "Amount", "Reference", "Status", "Review"],
+          rows,
+          (d) => {
+            const reviewButtons = [];
+            if (["pending", "under_review"].includes(d.status)) {
+              reviewButtons.push(button("Approve", () => reviewDeposit(d, "approved"), "primary"));
+              reviewButtons.push(button("Reject", () => reviewDeposit(d, "rejected"), "danger"));
+            }
+            reviewButtons.push(button("Details", () => showDepositDetails(d)));
+            return tr([
+              date(d.created_at),
+              shortId(d.user_id),
+              [d.method, d.network].filter(Boolean).join(" / "),
+              money(d.amount, d.currency),
+              d.transaction_hash || d.payment_reference || "—",
+              badge(d.status),
+              actions(...reviewButtons)
+            ]);
+          }
+        ));
+      }
+
+      async function showDepositDetails(d) {
+        const box = el("div", undefined, "card");
+        box.append(el("h2", "Deposit request details"));
+        [
+          ["Request ID", d.id], ["Customer UUID", d.user_id],
+          ["Wallet UUID", d.wallet_id], ["Method", d.method],
+          ["Currency", d.currency], ["Network", d.network],
+          ["Amount", money(d.amount, d.currency)],
+          ["Transaction hash", d.transaction_hash],
+          ["Payment reference", d.payment_reference],
+          ["Receipt path", d.receipt_path],
+          ["Status", d.status], ["Review note", d.review_note],
+          ["Reviewed at", date(d.reviewed_at)], ["Created at", date(d.created_at)]
+        ].forEach(([k, v]) => box.append(fieldLabel(k, v)));
+
+        box.append(button("Back to deposits", () => loadPage("deposits")));
+        clear(content);
+        content.append(box);
+      }
+
+      async function reviewDeposit(deposit, decision) {
+        const promptText = decision === "approved"
+          ? "Approve this deposit? The database function will credit the eligible wallet."
+          : "Reject this deposit request?";
+
+        if (!confirm(promptText)) return;
+
+        const note = prompt("Optional review note:", "");
+        if (note === null) return;
+
+        const result = await sgecoreSupabase.rpc("review_sge_deposit", {
+          p_request_id: deposit.id,
+          p_decision: decision,
+          p_review_note: note.trim() || null
+        });
+
+        if (result.error) {
+          message("globalMessage", "Review failed: " + result.error.message, "error");
+          return;
+        }
+
+        message("globalMessage", "Deposit review completed.", "success");
+        await loadPage("deposits");
+      }
+
+      async function renderWithdrawals() {
+        const rows = await query("withdrawal_requests",
+          "id,user_id,wallet_id,currency,network,destination_address,amount,fee,status,transaction_hash,reviewed_by,reviewed_at,created_at",
+          { order: "created_at", limit: 500 }
+        );
+
+        const warning = el("div", undefined, "notice warning");
+        warning.textContent = "Read-only mode. Do not approve, reject, or manually change balances here. A secure database review function must be created and tested first.";
+        content.append(warning);
+
+        content.append(table(
+          ["Date", "Customer", "Currency", "Network", "Destination", "Amount", "Fee", "Status", "Transaction hash"],
+          rows,
+          (w) => tr([
+            date(w.created_at), shortId(w.user_id), w.currency, w.network,
+            w.destination_address, money(w.amount, w.currency), money(w.fee, w.currency),
+            badge(w.status), w.transaction_hash
+          ])
+        ));
+      }
+
+      async function renderInvestments() {
+        const rows = await query("investments", "id,user_id,plan_id,wallet_id,principal,currency,status,created_at", {
+          order: "created_at", limit: 500
+        });
+        content.append(table(
+          ["Created", "Customer", "Plan", "Principal", "Currency", "Status", "Investment ID"],
+          rows,
+          (i) => tr([date(i.created_at), shortId(i.user_id), shortId(i.plan_id), money(i.principal, i.currency), i.currency, badge(i.status), shortId(i.id)])
+        ));
+      }
+
+      async function renderPlans() {
+        const rows = await query("investment_plans", "id,name,description,minimum_amount,currency,active,terms,created_at", {
+          order: "created_at", limit: 500
+        });
+        content.append(el("div", "Plan editing is not enabled in this client-side panel. This section is read-only.", "notice"));
+        content.append(table(
+          ["Name", "Minimum", "Currency", "Active", "Description", "Terms", "Created"],
+          rows,
+          (p) => tr([p.name, money(p.minimum_amount, p.currency), p.currency, badge(p.active ? "active" : "inactive"), p.description, p.terms, date(p.created_at)])
+        ));
+      }
+
+      async function renderSupport() {
+        const tickets = await query("support_tickets", "id,user_id,subject,status,assigned_to,created_at,updated_at", {
+          order: "created_at", limit: 500
+        });
+
+        const toolbar = el("div", undefined, "toolbar");
+        const filter = el("select");
+        [["all", "All tickets"], ["open", "Open"], ["pending", "Pending"], ["closed", "Closed"], ["resolved", "Resolved"]]
+          .forEach(([v, label]) => {
+            const opt = el("option", label);
+            opt.value = v;
+            filter.append(opt);
+          });
+        filter.value = state.ticketFilter;
+        filter.addEventListener("change", () => {
+          state.ticketFilter = filter.value;
+          loadPage("support");
+        });
+        toolbar.append(filter);
+        content.append(toolbar);
+
+        const filtered = state.ticketFilter === "all"
+          ? tickets
+          : tickets.filter((t) => String(t.status || "").toLowerCase() === state.ticketFilter);
+
+        content.append(table(
+          ["Created", "Customer", "Subject", "Status", "Assigned to", "Updated", "Actions"],
+          filtered,
+          (t) => tr([
+            date(t.created_at), shortId(t.user_id), t.subject, badge(t.status),
+            shortId(t.assigned_to), date(t.updated_at),
+            button("Open ticket", () => showTicket(t), "primary")
+          ])
+        ));
+      }
+
+      async function showTicket(ticket) {
+        try {
+          const messages = await query("support_messages",
+            "id,ticket_id,sender_id,message,attachment_path,created_at",
+            { eq: ["ticket_id", ticket.id], order: "created_at", limit: 500 }
+          );
+
+          clear(content);
+          const box = el("div", undefined, "card");
+          const head = el("div", undefined, "page-head");
+          const heading = el("div");
+          heading.append(el("h2", ticket.subject || "Support ticket"));
+          heading.append(el("div", "Ticket " + ticket.id, "muted small"));
+          head.append(heading, button("Back to support", () => loadPage("support")));
+          box.append(head);
+
+          [
+            ["Customer", ticket.user_id], ["Status", ticket.status],
+            ["Assigned to", ticket.assigned_to],
+            ["Created", date(ticket.created_at)], ["Updated", date(ticket.updated_at)]
+          ].forEach(([k, v]) => box.append(fieldLabel(k, v)));
+          content.append(box);
+
+          const msgBox = el("div", undefined, "card");
+          msgBox.append(el("h2", "Conversation"));
+          if (!messages.length) {
+            msgBox.append(el("div", "No messages found.", "empty"));
+          } else {
+            messages.forEach((m) => {
+              const item = el("div", undefined, "card");
+              item.append(el("div", "From: " + shortId(m.sender_id) + " · " + date(m.created_at), "muted small"));
+              const body = el("p", m.message || "");
+              body.style.whiteSpace = "pre-wrap";
+              item.append(body);
+
+              if (m.attachment_path) {
+                item.append(el("div", "Attachment path: " + m.attachment_path, "muted small"));
+              }
+              msgBox.append(item);
+            });
+          }
+          content.append(msgBox);
+          content.append(el("div", "Replying to tickets is not enabled yet. We'll add it through a secure, authorized database operation.", "notice"));
+        } catch (e) {
+          message("globalMessage", e.message, "error");
+        }
+      }
+
+      async function renderAddresses() {
+        const rows = await query("deposit_addresses", "id,asset,network,address,label,is_active,created_at,updated_at", {
+          order: "created_at", limit: 500
+        });
+
+        content.append(el("div", "Read-only for now. Adding, editing, or disabling payment addresses should be restricted to a dedicated secure admin operation.", "notice"));
+        content.append(table(
+          ["Asset", "Network", "Label", "Address", "Active", "Created", "Updated"],
+          rows,
+          (a) => tr([a.asset, a.network, a.label, a.address, badge(a.is_active ? "active" : "inactive"), date(a.created_at), date(a.updated_at)])
+        ));
+      }
+
+      async function renderAudit() {
+        const rows = await query("admin_audit_log", "id,admin_id,action,entity_type,entity_id,details,created_at", {
+          order: "created_at", limit: 500
+        });
+        content.append(table(
+          ["Date", "Admin", "Action", "Entity type", "Entity ID", "Details"],
+          rows,
+          (a) => tr([
+            date(a.created_at), shortId(a.admin_id), a.action,
+            a.entity_type, shortId(a.entity_id),
+            a.details ? JSON.stringify(a.details) : "—"
+          ])
+        ));
+      }
+
+      $("loginForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        message("loginMessage", "Signing in…");
+
+        try {
+          const { data, error } = await sgecoreSupabase.auth.signInWithPassword({
+            email: $("loginEmail").value.trim(),
+            password: $("loginPassword").value
+          });
+
+          if (error) throw error;
+          await ensureAdmin(data.user);
+          message("loginMessage", "");
+          showApp();
+          await loadPage("overview");
+        } catch (e) {
+          message("loginMessage", e.message || "Sign-in failed.", "error");
+        }
+      });
+
+      $("logoutButton").addEventListener("click", async () => {
+        const { error } = await sgecoreSupabase.auth.signOut();
+        if (error) {
+          message("globalMessage", error.message, "error");
+          return;
+        }
+        state.user = null;
+        showLogin();
+      });
+
+      $("navigation").addEventListener("click", async (event) => {
+        const b = event.target.closest("button[data-page]");
+        if (!b) return;
+        await loadPage(b.dataset.page);
+      });
+
+      $("refreshButton").addEventListener("click", async () => {
+        await loadPage(state.page);
+      });
+
+      sgecoreSupabase.auth.onAuthStateChange((_event, session) => {
+        if (!session) {
+          state.user = null;
+          showLogin();
+        }
+      });
+
+      checkSession().catch((e) => {
+        showLogin();
+        message("loginMessage", e.message || "Unable to check session.", "error");
+      });
+    })();
+  </script>
+</body>
+</html>
