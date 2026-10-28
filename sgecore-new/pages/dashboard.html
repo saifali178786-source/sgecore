@@ -764,6 +764,15 @@
       }
 
       try {
+        console.log("Dashboard URL:", window.location.href);
+
+console.log(
+  "Dashboard session:",
+  await sgecoreSupabase.auth.getSession().then(({ data, error }) => ({
+    hasSession: Boolean(data.session),
+    error: error?.message ?? null
+  }))
+);
         const { data, error } = await sgecoreSupabase.auth.getUser();
 
         if (error || !data.user) {
