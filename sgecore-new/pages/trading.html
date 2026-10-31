@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080e19">
+  <title>Trading Terminal | SGE Core</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080e19;
+      --panel: #101927;
+      --panel-hover: #151f2e;
+      --panel-active: #172538;
+      --input: #0b1220;
+      --gold: #d9b45d;
+      --gold-light: #f0d58c;
+      --text: #e8edf5;
+      --muted: #8998ad;
+      --border: #273448;
+      --blue: #5795f7;
+      --green: #16a675;
+      --red: #d94f60;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body { min-height: 100vh; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    [hidden] { display: none !important; }
+
+    .topbar {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 20px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .top-nav a {
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .top-nav a:hover { color: var(--gold-light); }
+
+    .terminal {
+      width: 100%;
+      max-width: 2000px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    .terminal-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .main-column, .right-column {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel {
+      min-width: 0;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chart-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .chart-subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .chart-tag {
+      color: var(--gold-light);
+      border: 1px solid #66542f;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .8px;
+    }
+
+    .chart-frame {
+      width: 100%;
+      height: min(70vh, 780px);
+      min-height: 480px;
+      background: #0b1220;
+    }
+
+    .chart-frame iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .chart-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 9px 13px;
+      color: var(--muted);
+      font-size: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .market-watch { padding: 0; }
+
+    .watch-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 15px 14px 12px;
+    }
+
+    .watch-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    .watch-count {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .watch-search {
+      position: relative;
+      padding: 0 12px 12px;
+    }
+
+    .watch-search-icon {
+      position: absolute;
+      left: 23px;
+      top: 9px;
+      color: var(--muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .field {
+      width: 100%;
+      min-height: 40px;
+      padding: 9px 10px;
+      color: var(--text);
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      outline: none;
+      font-size: 12px;
+    }
+
+    .field:focus { border-color: var(--blue); }
+
+    .watch-search .field {
+      min-height: 36px;
+      padding: 8px 10px 8px 32px;
+    }
+
+    .watch-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 12px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .watch-tab {
+      padding: 7px 10px;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    .watch-tab:hover {
+      color: var(--text);
+      background: var(--panel-hover);
+    }
+
+    .watch-tab.active {
+      color: #e8f0ff;
+      background: #243247;
+    }
+
+    .watch-columns {
+      display: flex;
+      justify-content: space-between;
+      padding: 11px 13px 8px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .8px;
+    }
+
+    .sidebar-markets {
+      display: flex;
+      flex-direction: column;
+      max-height: 510px;
+      overflow-y: auto;
+    }
+
+    .sidebar-market {
+      position: relative;
+      width: 100%;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      text-align: left;
+      background: transparent;
+      border: 0;
+      border-top: 1px solid rgba(39, 52, 72, .75);
+    }
+
+    .sidebar-market:hover { background: var(--panel-hover); }
+
+    .sidebar-market.active {
+      background: var(--panel-active);
+      box-shadow: inset 2px 0 0 var(--blue);
+    }
+
+    .side-market-left {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .market-icon {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      display: grid;
+      place-items: center;
+      color: #e8edf5;
+      background: #202b3b;
+      border: 1px solid #344157;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .market-icon.gold-icon {
+      color: var(--gold-light);
+      background: #30291b;
+      border-color: #66542f;
+    }
+
+    .side-market-symbol {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .side-market-name {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .side-market-right {
+      min-width: 0;
+      max-width: 52%;
+      text-align: right;
+    }
+
+    .side-market-price {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .side-market-change {
+      display: block;
+      margin-top: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .side-market-change.positive { color: #34d399; }
+    .side-market-change.negative { color: #fb7185; }
+    .side-market-change.neutral { color: var(--muted); }
+
+    .side-market-meta {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .watch-empty {
+      padding: 20px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .watch-footer {
+      padding: 10px 13px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+    }
+
+    .side-section { padding: 15px; }
+
+    .side-title {
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .wallet-label {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .wallet-balance {
+      margin: 8px 0 4px;
+      color: var(--gold-light);
+      font-size: 24px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .wallet-unit {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .form-label {
+      display: block;
+      margin: 14px 0 7px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .durations {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .duration {
+      min-height: 36px;
+      padding: 6px 3px;
+      color: var(--muted);
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 11px;
+    }
+
+    .duration:hover { color: var(--text); }
+
+    .duration.selected {
+      color: var(--gold-light);
+      border-color: var(--gold);
+      background: #282619;
+    }
+
+    .trade-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 10px;
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 11px;
+    }
+
+    .trade-summary span { color: var(--muted); }
+
+    .trade-summary strong {
+      color: var(--green);
+      text-align: right;
+    }
+
+    .directions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .direction {
+      min-height: 43px;
+      color: #fff;
+      border: 0;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .buy { background: #13875e; }
+    .buy:hover { background: var(--green); }
+    .sell { background: #bd414d; }
+    .sell:hover { background: var(--red); }
+
+    .status {
+      display: none;
+      margin-top: 10px;
+      padding: 12px 14px;
+      color: #cbd5e1;
+      background: #111c2b;
+      border: 1px solid #273448;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    #trade-status.status:not(.success):not(.error):not(:empty) {
+      display: block;
+      color: #cbd5e1;
+      background: #111c2b !important;
+      border-color: #273448;
+    }
+
+    #trade-status.status.success,
+    #page-status.status.success {
+      display: block;
+      color: #86efac !important;
+      background: #10251e !important;
+      border: 1px solid #245a43 !important;
+      box-shadow: inset 3px 0 0 #34d399;
+    }
+
+    #trade-status.status.error,
+    #page-status.status.error {
+      display: block;
+      color: #fda4af !important;
+      background: #29171c !important;
+      border: 1px solid #71313d !important;
+      box-shadow: inset 3px 0 0 #fb7185;
+    }
+
+    .status.success::before {
+      content: "✓";
+      display: inline-grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      color: #86efac;
+      background: #173c2d;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      vertical-align: middle;
+    }
+
+    .status.error::before {
+      content: "!";
+      display: inline-grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      color: #fda4af;
+      background: #4a202a;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      vertical-align: middle;
+    }
+
+    .small-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .history-panel { padding: 15px; }
+
+    .panel-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .history-list {
+      max-height: 340px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .history-item:first-child { border-top: 0; }
+
+    .history-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .history-symbol { font-weight: 700; }
+    .history-meta { color: var(--muted); }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .footer {
+      padding: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    @media (min-width: 1500px) {
+      .terminal-grid { grid-template-columns: minmax(0, 1fr) 365px; }
+      .chart-frame { height: min(73vh, 900px); }
+    }
+
+    @media (max-width: 950px) {
+      .terminal-grid { grid-template-columns: minmax(0, 1fr) 305px; }
+      .chart-frame { height: 58vh; min-height: 420px; }
+    }
+
+    @media (max-width: 720px) {
+      .topbar { padding: 12px; }
+      .brand { font-size: 15px; }
+      .top-nav { gap: 12px; }
+      .top-nav a { font-size: 11px; }
+      .terminal { padding: 8px; }
+      .terminal-grid { grid-template-columns: minmax(0, 1fr); }
+      .chart-frame { height: 60vh; min-height: 360px; }
+      .right-column { display: flex; }
+      .side-market-right { max-width: 56%; }
+      .side-market-change { font-size: 9px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">SGE CORE</a>
+    <nav class="top-nav" aria-label="Main navigation">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="quick-recharge.html">Recharge</a>
+    </nav>
+  </header>
+
+  <main class="terminal">
+    <div class="terminal-grid">
+      <section class="main-column">
+        <article class="panel">
+          <div class="chart-header">
+            <div>
+              <h1 class="chart-title" id="chart-title">Gold · XAU/USD</h1>
+              <div class="chart-subtitle">Interactive chart · TradingView</div>
+            </div>
+            <span class="chart-tag">MARKET CHART</span>
+          </div>
+
+          <div class="chart-frame">
+            <iframe
+              id="tradingview-chart"
+              title="TradingView interactive market chart"
+              src="https://s.tradingview.com/widgetembed/?symbol=OANDA%3AXAUUSD&interval=5&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=101a2b&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en"
+              frameborder="0"
+              allowtransparency="true"
+              scrolling="no"
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <div class="chart-footer">
+            <span>Chart provided by TradingView</span>
+            <span>Order prices use the SGE Core market feed</span>
+          </div>
+        </article>
+
+        <article class="panel history-panel">
+          <h2 class="panel-heading">
+            <span>Trade History</span>
+            <span class="chart-tag">YOUR ORDERS</span>
+          </h2>
+          <div id="recent-orders" class="history-list">
+            <div class="empty-state">Loading trade history…</div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="right-column">
+        <section class="panel market-watch">
+          <div class="watch-header">
+            <h2 class="watch-title">Market Watch</h2>
+            <span class="watch-count" id="watch-count">14 markets</span>
+          </div>
+
+          <div class="watch-search">
+            <span class="watch-search-icon" aria-hidden="true">⌕</span>
+            <input
+              class="field"
+              id="market-search"
+              type="search"
+              placeholder="Search markets"
+              aria-label="Search markets"
+              autocomplete="off">
+          </div>
+
+          <div class="watch-tabs" role="group" aria-label="Market categories">
+            <button class="watch-tab active" type="button" data-category="all">All</button>
+            <button class="watch-tab" type="button" data-category="metals">Metals</button>
+            <button class="watch-tab" type="button" data-category="crypto">Crypto</button>
+          </div>
+
+          <div class="watch-columns">
+            <span>SYMBOL</span>
+            <span>LAST PRICE / CHANGE</span>
+          </div>
+
+          <div class="sidebar-markets" id="market-watch-list"></div>
+
+          <div class="watch-empty" id="watch-empty" hidden>
+            No markets match your search.
+          </div>
+
+          <div class="watch-footer">
+            Live prices from the SGE Core market feed.
+            Displayed prices can differ from the embedded chart.
+            Metal quotes may update less frequently than crypto quotes.
+          </div>
+        </section>
+
+        <section class="panel side-section">
+          <h2 class="side-title">Place Timed Trade</h2>
+
+          <div class="wallet-label">Delivery Wallet</div>
+          <div class="wallet-balance" id="wallet-balance">—</div>
+          <div class="wallet-unit">USDT available balance</div>
+
+          <label class="form-label" for="asset">Market</label>
+          <select class="field" id="asset">
+            <option value="XAU/USD">Gold · XAU/USD</option>
+            <option value="BTC/USDT">Bitcoin · BTC/USDT</option>
+            <option value="ETH/USDT">Ethereum · ETH/USDT</option>
+            <option value="BNB/USDT">BNB · BNB/USDT</option>
+            <option value="SOL/USDT">Solana · SOL/USDT</option>
+            <option value="XRP/USDT">XRP · XRP/USDT</option>
+            <option value="ADA/USDT">Cardano · ADA/USDT</option>
+            <option value="DOGE/USDT">Dogecoin · DOGE/USDT</option>
+            <option value="TRX/USDT">TRON · TRX/USDT</option>
+            <option value="LINK/USDT">Chainlink · LINK/USDT</option>
+            <option value="LTC/USDT">Litecoin · LTC/USDT</option>
+          </select>
+
+          <label class="form-label">Duration</label>
+          <div class="durations" role="group" aria-label="Trade duration">
+            <button class="duration selected" data-duration="30" type="button">30 sec</button>
+            <button class="duration" data-duration="60" type="button">60 sec</button>
+            <button class="duration" data-duration="300" type="button">5 min</button>
+          </div>
+
+          <label class="form-label" for="stake">Stake (USDT)</label>
+          <input
+            class="field"
+            id="stake"
+            type="number"
+            min="1"
+            step="0.01"
+            placeholder="Enter stake"
+            inputmode="decimal">
+
+          <div class="trade-summary">
+            <span>Potential profit on a win</span>
+            <strong id="potential-profit">0.00 USDT</strong>
+          </div>
+
+          <div class="directions">
+            <button class="direction buy" id="buy-button" type="button">BUY / UP</button>
+            <button class="direction sell" id="sell-button" type="button">SELL / DOWN</button>
+          </div>
+
+          <div class="status" id="trade-status" role="status" aria-live="polite"></div>
+
+          <div class="small-note">
+            Testing mode. A trade can lose the full stake.
+            Winning orders follow the configured 15% rule.
+          </div>
+        </section>
+
+        <section class="panel side-section">
+          <h2 class="side-title">Recent Orders</h2>
+          <div id="sidebar-orders" class="empty-state">Loading orders…</div>
+        </section>
+      </aside>
+    </div>
+
+    <div class="status" id="page-status" role="status" aria-live="polite"></div>
+  </main>
+
+  <footer class="footer">SGE Core · Testing environment</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+
+      const markets = [
+        {
+          symbol: "XAU/USD",
+          name: "Gold / US Dollar",
+          shortName: "Gold",
+          category: "metals",
+          icon: "Au",
+          chart: "OANDA%3AXAUUSD"
+        },
+        {
+          symbol: "XAG/USD",
+          name: "Silver / US Dollar",
+          shortName: "Silver",
+          category: "metals",
+          icon: "Ag",
+          chart: "OANDA%3AXAGUSD"
+        },
+        {
+          symbol: "XPT/USD",
+          name: "Platinum / US Dollar",
+          shortName: "Platinum",
+          category: "metals",
+          icon: "Pt",
+          chart: "OANDA%3AXPTUSD"
+        },
+        {
+          symbol: "XPD/USD",
+          name: "Palladium / US Dollar",
+          shortName: "Palladium",
+          category: "metals",
+          icon: "Pd",
+          chart: "OANDA%3AXPDUSD"
+        },
+        {
+          symbol: "BTC/USDT",
+          name: "Bitcoin",
+          shortName: "Bitcoin",
+          category: "crypto",
+          icon: "₿",
+          chart: "BINANCE%3ABTCUSDT"
+        },
+        {
+          symbol: "ETH/USDT",
+          name: "Ethereum",
+          shortName: "Ethereum",
+          category: "crypto",
+          icon: "Ξ",
+          chart: "BINANCE%3AETHUSDT"
+        },
+        {
+          symbol: "BNB/USDT",
+          name: "BNB",
+          shortName: "BNB",
+          category: "crypto",
+          icon: "BNB",
+          chart: "BINANCE%3ABNBUSDT"
+        },
+        {
+          symbol: "SOL/USDT",
+          name: "Solana",
+          shortName: "Solana",
+          category: "crypto",
+          icon: "SOL",
+          chart: "BINANCE%3ASOLUSDT"
+        },
+        {
+          symbol: "XRP/USDT",
+          name: "XRP",
+          shortName: "XRP",
+          category: "crypto",
+          icon: "X",
+          chart: "BINANCE%3AXRPUSDT"
+        },
+        {
+          symbol: "ADA/USDT",
+          name: "Cardano",
+          shortName: "Cardano",
+          category: "crypto",
+          icon: "ADA",
+          chart: "BINANCE%3AADAUSDT"
+        },
+        {
+          symbol: "DOGE/USDT",
+          name: "Dogecoin",
+          shortName: "Dogecoin",
+          category: "crypto",
+          icon: "Ð",
+          chart: "BINANCE%3ADOGEUSDT"
+        },
+        {
+          symbol: "TRX/USDT",
+          name: "TRON",
+          shortName: "TRON",
+          category: "crypto",
+          icon: "TRX",
+          chart: "BINANCE%3ATRXUSDT"
+        },
+        {
+          symbol: "LINK/USDT",
+          name: "Chainlink",
+          shortName: "Chainlink",
+          category: "crypto",
+          icon: "LINK",
+          chart: "BINANCE%3ALINKUSDT"
+        },
+        {
+          symbol: "LTC/USDT",
+          name: "Litecoin",
+          shortName: "Litecoin",
+          category: "crypto",
+          icon: "Ł",
+          chart: "BINANCE%3ALTCUSDT"
+        }
+      ];
+
+      const symbols = markets.map((market) => market.symbol);
+      const marketBySymbol = Object.fromEntries(
+        markets.map((market) => [market.symbol, market])
+      );
+
+      let currentUser = null;
+      let selectedDuration = 30;
+      let isSubmitting = false;
+      let walletBalance = null;
+      let refreshInProgress = false;
+      let pricesBySymbol = {};
+      let activeCategory = "all";
+      let refreshTimer = null;
+
+      function setMessage(id, message, type = "") {
+        const element = $(id);
+        if (!element) return;
+
+        if (element._hideTimer) {
+          window.clearTimeout(element._hideTimer);
+          element._hideTimer = null;
+        }
+
+        element.textContent = message;
+        element.className = "status" + (type ? " " + type : "");
+
+        if (message && type === "success") {
+          element._hideTimer = window.setTimeout(() => {
+            element.textContent = "";
+            element.className = "status";
+            element._hideTimer = null;
+          }, 6000);
+        }
+      }
+
+      function money(value) {
+        const amount = Number(value);
+
+        if (!Number.isFinite(amount)) return "Unavailable";
+
+        return amount.toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function formatPrice(value) {
+        const amount = Number(value);
+
+        if (!Number.isFinite(amount)) return "Unavailable";
+
+        const decimals = amount >= 1000 ? 2 : amount >= 1 ? 4 : 6;
+
+        return amount.toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: decimals
+        });
+      }
+
+      function requireClient() {
+        if (typeof sgecoreSupabase === "undefined") {
+          throw new Error("Supabase client is not available.");
+        }
+      }
+
+      async function requireSession() {
+        const { data, error } = await sgecoreSupabase.auth.getUser();
+
+        if (error || !data.user) {
+          window.location.replace("login.html");
+          return false;
+        }
+
+        currentUser = data.user;
+        return true;
+      }
+
+      function renderMarkets() {
+        const container = $("market-watch-list");
+        container.replaceChildren();
+
+        for (const market of markets) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "sidebar-market";
+          button.dataset.selectMarket = market.symbol;
+          button.dataset.category = market.category;
+
+          const left = document.createElement("span");
+          left.className = "side-market-left";
+
+          const icon = document.createElement("span");
+          icon.className = "market-icon" +
+            (market.category === "metals" ? " gold-icon" : "");
+          icon.textContent = market.icon;
+
+          const identity = document.createElement("span");
+
+          const symbol = document.createElement("span");
+          symbol.className = "side-market-symbol";
+          symbol.textContent = market.symbol;
+
+          const name = document.createElement("span");
+          name.className = "side-market-name";
+          name.textContent = market.name;
+
+          identity.append(symbol, name);
+          left.append(icon, identity);
+
+          const right = document.createElement("span");
+          right.className = "side-market-right";
+
+          const price = document.createElement("span");
+          price.className = "side-market-price";
+          price.textContent = "Loading…";
+          price.dataset.priceFor = market.symbol;
+
+          const change = document.createElement("span");
+          change.className = "side-market-change neutral";
+          change.textContent = "Change unavailable";
+          change.dataset.changeFor = market.symbol;
+
+          const meta = document.createElement("span");
+          meta.className = "side-market-meta";
+          meta.textContent = "Updating";
+          meta.dataset.metaFor = market.symbol;
+
+          right.append(price, change, meta);
+          button.append(left, right);
+          container.append(button);
+
+          button.addEventListener("click", () => {
+            selectMarket(market.symbol);
+          });
+        }
+      }
+
+      function selectMarket(symbol) {
+        const market = marketBySymbol[symbol];
+        if (!market) return;
+
+        /*
+         * Display-only markets can be selected for chart viewing.
+         * This does not make them eligible for timed trades.
+         */
+        $("chart-title").textContent = market.shortName + " · " + symbol;
+
+        /*
+         * Keep the timed-trade selection restricted to its existing options.
+         * Silver, Platinum and Palladium are not added to the trade dropdown.
+         */
+        const tradeAsset = $("asset");
+        if ([...tradeAsset.options].some((option) => option.value === symbol)) {
+          tradeAsset.value = symbol;
+        }
+
+        $("tradingview-chart").src =
+          "https://s.tradingview.com/widgetembed/?symbol=" +
+          market.chart +
+          "&interval=5&hidesidetoolbar=0&symboledit=0&saveimage=0" +
+          "&toolbarbg=101a2b&theme=dark&style=1" +
+          "&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en";
+
+        document.querySelectorAll("[data-select-market]").forEach((button) => {
+          button.classList.toggle(
+            "active",
+            button.dataset.selectMarket === symbol
+          );
+        });
+
+        filterMarketWatch();
+      }
+
+      function filterMarketWatch() {
+        const query = $("market-search").value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        document.querySelectorAll("[data-select-market]").forEach((button) => {
+          const symbol = button.dataset.selectMarket;
+          const market = marketBySymbol[symbol];
+
+          const matchesCategory =
+            activeCategory === "all" ||
+            market.category === activeCategory;
+
+          const matchesSearch =
+            symbol.toLowerCase().includes(query) ||
+            market.name.toLowerCase().includes(query) ||
+            market.shortName.toLowerCase().includes(query);
+
+          const visible = matchesCategory && matchesSearch;
+          button.hidden = !visible;
+
+          if (visible) visibleCount++;
+        });
+
+        $("watch-count").textContent =
+          visibleCount + (visibleCount === 1 ? " market" : " markets");
+
+        $("watch-empty").hidden = visibleCount !== 0;
+      }
+
+      function getQuoteFreshness(row, market) {
+        const quoteTime = row.price_as_of
+          ? new Date(row.price_as_of)
+          : null;
+
+        const validQuoteTime =
+          quoteTime !== null &&
+          Number.isFinite(quoteTime.getTime());
+
+        if (!validQuoteTime) {
+          return {
+            isFresh: false,
+            message: "Quote time unavailable"
+          };
+        }
+
+        const ageSeconds = Math.floor(
+          (Date.now() - quoteTime.getTime()) / 1000
+        );
+
+        if (ageSeconds < -10) {
+          return {
+            isFresh: false,
+            message: "Invalid quote time"
+          };
+        }
+
+        /*
+         * These are frontend display thresholds, not changes to the
+         * database updater or the timed-trade settlement rules.
+         */
+        const maxAgeSeconds = market.category === "metals"
+          ? (market.symbol === "XAU/USD" ? 180 : 1200)
+          : 120;
+
+        const isFresh =
+          row.data_status === "fresh" &&
+          ageSeconds >= -10 &&
+          ageSeconds <= maxAgeSeconds;
+
+        if (!isFresh) {
+          return {
+            isFresh: false,
+            message: "Quote stale"
+          };
+        }
+
+        if (ageSeconds < 90) {
+          return {
+            isFresh: true,
+            message: "Quote just updated"
+          };
+        }
+
+        return {
+          isFresh: true,
+          message: "Quote " + Math.floor(ageSeconds / 60) + "m ago"
+        };
+      }
+
+      async function loadPrices() {
+        const { data, error } = await sgecoreSupabase
+          .from("market_prices")
+          .select(
+            "asset_symbol, price, previous_price, price_change, change_percent, source, updated_at, price_as_of, data_status"
+          )
+          .in("asset_symbol", symbols);
+
+        if (error) throw error;
+
+        pricesBySymbol = {};
+
+        for (const row of data || []) {
+          const market = marketBySymbol[row.asset_symbol];
+          if (!market) continue;
+
+          pricesBySymbol[row.asset_symbol] = row;
+
+          const priceElement = document.querySelector(
+            `[data-price-for="${row.asset_symbol}"]`
+          );
+
+          const changeElement = document.querySelector(
+            `[data-change-for="${row.asset_symbol}"]`
+          );
+
+          const metaElement = document.querySelector(
+            `[data-meta-for="${row.asset_symbol}"]`
+          );
+
+          if (!priceElement || !metaElement) continue;
+
+          const numericPrice = Number(row.price);
+
+          if (Number.isFinite(numericPrice) && numericPrice > 0) {
+            priceElement.textContent = formatPrice(numericPrice);
+          } else {
+            priceElement.textContent = "Unavailable";
+          }
+
+          if (changeElement) {
+            const changeValue = Number(row.price_change);
+            const percentValue = Number(row.change_percent);
+
+            const hasChange =
+              row.price_change !== null &&
+              row.price_change !== undefined &&
+              row.change_percent !== null &&
+              row.change_percent !== undefined &&
+              Number.isFinite(changeValue) &&
+              Number.isFinite(percentValue);
+
+            if (hasChange) {
+              const changeSign = changeValue > 0 ? "+" : "";
+              const percentSign = percentValue > 0 ? "+" : "";
+
+              changeElement.textContent =
+                changeSign + formatPrice(changeValue) +
+                " (" + percentSign + percentValue.toFixed(4) + "%)";
+
+              changeElement.className =
+                "side-market-change " +
+                (changeValue > 0
+                  ? "positive"
+                  : changeValue < 0
+                    ? "negative"
+                    : "neutral");
+            } else {
+              changeElement.textContent = "Change unavailable";
+              changeElement.className = "side-market-change neutral";
+            }
+          }
+
+          const freshness = getQuoteFreshness(row, market);
+
+          metaElement.textContent = freshness.message;
+          metaElement.style.color = freshness.isFresh
+            ? "#8998ad"
+            : "#e0a64b";
+
+          /*
+           * If a provider quote is stale or its timestamp is missing,
+           * keep showing the stored price but label it appropriately.
+           * The label does not make the quote suitable for trading.
+           */
+        }
+
+        for (const market of markets) {
+          if (pricesBySymbol[market.symbol]) continue;
+
+          const priceElement = document.querySelector(
+            `[data-price-for="${market.symbol}"]`
+          );
+
+          const changeElement = document.querySelector(
+            `[data-change-for="${market.symbol}"]`
+          );
+
+          const metaElement = document.querySelector(
+            `[data-meta-for="${market.symbol}"]`
+          );
+
+          if (priceElement) priceElement.textContent = "Unavailable";
+
+          if (changeElement) {
+            changeElement.textContent = "Change unavailable";
+            changeElement.className = "side-market-change neutral";
+          }
+
+          if (metaElement) {
+            metaElement.textContent = "No price record";
+            metaElement.style.color = "#e0a64b";
+          }
+        }
+      }
+
+      async function loadWallet() {
+        const { data, error } = await sgecoreSupabase
+          .from("wallets")
+          .select("balance")
+          .eq("user_id", currentUser.id)
+          .eq("wallet_type", "delivery")
+          .eq("currency", "USDT")
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (!data) {
+          walletBalance = null;
+          $("wallet-balance").textContent = "Unavailable";
+          return;
+        }
+
+        walletBalance = Number(data.balance);
+        $("wallet-balance").textContent = money(walletBalance) + " USDT";
+      }
+
+      function buildOrderElement(order) {
+        const row = document.createElement("div");
+        row.className = "history-item";
+
+        const top = document.createElement("div");
+        top.className = "history-top";
+
+        const heading = document.createElement("span");
+        heading.className = "history-symbol";
+        heading.textContent =
+          order.asset_symbol + " · " + String(order.side).toUpperCase();
+
+        const state = document.createElement("span");
+        state.textContent = String(order.status).toUpperCase();
+
+        top.append(heading, state);
+
+        const details = document.createElement("div");
+        details.className = "history-meta";
+        details.textContent =
+          "Stake: " + money(order.stake_amount) +
+          " USDT · Entry: " + formatPrice(order.entry_price);
+
+        row.append(top, details);
+
+        if (order.expires_at) {
+          const expiry = document.createElement("div");
+          expiry.className = "history-meta";
+          expiry.textContent =
+            "Expiry: " + new Date(order.expires_at).toLocaleString();
+          row.append(expiry);
+        }
+
+        if (order.profit_loss !== null &&
+            order.profit_loss !== undefined) {
+          const outcome = document.createElement("div");
+          outcome.textContent =
+            "Profit/Loss: " + money(order.profit_loss) + " USDT";
+          outcome.style.color =
+            Number(order.profit_loss) >= 0 ? "#8be0b5" : "#ff9eaa";
+          row.append(outcome);
+        }
+
+        return row;
+      }
+
+      async function loadOrders() {
+        const { data, error } = await sgecoreSupabase
+          .from("trading_orders")
+          .select(
+            "id, asset_symbol, side, stake_amount, entry_price, status, opened_at, expires_at, profit_loss"
+          )
+          .eq("user_id", currentUser.id)
+          .eq("order_type", "timed")
+          .order("opened_at", { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+
+        const mainContainer = $("recent-orders");
+        const sideContainer = $("sidebar-orders");
+
+        mainContainer.replaceChildren();
+        sideContainer.replaceChildren();
+
+        if (!data || data.length === 0) {
+          mainContainer.textContent = "No timed trades yet.";
+          sideContainer.textContent = "No timed trades yet.";
+          return;
+        }
+
+        for (const order of data) {
+          mainContainer.append(buildOrderElement(order));
+        }
+
+        for (const order of data.slice(0, 3)) {
+          sideContainer.append(buildOrderElement(order));
+        }
+      }
+
+      async function refresh() {
+        if (refreshInProgress) return;
+
+        refreshInProgress = true;
+
+        try {
+          const results = await Promise.allSettled([
+            loadPrices(),
+            loadWallet(),
+            loadOrders()
+          ]);
+
+          const errors = results.filter(
+            (result) => result.status === "rejected"
+          );
+
+          if (errors.length) {
+            errors.forEach((result) => {
+              console.error("Trading data refresh error:", result.reason);
+            });
+
+            setMessage(
+              "page-status",
+              "Some data could not be refreshed. Check the browser console.",
+              "error"
+            );
+          } else {
+            setMessage("page-status", "", "");
+          }
+        } finally {
+          refreshInProgress = false;
+        }
+      }
+
+      document.querySelectorAll(".duration").forEach((button) => {
+        button.addEventListener("click", () => {
+          selectedDuration = Number(button.dataset.duration);
+
+          document.querySelectorAll(".duration").forEach((item) => {
+            item.classList.toggle("selected", item === button);
+          });
+        });
+      });
+
+      document.querySelectorAll(".watch-tab[data-category]").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeCategory = button.dataset.category;
+
+          document.querySelectorAll(".watch-tab[data-category]").forEach((tab) => {
+            tab.classList.toggle("active", tab === button);
+          });
+
+          filterMarketWatch();
+        });
+      });
+
+      $("market-search").addEventListener("input", filterMarketWatch);
+
+      $("asset").addEventListener("change", () => {
+        selectMarket($("asset").value);
+      });
+
+      $("stake").addEventListener("input", () => {
+        const stake = Number($("stake").value);
+
+        $("potential-profit").textContent =
+          Number.isFinite(stake) && stake > 0
+            ? money(stake * 0.15) + " USDT"
+            : "0.00 USDT";
+      });
+
+      async function openTrade(side) {
+        if (isSubmitting) return;
+
+        isSubmitting = true;
+        $("buy-button").disabled = true;
+        $("sell-button").disabled = true;
+
+        try {
+          setMessage("trade-status", "Checking price and wallet…");
+
+          const stake = Number($("stake").value);
+          const asset = $("asset").value;
+
+          if (!Number.isFinite(stake) || stake <= 0 ||
+              Math.round(stake * 100) !== stake * 100) {
+            throw new Error(
+              "Enter a valid stake with up to 2 decimal places."
+            );
+          }
+
+          if (walletBalance === null || stake > walletBalance) {
+            throw new Error(
+              "Your Delivery Wallet balance is insufficient."
+            );
+          }
+
+          const { data: price, error: priceError } = await sgecoreSupabase
+            .from("market_prices")
+            .select("price, updated_at")
+            .eq("asset_symbol", asset)
+            .maybeSingle();
+
+          if (priceError) throw priceError;
+
+          const priceTime = price
+            ? new Date(price.updated_at).getTime()
+            : 0;
+
+          if (!price ||
+              !Number.isFinite(Number(price.price)) ||
+              Number(price.price) <= 0 ||
+              !Number.isFinite(priceTime) ||
+              Date.now() - priceTime > 120000 ||
+              priceTime > Date.now() + 10000) {
+            throw new Error(
+              "The selected market price is unavailable or stale."
+            );
+          }
+
+          const confirmed = window.confirm(
+            "Open " + side.toUpperCase() + " trade on " + asset +
+            " for " + selectedDuration + " seconds with a " +
+            money(stake) + " USDT stake?\n\n" +
+            "A loss may result in losing the full stake."
+          );
+
+          if (!confirmed) return;
+
+          const { data: orderId, error } = await sgecoreSupabase.rpc(
+            "open_sge_timed_trade",
+            {
+              p_asset_symbol: asset,
+              p_side: side,
+              p_stake_amount: stake,
+              p_duration_seconds: selectedDuration
+            }
+          );
+
+          if (error) throw error;
+
+          setMessage(
+            "trade-status",
+            "Trade opened successfully. Order ID: " + orderId,
+            "success"
+          );
+
+          $("stake").value = "";
+          $("potential-profit").textContent = "0.00 USDT";
+
+          await refresh();
+        } catch (error) {
+          console.error("Trade opening error:", error);
+
+          setMessage(
+            "trade-status",
+            error instanceof Error
+              ? error.message
+              : "Unable to open trade.",
+            "error"
+          );
+        } finally {
+          isSubmitting = false;
+          $("buy-button").disabled = false;
+          $("sell-button").disabled = false;
+        }
+      }
+
+      $("buy-button").addEventListener("click", () => openTrade("buy"));
+      $("sell-button").addEventListener("click", () => openTrade("sell"));
+
+      async function init() {
+        try {
+          requireClient();
+
+          if (!(await requireSession())) return;
+
+          renderMarkets();
+          filterMarketWatch();
+          selectMarket("XAU/USD");
+
+          await refresh();
+
+          refreshTimer = window.setInterval(refresh, 10000);
+        } catch (error) {
+          console.error("Trading initialization error:", error);
+
+          setMessage(
+            "page-status",
+            "Unable to initialize trading. Please sign in and try again.",
+            "error"
+          );
+        }
+      }
+
+      window.addEventListener("beforeunload", () => {
+        if (refreshTimer) window.clearInterval(refreshTimer);
+      });
+
+      init();
+    })();
+  </script>
+</body>
+</html>

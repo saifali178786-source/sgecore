@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+  <title>Withdraw | SGE Core</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    :root{color-scheme:dark;--bg:#07111f;--panel:#0d1a2b;--gold:#d9b45d;--gold-light:#f0d58c;--text:#f5f7fb;--muted:#aeb9ca;--border:rgba(217,180,93,.24)}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+    .top{padding:18px max(5%,calc((100% - 900px)/2));background:var(--panel);border-bottom:1px solid var(--border)}
+    .brand{color:var(--gold);font-weight:800;letter-spacing:2px;text-decoration:none}
+    main{width:min(900px,90%);margin:38px auto}
+    .card{padding:clamp(20px,4vw,34px);border:1px solid var(--border);border-radius:12px;background:var(--panel)}
+    h1{margin:0 0 8px;font-size:clamp(27px,4vw,36px)}h1 span{color:var(--gold)}
+    .muted{color:var(--muted);line-height:1.7;font-size:14px}
+    .field{margin-top:18px}.field label{display:block;margin-bottom:8px;color:var(--muted);font-size:13px;font-weight:700}
+    input,select{width:100%;min-height:46px;padding:12px;border:1px solid #344861;border-radius:7px;background:#091626;color:var(--text);font:inherit}
+    input:focus,select:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+    .methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}
+    .method{padding:15px;border:1px solid #344861;border-radius:8px;background:#112239;color:var(--text);text-align:left}
+    .method[aria-pressed=true]{border-color:var(--gold);background:#192b40}
+    .method strong{display:block;margin-bottom:5px}.method small{color:var(--muted);line-height:1.5}
+    .hidden{display:none!important}.notice{margin-top:20px;padding:14px;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:13px;line-height:1.7}
+    .notice strong{color:var(--gold-light)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 18px;border:1px solid var(--gold);border-radius:6px;background:var(--gold);color:#07111f;font-weight:800;text-decoration:none;cursor:pointer}
+    .btn.secondary{background:transparent;color:var(--gold-light)}
+    .message{margin-top:14px;color:#ffaaaa;font-size:13px;line-height:1.6}.message.success{color:#8be0b5}
+    @media(max-width:520px){.methods{grid-template-columns:1fr}main{margin:24px auto}}
+  </style>
+</head>
+<body>
+  <header class="top"><a class="brand" href="../index.html">SGE CORE</a></header>
+  <main>
+    <section class="card">
+      <p class="muted">MEMBER WALLET</p>
+      <h1>Withdraw <span>Funds</span></h1>
+      <p class="muted">Select your preferred withdrawal destination and enter the requested details.</p>
+
+      <div class="methods" role="group" aria-label="Withdrawal method">
+        <button class="method" id="crypto-method" type="button" aria-pressed="true">
+          <strong>Crypto wallet</strong><small>Withdraw to a supported cryptocurrency address.</small>
+        </button>
+        <button class="method" id="bank-method" type="button" aria-pressed="false">
+          <strong>Bank account</strong><small>Withdraw to your bank account details.</small>
+        </button>
+      </div>
+
+      <form id="withdraw-form">
+        <div class="field">
+          <label for="amount">Amount (USDT)</label>
+          <input id="amount" name="amount" type="number" min="0.00000001" step="0.00000001" required placeholder="Enter amount in USDT">
+        </div>
+
+        <div id="crypto-fields">
+          <div class="field">
+            <label for="network">Network</label>
+            <select id="network" name="network" required>
+              <option value="">Select network</option>
+              <option value="TRC20">USDT — TRC20</option>
+              <option value="ERC20">USDT — ERC20</option>
+              <option value="BEP20">USDT — BEP20</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="wallet-address">Crypto wallet address</label>
+            <input id="wallet-address" name="wallet_address" type="text" autocomplete="off" placeholder="Enter destination wallet address">
+          </div>
+        </div>
+
+        <div id="bank-fields" class="hidden">
+          <div class="field">
+            <label for="bank-country">Bank country</label>
+            <select id="bank-country" name="bank_country">
+              <option value="">Select country</option>
+              <option>India</option><option>United Arab Emirates</option><option>United Kingdom</option>
+              <option>United States</option><option>China</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="account-name">Account holder name</label>
+            <input id="account-name" name="account_name" type="text" autocomplete="name" placeholder="Name as registered with the bank">
+          </div>
+          <div class="field">
+            <label for="bank-name">Bank name</label>
+            <input id="bank-name" name="bank_name" type="text" placeholder="Enter bank name">
+          </div>
+          <div class="field">
+            <label for="account-number">Account number / IBAN</label>
+            <input id="account-number" name="account_number" type="text" autocomplete="off" placeholder="Enter account number or IBAN">
+          </div>
+          <div class="field">
+            <label for="swift">SWIFT / BIC (if applicable)</label>
+            <input id="swift" name="swift" type="text" placeholder="Enter SWIFT / BIC">
+          </div>
+        </div>
+
+        <div class="notice"><strong>Important:</strong> This page currently collects and validates the withdrawal details in your browser only. It does not submit a withdrawal request, debit your wallet, or transfer funds. A secure server-side withdrawal workflow and database approval process must be connected before real withdrawals can be accepted. Never share your wallet seed phrase or private key.</div>
+        <div class="actions">
+          <button class="btn" type="submit">Validate details</button>
+          <a class="btn secondary" href="dashboard.html">Back to dashboard</a>
+        </div>
+        <p class="message" id="form-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <script>
+    const cryptoButton = document.getElementById("crypto-method");
+    const bankButton = document.getElementById("bank-method");
+    const cryptoFields = document.getElementById("crypto-fields");
+    const bankFields = document.getElementById("bank-fields");
+    const form = document.getElementById("withdraw-form");
+    const message = document.getElementById("form-message");
+    let method = "crypto";
+
+    function setMethod(next) {
+      method = next;
+      const isCrypto = next === "crypto";
+      cryptoButton.setAttribute("aria-pressed", String(isCrypto));
+      bankButton.setAttribute("aria-pressed", String(!isCrypto));
+      cryptoFields.classList.toggle("hidden", !isCrypto);
+      bankFields.classList.toggle("hidden", isCrypto);
+      document.getElementById("network").required = isCrypto;
+      document.getElementById("wallet-address").required = isCrypto;
+      ["bank-country","account-name","bank-name","account-number"].forEach(id => {
+        document.getElementById(id).required = !isCrypto;
+      });
+      message.textContent = "";
+      message.classList.remove("success");
+    }
+
+    cryptoButton.addEventListener("click", () => setMethod("crypto"));
+    bankButton.addEventListener("click", () => setMethod("bank"));
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      message.classList.remove("success");
+      if (!form.reportValidity()) return;
+      const amount = Number(document.getElementById("amount").value);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        message.textContent = "Enter a valid amount greater than zero.";
+        return;
+      }
+      message.textContent = "Your details passed browser validation only. No withdrawal request has been submitted and no funds have been moved.";
+      message.classList.add("success");
+    });
+  </script>
+</body>
+</html>

@@ -203,6 +203,60 @@
     .market-status.is-error { color:#ff8585; }
     @media(max-width:1000px) { .crypto-market-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
     @media(max-width:600px) { .crypto-market-heading { align-items:flex-start; flex-direction:column; } .crypto-market-grid { grid-template-columns:1fr; } .crypto-market-card { padding:16px; } }
+
+    /* SGE Core homepage visual enhancements */
+    .site-header { display:flex; align-items:center; justify-content:flex-start; gap:clamp(22px,3vw,48px); }
+    .site-header .brand { flex:0 0 auto; }
+    .site-header .main-nav { margin-left:0; display:flex; align-items:center; justify-content:flex-start; flex:1 1 auto; gap:clamp(12px,1.7vw,25px); }
+    .site-header .main-nav a { font-weight:750; letter-spacing:.015em; transition:color .2s ease, transform .2s ease, background .2s ease, box-shadow .2s ease; }
+    .site-header .main-nav a:hover { transform:translateY(-2px); }
+    .button, .investment-button { position:relative; overflow:hidden; transition:transform .22s ease, box-shadow .22s ease, background .22s ease; }
+    .button:hover, .investment-button:hover { transform:translateY(-3px); box-shadow:0 10px 26px rgba(220,181,93,.2); }
+    .button:active, .investment-button:active { transform:translateY(0) scale(.98); }
+    .hero { isolation:isolate; }
+    .hero-inner { position:relative; }
+    .hero-gold-art { position:absolute; z-index:0; right:clamp(20px,8vw,130px); top:50%; width:min(31vw,340px); height:230px; transform:translateY(-48%); pointer-events:none; perspective:900px; }
+    .gold-bar { position:absolute; border:1px solid rgba(255,235,174,.72); border-radius:12px 12px 17px 17px; background:linear-gradient(145deg,#fff0ad 0%,#d9a83f 22%,#f7d879 42%,#a66e19 72%,#e9bd59 100%); box-shadow:inset 0 2px 7px rgba(255,255,255,.45),inset 0 -8px 15px rgba(91,52,5,.28),0 25px 45px rgba(0,0,0,.38); }
+    .gold-bar-front { width:220px; height:105px; right:12px; bottom:28px; transform:rotate(-13deg) skewY(-3deg); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#62400e; animation:goldBarFloat 5s ease-in-out infinite; }
+    .gold-bar-front:before { content:""; position:absolute; inset:10px; border:1px solid rgba(105,66,9,.45); border-radius:7px; }
+    .gold-bar-front span { font-size:32px; font-weight:900; letter-spacing:5px; text-shadow:0 1px rgba(255,255,255,.4); }
+    .gold-bar-front small { font-size:9px; font-weight:800; letter-spacing:2px; }
+    .gold-bar-back { width:185px; height:82px; right:95px; bottom:18px; transform:rotate(12deg) skewY(3deg); opacity:.78; animation:goldBarFloatBack 6s ease-in-out infinite; }
+    .gold-art-glow { position:absolute; width:230px; height:110px; right:10px; bottom:0; border-radius:50%; background:rgba(226,177,73,.24); filter:blur(35px); }
+    @keyframes goldBarFloat { 0%,100%{translate:0 0;rotate:0deg} 50%{translate:0 -13px;rotate:2deg} }
+    @keyframes goldBarFloatBack { 0%,100%{translate:0 0} 50%{translate:0 10px} }
+    .hero-copy, .hero-side-note { position:relative; z-index:1; }
+    .hero-gold-art { opacity:.9; }
+    .platform-info-section { background:#07111f; color:#f5f7fb; }
+    .platform-info-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .platform-info-card { min-width:0; padding:25px; border:1px solid rgba(190,204,224,.14); border-radius:12px; background:linear-gradient(145deg,#122033,#0c1725); box-shadow:0 12px 30px rgba(0,0,0,.12); transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; }
+    .platform-info-card:hover { transform:translateY(-6px); border-color:rgba(232,184,77,.55); box-shadow:0 18px 36px rgba(0,0,0,.22); }
+    .platform-info-icon { display:flex; width:46px; height:46px; align-items:center; justify-content:center; margin-bottom:20px; border:1px solid rgba(232,184,77,.35); border-radius:10px; background:rgba(232,184,77,.09); color:#f0c96e; font-size:23px; font-weight:800; }
+    .platform-info-index { color:#dcb55d; font-size:10px; font-weight:800; letter-spacing:1.5px; }
+    .platform-info-card h3 { margin:9px 0 10px; color:#fff; font-size:19px; }
+    .platform-info-card p { min-height:76px; margin:0 0 16px; color:#a9b9cf; font-size:13px; line-height:1.75; }
+    .platform-info-card .card-link { color:#f0c96e; font-weight:700; text-decoration:none; }
+    .platform-info-note { margin:22px 0 0; color:#91a2b8; font-size:12px; line-height:1.7; }
+    @media(max-width:1000px) {
+      .site-header { flex-wrap:wrap; }
+      .site-header .main-nav { flex-basis:100%; flex-wrap:wrap; }
+      .hero-gold-art { right:2vw; opacity:.45; }
+      .platform-info-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media(max-width:600px) {
+      .site-header { justify-content:space-between; }
+      .site-header .main-nav { display:none; }
+      .site-header .main-nav.is-open { display:flex; flex-direction:column; align-items:stretch; gap:12px; width:100%; padding:15px 0; }
+      .hero-gold-art { width:230px; right:-25px; top:72%; opacity:.22; }
+      .gold-bar-front { transform:scale(.78) rotate(-13deg); transform-origin:right center; }
+      .platform-info-grid { grid-template-columns:1fr; }
+      .platform-info-card p { min-height:0; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .gold-bar-front,.gold-bar-back { animation:none !important; }
+      .button,.investment-button,.platform-info-card,.site-header .main-nav a { transition:none !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -258,8 +312,13 @@
             <span><i>✓</i> Mining plan information</span>
           </div>
         </div>
-        <div class="hero-side-note">
-          <span class="side-line"></span>
+        <div class="hero-gold-art" aria-hidden="true">
+        <div class="gold-bar gold-bar-back"></div>
+        <div class="gold-bar gold-bar-front"><span>SGE</span><small>FINE GOLD · 999.9</small></div>
+        <span class="gold-art-glow"></span>
+      </div>
+      <div class="hero-side-note">
+        <span class="side-line"></span>
           <span>PRECIOUS METALS</span>
           <strong>Built around<br>the value of gold.</strong>
         </div>
@@ -332,7 +391,7 @@
         <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">✕</span><div><h4>XRP/USDT</h4><span>XRP</span></div></div><div class="crypto-price" id="price-XRPUSDT">—</div><div class="crypto-change" id="change-XRPUSDT">Loading 24h change…</div></article>
         <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">Ð</span><div><h4>DOGE/USDT</h4><span>Dogecoin</span></div></div><div class="crypto-price" id="price-DOGEUSDT">—</div><div class="crypto-change" id="change-DOGEUSDT">Loading 24h change…</div></article>
         <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">◆</span><div><h4>BNB/USDT</h4><span>BNB</span></div></div><div class="crypto-price" id="price-BNBUSDT">—</div><div class="crypto-change" id="change-BNBUSDT">Loading 24h change…</div></article>
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">◎</span><div><h4>SOL/USDT</h4><span>Solana</span></div></div><div class="crypto-price" id="price-SOLUSDT">—</div><div class="crypto-change" id="change-SOLUSDT">Loading 24h change…</div></article>
+        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">◉</span><div><h4>SOL/USDT</h4><span>Solana</span></div></div><div class="crypto-price" id="price-SOLUSDT">—</div><div class="crypto-change" id="change-SOLUSDT">Loading 24h change…</div></article>
         <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">●</span><div><h4>ADA/USDT</h4><span>Cardano</span></div></div><div class="crypto-price" id="price-ADAUSDT">—</div><div class="crypto-change" id="change-ADAUSDT">Loading 24h change…</div></article>
         <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">▲</span><div><h4>TRX/USDT</h4><span>TRON</span></div></div><div class="crypto-price" id="price-TRXUSDT">—</div><div class="crypto-change" id="change-TRXUSDT">Loading 24h change…</div></article>
       </div>
@@ -353,24 +412,44 @@
       </div>
       <div class="services-grid">
         <article class="service-card">
-          <div class="service-number">01 / MARKETS</div><div class="service-icon">◇</div>
+          <div class="service-number">01 / MARKETS</div><div class="service-icon">â—‡</div>
           <h3>Gold Market Information</h3>
           <p>Explore spot-market information and follow developments in gold pricing.</p>
           <a href="#markets" class="card-link">View market overview <span>→</span></a>
         </article>
         <article class="service-card">
-          <div class="service-number">02 / MINING</div><div class="service-icon">⌁</div>
+          <div class="service-number">02 / MINING</div><div class="service-icon">⚒</div>
           <h3>Mining Investment Plans</h3>
           <p>Review the listed company names, periods and investment limits.</p>
           <a href="#investments" class="card-link">Explore mining plans <span>→</span></a>
         </article>
         <article class="service-card">
-          <div class="service-number">03 / EDUCATION</div><div class="service-icon">◎</div>
+          <div class="service-number">03 / EDUCATION</div><div class="service-icon">◉</div>
           <h3>Investment Education</h3>
           <p>Understand investment risks and review information before making decisions.</p>
           <a href="#about" class="card-link">Learn about SGE Core <span>→</span></a>
         </article>
       </div>
+    </section>
+
+    <!-- SGE Core platform information -->
+    <section class="platform-info-section section-pad" id="platform">
+      <div class="section-heading">
+        <div>
+          <div class="section-label">THE SGE CORE PLATFORM</div>
+          <h2>One platform. <span>More perspective.</span></h2>
+          <p class="section-description">Explore the tools and information currently presented across SGE Core.</p>
+        </div>
+      </div>
+      <div class="platform-info-grid">
+        <article class="platform-info-card"><span class="platform-info-icon">Au</span><span class="platform-info-index">01 / METALS</span><h3>Gold &amp; Silver Markets</h3><p>Follow spot-market quotes for gold and silver, displayed in US dollars per troy ounce when feeds are available.</p><a href="#markets" class="card-link">View market overview <span>→</span></a></article>
+        <article class="platform-info-card"><span class="platform-info-icon">₿</span><span class="platform-info-index">02 / DIGITAL ASSETS</span><h3>Crypto Market Quotes</h3><p>Review selected cryptocurrency trading pairs and their reported 24-hour price changes.</p><a href="#markets" class="card-link">Explore crypto markets <span>→</span></a></article>
+        <article class="platform-info-card"><span class="platform-info-icon">◇</span><span class="platform-info-index">03 / INSIGHTS</span><h3>Market Information</h3><p>Explore market terminology, price movements and factors that may influence precious-metal markets.</p><a href="#services" class="card-link">Explore services <span>→</span></a></article>
+        <article class="platform-info-card"><span class="platform-info-icon">▤</span><span class="platform-info-index">04 / PLAN LISTINGS</span><h3>Mining Plan Information</h3><p>Review the listed mining-plan names, periods, rates and minimum and maximum amounts, alongside the stated risk notice.</p><a href="#investments" class="card-link">View listed plans <span>→</span></a></article>
+        <article class="platform-info-card"><span class="platform-info-icon">◎</span><span class="platform-info-index">05 / MEMBER AREA</span><h3>Member Dashboard</h3><p>Registered members can access their account area and view available wallet and account information.</p><a href="pages/login.html" class="card-link">Member login <span>→</span></a></article>
+        <article class="platform-info-card"><span class="platform-info-icon">＋</span><span class="platform-info-index">06 / ACCOUNT FUNDING</span><h3>Quick Recharge</h3><p>Open the recharge page to review the available account-funding process and instructions.</p><a href="pages/quick-recharge.html" class="card-link">Open quick recharge <span>→</span></a></article>
+      </div>
+      <p class="platform-info-note">Market information may be delayed or unavailable. Listed mining-plan terms are not independently verified or guaranteed. Review all risks and terms before making financial decisions.</p>
     </section>
 
     <!-- Mining investment listings: all 12 supplied plans -->
@@ -399,7 +478,7 @@
               <div><dt>Minimum</dt><dd>100 USDT</dd></div>
               <div><dt>Maximum</dt><dd>999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-01" data-plan-name="Nevada Gold Mines" data-plan-rate="0.3%" data-plan-period="1 day" data-plan-minimum="100" data-plan-maximum="999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="nevada-1" data-plan-name="Nevada Gold Mines" data-plan-rate="0.3%" data-plan-period="1 day" data-plan-minimum="100" data-plan-maximum="999">Subscribe</a>
           </div>
         </article>
 
@@ -417,7 +496,7 @@
               <div><dt>Minimum</dt><dd>1,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>9,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-02" data-plan-name="Nevada Gold Mines" data-plan-rate="0.4%" data-plan-period="1 day" data-plan-minimum="1000" data-plan-maximum="9999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="nevada-2" data-plan-name="Nevada Gold Mines" data-plan-rate="0.4%" data-plan-period="1 day" data-plan-minimum="1000" data-plan-maximum="9999">Subscribe</a>
           </div>
         </article>
 
@@ -435,7 +514,7 @@
               <div><dt>Minimum</dt><dd>1,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>9,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-03" data-plan-name="Muruntau Gold Mine" data-plan-rate="0.5%" data-plan-period="5 days" data-plan-minimum="1000" data-plan-maximum="9999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="muruntau-1" data-plan-name="Muruntau Gold Mine" data-plan-rate="0.5%" data-plan-period="5 days" data-plan-minimum="1000" data-plan-maximum="9999">Subscribe</a>
           </div>
         </article>
 
@@ -453,7 +532,7 @@
               <div><dt>Minimum</dt><dd>10,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>19,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-04" data-plan-name="Muruntau Gold Mines" data-plan-rate="0.6%" data-plan-period="5 days" data-plan-minimum="10000" data-plan-maximum="19999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="muruntau-2" data-plan-name="Muruntau Gold Mines" data-plan-rate="0.6%" data-plan-period="5 days" data-plan-minimum="10000" data-plan-maximum="19999">Subscribe</a>
           </div>
         </article>
 
@@ -471,7 +550,7 @@
               <div><dt>Minimum</dt><dd>10,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>99,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-05" data-plan-name="Grasberg Gold Mines" data-plan-rate="0.8%" data-plan-period="15 days" data-plan-minimum="10000" data-plan-maximum="99999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="grasberg-1" data-plan-name="Grasberg Gold Mines" data-plan-rate="0.8%" data-plan-period="15 days" data-plan-minimum="10000" data-plan-maximum="99999">Subscribe</a>
           </div>
         </article>
 
@@ -489,7 +568,7 @@
               <div><dt>Minimum</dt><dd>50,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>99,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-06" data-plan-name="Grasberg Gold Mines" data-plan-rate="0.9%" data-plan-period="15 days" data-plan-minimum="50000" data-plan-maximum="99999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="grasberg-2" data-plan-name="Grasberg Gold Mines" data-plan-rate="0.9%" data-plan-period="15 days" data-plan-minimum="50000" data-plan-maximum="99999">Subscribe</a>
           </div>
         </article>
 
@@ -507,7 +586,7 @@
               <div><dt>Minimum</dt><dd>100,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>199,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-07" data-plan-name="Olimpiada Gold Mines" data-plan-rate="1.2%" data-plan-period="30 days" data-plan-minimum="100000" data-plan-maximum="199999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="olimpiada-1" data-plan-name="Olimpiada Gold Mines" data-plan-rate="1.2%" data-plan-period="30 days" data-plan-minimum="100000" data-plan-maximum="199999">Subscribe</a>
           </div>
         </article>
 
@@ -525,7 +604,7 @@
               <div><dt>Minimum</dt><dd>200,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>299,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-08" data-plan-name="Olimpiada Gold Mines" data-plan-rate="1.4%" data-plan-period="30 days" data-plan-minimum="200000" data-plan-maximum="299999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="olimpiada-2" data-plan-name="Olimpiada Gold Mines" data-plan-rate="1.4%" data-plan-period="30 days" data-plan-minimum="200000" data-plan-maximum="299999">Subscribe</a>
           </div>
         </article>
 
@@ -543,7 +622,7 @@
               <div><dt>Minimum</dt><dd>200,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>999,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-09" data-plan-name="Pueblo Viejo Gold Mines" data-plan-rate="1.6%" data-plan-period="90 days" data-plan-minimum="200000" data-plan-maximum="999999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="pueblo-1" data-plan-name="Pueblo Viejo Gold Mines" data-plan-rate="1.6%" data-plan-period="90 days" data-plan-minimum="200000" data-plan-maximum="999999">Subscribe</a>
           </div>
         </article>
 
@@ -561,7 +640,7 @@
               <div><dt>Minimum</dt><dd>500,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>999,999 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-10" data-plan-name="Pueblo Viejo Gold Mines" data-plan-rate="1.8%" data-plan-period="90 days" data-plan-minimum="500000" data-plan-maximum="999999">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="pueblo-2" data-plan-name="Pueblo Viejo Gold Mines" data-plan-rate="1.8%" data-plan-period="90 days" data-plan-minimum="500000" data-plan-maximum="999999">Subscribe</a>
           </div>
         </article>
 
@@ -579,7 +658,7 @@
               <div><dt>Minimum</dt><dd>1,000,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>10,000,000 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-11" data-plan-name="Climax Mine" data-plan-rate="2%" data-plan-period="90 days" data-plan-minimum="1000000" data-plan-maximum="10000000">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="climax-1" data-plan-name="Climax Mine" data-plan-rate="2%" data-plan-period="90 days" data-plan-minimum="1000000" data-plan-maximum="10000000">Subscribe</a>
           </div>
         </article>
 
@@ -597,7 +676,7 @@
               <div><dt>Minimum</dt><dd>3,000,000 USDT</dd></div>
               <div><dt>Maximum</dt><dd>30,000,000 USDT</dd></div>
             </dl>
-            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="plan-12" data-plan-name="Climax Mine" data-plan-rate="2.2%" data-plan-period="90 days" data-plan-minimum="3000000" data-plan-maximum="30000000">Subscribe</a>
+            <a class="button button-gold investment-button" href="pages/login.html" data-plan-id="climax-2" data-plan-name="Climax Mine" data-plan-rate="2.2%" data-plan-period="90 days" data-plan-minimum="3000000" data-plan-maximum="30000000">Subscribe</a>
           </div>
         </article>
       </div>

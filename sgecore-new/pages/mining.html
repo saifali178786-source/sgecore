@@ -1,0 +1,668 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mining Plans | Sovereign Gold Exchange</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    .mining-wrap {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+
+    .mining-panel {
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(212, 175, 55, .35);
+      border-radius: 16px;
+      background: rgba(18, 24, 35, .94);
+      color: #f5f7fb;
+    }
+
+    .mining-panel h1,
+    .mining-panel h2 {
+      color: #f0d58c;
+      margin-top: 0;
+    }
+
+    .mining-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .mining-stat {
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .05);
+      overflow-wrap: anywhere;
+    }
+
+    .mining-stat small {
+      display: block;
+      color: #b8c0cc;
+      margin-bottom: 7px;
+    }
+
+    .mining-stat strong {
+      overflow-wrap: anywhere;
+    }
+
+    .mining-form label {
+      display: block;
+      margin: 18px 0 8px;
+    }
+
+    .mining-form input {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 420px;
+      padding: 12px;
+      border: 1px solid #727b89;
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    .mining-message {
+      margin-top: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .mining-message.error {
+      color: #ffaaaa;
+    }
+
+    .mining-message.success {
+      color: #9ce5ae;
+    }
+
+    .mining-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .mining-note {
+      color: #c5ccd6;
+      line-height: 1.6;
+      font-size: .92rem;
+    }
+
+    .mining-back {
+      color: #f0d58c;
+    }
+
+    .mining-list-entry {
+      margin-bottom: 12px;
+    }
+
+    .mining-list-entry p {
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .mining-empty {
+      color: #c5ccd6;
+    }
+
+    .mining-form button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 600px) {
+      .mining-wrap {
+        margin: 16px auto;
+        padding: 12px;
+      }
+
+      .mining-panel {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="mining-wrap">
+
+    <section class="mining-panel">
+      <a class="mining-back" href="../index.html#investments">
+        &larr; Back to plans
+      </a>
+
+      <h1 style="margin-top: 20px">Mining Subscription</h1>
+
+      <p id="pageStatus" role="status" aria-live="polite">
+        Loading your selected plan...
+      </p>
+    </section>
+
+    <section id="planPanel" class="mining-panel" hidden>
+      <h2 id="planName">Selected plan</h2>
+      <p id="planLocation"></p>
+
+      <div class="mining-grid">
+        <div class="mining-stat">
+          <small>Daily rate (configured)</small>
+          <strong id="planRate">—</strong>
+        </div>
+
+        <div class="mining-stat">
+          <small>Duration</small>
+          <strong id="planDuration">—</strong>
+        </div>
+
+        <div class="mining-stat">
+          <small>Minimum amount</small>
+          <strong id="planMinimum">—</strong>
+        </div>
+
+        <div class="mining-stat">
+          <small>Maximum amount</small>
+          <strong id="planMaximum">—</strong>
+        </div>
+
+        <div class="mining-stat">
+          <small>Funding wallet balance</small>
+          <strong id="walletBalance">Loading...</strong>
+        </div>
+
+        <div class="mining-stat">
+          <small>Estimated profit (simple calculation)</small>
+          <strong id="estimatedProfit">—</strong>
+        </div>
+      </div>
+
+      <form id="subscribeForm" class="mining-form">
+        <label for="amount">Subscription amount (USDT)</label>
+
+        <input
+          id="amount"
+          name="amount"
+          type="number"
+          min="0"
+          step="any"
+          inputmode="decimal"
+          placeholder="Enter an amount within the plan limits"
+          required
+        >
+
+        <p class="mining-note">
+          Estimates are illustrative and do not guarantee returns.
+          Actual subscription eligibility and deductions must be validated
+          by the database.
+        </p>
+
+        <div class="mining-actions">
+          <button
+            id="subscribeButton"
+            class="button button-gold"
+            type="submit"
+          >
+            Review and subscribe
+          </button>
+
+          <a class="button" href="dashboard.html">
+            Return to dashboard
+          </a>
+        </div>
+
+        <p
+          id="formMessage"
+          class="mining-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </form>
+    </section>
+
+    <section class="mining-panel">
+      <h2>Your mining subscriptions</h2>
+
+      <p class="mining-note">
+        This list shows subscriptions belonging to your signed-in account.
+      </p>
+
+      <div id="subscriptionList" aria-live="polite">
+        Loading subscriptions...
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Load Supabase library before your project configuration. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      // Use the initialized project client, not the Supabase library.
+      const client =
+        typeof sgecoreSupabase !== "undefined"
+          ? sgecoreSupabase
+          : null;
+
+      const params = new URLSearchParams(window.location.search);
+      const planId = params.get("plan");
+
+      const pageStatus = document.getElementById("pageStatus");
+      const planPanel = document.getElementById("planPanel");
+      const form = document.getElementById("subscribeForm");
+      const amountInput = document.getElementById("amount");
+      const subscribeButton = document.getElementById("subscribeButton");
+      const formMessage = document.getElementById("formMessage");
+      const subscriptionList = document.getElementById("subscriptionList");
+
+      let currentPlan = null;
+      let walletBalance = null;
+      let submitting = false;
+
+      function money(value) {
+        const number = Number(value);
+
+        if (!Number.isFinite(number)) {
+          return "—";
+        }
+
+        return number.toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 8
+        });
+      }
+
+      function setMessage(message, type = "") {
+        formMessage.textContent = message;
+        formMessage.className =
+          "mining-message" + (type ? " " + type : "");
+      }
+
+      function setStatus(message) {
+        pageStatus.textContent = message;
+      }
+
+      function safeError(error) {
+        console.error("Mining page error:", error);
+
+        return error && error.message
+          ? error.message
+          : "An unexpected error occurred. Please try again.";
+      }
+
+      function updateEstimate() {
+        const estimateElement =
+          document.getElementById("estimatedProfit");
+
+        if (!currentPlan) {
+          estimateElement.textContent = "—";
+          return;
+        }
+
+        const amount = Number(amountInput.value);
+        const dailyRate = Number(currentPlan.daily_rate);
+        const duration = Number(currentPlan.duration_days);
+
+        if (
+          !Number.isFinite(amount) ||
+          amount <= 0 ||
+          !Number.isFinite(dailyRate) ||
+          !Number.isFinite(duration)
+        ) {
+          estimateElement.textContent = "—";
+          return;
+        }
+
+        const profit = amount * dailyRate * duration;
+
+        estimateElement.textContent =
+          money(profit) + " " + currentPlan.currency + " (estimate)";
+      }
+
+      function renderSubscriptions(data) {
+        if (!Array.isArray(data) || data.length === 0) {
+          subscriptionList.textContent =
+            "You have no mining subscriptions yet.";
+          return;
+        }
+
+        const list = document.createElement("div");
+
+        data.forEach((item) => {
+          const entry = document.createElement("div");
+          entry.className = "mining-stat mining-list-entry";
+
+          const title = document.createElement("strong");
+          title.textContent =
+            (item.plan_id || "Mining plan") +
+            " — " + (item.status || "Unknown status");
+
+          const details = document.createElement("p");
+
+          let maturity = "Not available";
+
+          if (item.matures_at) {
+            const date = new Date(item.matures_at);
+
+            if (!Number.isNaN(date.getTime())) {
+              maturity = date.toLocaleString();
+            }
+          }
+
+          details.textContent =
+            money(item.principal) + " " + (item.currency || "") +
+            " · Estimated profit " + money(item.expected_profit) +
+            " " + (item.currency || "") +
+            " · Matures: " + maturity;
+
+          entry.append(title, details);
+          list.appendChild(entry);
+        });
+
+        subscriptionList.replaceChildren(list);
+      }
+
+      async function loadSubscriptions(userId) {
+        // FIX: query through the initialized Supabase client.
+        const { data, error } = await client
+          .from("mining_subscriptions")
+          .select(
+            "id,plan_id,principal,currency,status,started_at,matures_at,expected_profit"
+          )
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(20);
+
+        if (error) {
+          console.error("Subscription list error:", error);
+
+          subscriptionList.textContent =
+            "Unable to load subscriptions: " + error.message;
+          return;
+        }
+
+        renderSubscriptions(data);
+      }
+
+      async function loadWalletBalance(userId, currency) {
+        // FIX: use client.from(), not supabase.from().
+        const { data: wallet, error } = await client
+          .from("wallets")
+          .select("balance")
+          .eq("user_id", userId)
+          .eq("wallet_type", "funding")
+          .eq("currency", currency)
+          .maybeSingle();
+
+        if (error) {
+          walletBalance = null;
+
+          document.getElementById("walletBalance").textContent =
+            "Unable to load";
+
+          console.error("Wallet read error:", error);
+          return false;
+        }
+
+        walletBalance = wallet ? Number(wallet.balance) : 0;
+
+        document.getElementById("walletBalance").textContent =
+          money(walletBalance) + " " + currency;
+
+        return true;
+      }
+
+      async function initialize() {
+        // FIX: validate the actual client and its methods.
+        if (
+          !client ||
+          !client.auth ||
+          typeof client.from !== "function"
+        ) {
+          setStatus(
+            "Supabase client did not initialize. Check the CDN connection " +
+            "and js/supabase.js configuration."
+          );
+
+          subscriptionList.textContent =
+            "Subscriptions cannot be loaded until Supabase is available.";
+
+          console.error(
+            "Expected sgecoreSupabase with auth and from methods."
+          );
+
+          return;
+        }
+
+        if (!planId) {
+          setStatus(
+            "No plan was selected. Please return to the plans page."
+          );
+
+          subscriptionList.textContent =
+            "Select a mining plan to continue.";
+
+          return;
+        }
+
+        setStatus("Checking your sign-in status...");
+
+        const { data: authData, error: authError } =
+          await client.auth.getUser();
+
+        if (authError || !authData.user) {
+          window.location.replace(
+            "login.html?plan=" + encodeURIComponent(planId)
+          );
+          return;
+        }
+
+        const userId = authData.user.id;
+
+        setStatus("Loading selected mining plan...");
+
+        // FIX: use the initialized client for the plan query.
+        const { data: plan, error: planError } = await client
+          .from("mining_plans")
+          .select(
+            "id,name,location,daily_rate,duration_days,min_amount,max_amount,currency,is_active"
+          )
+          .eq("id", planId)
+          .eq("is_active", true)
+          .maybeSingle();
+
+        if (planError || !plan) {
+          setStatus(
+            planError
+              ? "Unable to load this plan: " + planError.message
+              : "This plan is unavailable or inactive. Please choose another plan."
+          );
+
+          console.error("Mining plan query error:", planError);
+          return;
+        }
+
+        currentPlan = plan;
+
+        document.getElementById("planName").textContent =
+          plan.name || "Mining plan";
+
+        document.getElementById("planLocation").textContent =
+          plan.location || "";
+
+        document.getElementById("planRate").textContent =
+          (Number(plan.daily_rate) * 100).toLocaleString("en-US") +
+          "% per day";
+
+        document.getElementById("planDuration").textContent =
+          plan.duration_days + " days";
+
+        document.getElementById("planMinimum").textContent =
+          money(plan.min_amount) + " " + plan.currency;
+
+        document.getElementById("planMaximum").textContent =
+          money(plan.max_amount) + " " + plan.currency;
+
+        amountInput.min = String(plan.min_amount);
+        amountInput.max = String(plan.max_amount);
+
+        amountInput.placeholder =
+          money(plan.min_amount) + " to " +
+          money(plan.max_amount) + " " + plan.currency;
+
+        planPanel.hidden = false;
+
+        setStatus("Plan loaded. Checking your funding wallet...");
+
+        await loadWalletBalance(userId, plan.currency);
+
+        setStatus(
+          "Plan loaded. Review the details before subscribing."
+        );
+
+        await loadSubscriptions(userId);
+      }
+
+      amountInput.addEventListener("input", updateEstimate);
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (submitting || !currentPlan) {
+          return;
+        }
+
+        const amount = Number(amountInput.value);
+        const minimum = Number(currentPlan.min_amount);
+        const maximum = Number(currentPlan.max_amount);
+
+        if (
+          !Number.isFinite(amount) ||
+          amount <= 0 ||
+          amount < minimum ||
+          amount > maximum
+        ) {
+          setMessage(
+            "Enter an amount between " +
+            money(minimum) + " and " +
+            money(maximum) + " " +
+            currentPlan.currency + ".",
+            "error"
+          );
+
+          return;
+        }
+
+        // Do not allow a subscription when the wallet could not be checked.
+        if (walletBalance === null) {
+          setMessage(
+            "Your Funding wallet balance could not be verified. " +
+            "Please reload the page and try again.",
+            "error"
+          );
+
+          return;
+        }
+
+        if (amount > walletBalance) {
+          setMessage(
+            "Your displayed Funding wallet balance is insufficient. " +
+            "Please check your balance.",
+            "error"
+          );
+
+          return;
+        }
+
+        const estimatedProfit =
+          amount *
+          Number(currentPlan.daily_rate) *
+          Number(currentPlan.duration_days);
+
+        const confirmed = window.confirm(
+          "Confirm mining subscription?\n\n" +
+          "Plan: " + currentPlan.name + "\n" +
+          "Amount: " + money(amount) + " " + currentPlan.currency + "\n" +
+          "Duration: " + currentPlan.duration_days + " days\n" +
+          "Estimated profit (not guaranteed): " +
+          money(estimatedProfit) + " " + currentPlan.currency + "\n\n" +
+          "The database must validate the plan and wallet balance."
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        submitting = true;
+        subscribeButton.disabled = true;
+        subscribeButton.textContent = "Processing...";
+
+        setMessage("Submitting your subscription request...");
+
+        try {
+          // Keep the existing RPC name and parameter names.
+          const { data, error } = await client.rpc(
+            "sge_subscribe_mining_plan",
+            {
+              p_plan_id: currentPlan.id,
+              p_amount: amount
+            }
+          );
+
+          if (error) {
+            throw error;
+          }
+
+          setMessage(
+            "Subscription request completed. Refreshing your wallet " +
+            "and subscription list.",
+            "success"
+          );
+
+          const { data: refreshedAuth, error: refreshedAuthError } =
+            await client.auth.getUser();
+
+          if (refreshedAuthError || !refreshedAuth.user) {
+            setMessage(
+              "The subscription request returned successfully, but your " +
+              "session could not be refreshed. Please sign in again.",
+              "error"
+            );
+
+            return;
+          }
+
+          await loadWalletBalance(
+            refreshedAuth.user.id,
+            currentPlan.currency
+          );
+
+          await loadSubscriptions(refreshedAuth.user.id);
+
+          amountInput.value = "";
+          updateEstimate();
+
+          console.info("Mining subscription RPC response:", data);
+        } catch (error) {
+          setMessage(safeError(error), "error");
+        } finally {
+          submitting = false;
+          subscribeButton.disabled = false;
+          subscribeButton.textContent = "Review and subscribe";
+        }
+      });
+
+      initialize().catch((error) => {
+        setStatus(safeError(error));
+      });
+    })();
+  </script>
+</body>
+</html>

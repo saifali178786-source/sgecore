@@ -1,4 +1,4 @@
-```html
+﻿```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -196,7 +196,7 @@
         Don't have an account?
         <a href="register.html">Register here</a>
         <br>
-        <a href="../index.html">← Back to homepage</a>
+        <a href="../index.html">â† Back to homepage</a>
       </div>
     </section>
   </main>
@@ -253,7 +253,11 @@
             loginMessage.textContent =
               "Login successful! Opening your dashboard...";
 
-            window.location.href = "dashboard.html";
+            const selectedPlan = new URLSearchParams(window.location.search).get("plan");
+
+            window.location.href = selectedPlan
+              ? "mining.html?plan=" + encodeURIComponent(selectedPlan)
+              : "dashboard.html";
           } else {
             loginMessage.textContent =
               "Sign-in could not be completed. Please try again.";
