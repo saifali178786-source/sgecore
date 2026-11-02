@@ -204,66 +204,156 @@
     @media(max-width:1000px) { .crypto-market-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
     @media(max-width:600px) { .crypto-market-heading { align-items:flex-start; flex-direction:column; } .crypto-market-grid { grid-template-columns:1fr; } .crypto-market-card { padding:16px; } }
 
-    /* SGE Core homepage visual enhancements */
-    .site-header { display:flex; align-items:center; justify-content:flex-start; gap:clamp(22px,3vw,48px); }
-    .site-header .brand { flex:0 0 auto; }
-    .site-header .main-nav { margin-left:0; display:flex; align-items:center; justify-content:flex-start; flex:1 1 auto; gap:clamp(12px,1.7vw,25px); }
-    .site-header .main-nav a { font-weight:750; letter-spacing:.015em; transition:color .2s ease, transform .2s ease, background .2s ease, box-shadow .2s ease; }
-    .site-header .main-nav a:hover { transform:translateY(-2px); }
-    .button, .investment-button { position:relative; overflow:hidden; transition:transform .22s ease, box-shadow .22s ease, background .22s ease; }
-    .button:hover, .investment-button:hover { transform:translateY(-3px); box-shadow:0 10px 26px rgba(220,181,93,.2); }
-    .button:active, .investment-button:active { transform:translateY(0) scale(.98); }
-    .hero { isolation:isolate; }
-    .hero-inner { position:relative; }
-    .hero-gold-art { position:absolute; z-index:0; right:clamp(20px,8vw,130px); top:50%; width:min(31vw,340px); height:230px; transform:translateY(-48%); pointer-events:none; perspective:900px; }
-    .gold-bar { position:absolute; border:1px solid rgba(255,235,174,.72); border-radius:12px 12px 17px 17px; background:linear-gradient(145deg,#fff0ad 0%,#d9a83f 22%,#f7d879 42%,#a66e19 72%,#e9bd59 100%); box-shadow:inset 0 2px 7px rgba(255,255,255,.45),inset 0 -8px 15px rgba(91,52,5,.28),0 25px 45px rgba(0,0,0,.38); }
-    .gold-bar-front { width:220px; height:105px; right:12px; bottom:28px; transform:rotate(-13deg) skewY(-3deg); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#62400e; animation:goldBarFloat 5s ease-in-out infinite; }
-    .gold-bar-front:before { content:""; position:absolute; inset:10px; border:1px solid rgba(105,66,9,.45); border-radius:7px; }
-    .gold-bar-front span { font-size:32px; font-weight:900; letter-spacing:5px; text-shadow:0 1px rgba(255,255,255,.4); }
-    .gold-bar-front small { font-size:9px; font-weight:800; letter-spacing:2px; }
-    .gold-bar-back { width:185px; height:82px; right:95px; bottom:18px; transform:rotate(12deg) skewY(3deg); opacity:.78; animation:goldBarFloatBack 6s ease-in-out infinite; }
-    .gold-art-glow { position:absolute; width:230px; height:110px; right:10px; bottom:0; border-radius:50%; background:rgba(226,177,73,.24); filter:blur(35px); }
-    @keyframes goldBarFloat { 0%,100%{translate:0 0;rotate:0deg} 50%{translate:0 -13px;rotate:2deg} }
-    @keyframes goldBarFloatBack { 0%,100%{translate:0 0} 50%{translate:0 10px} }
-    .hero-copy, .hero-side-note { position:relative; z-index:1; }
-    .hero-gold-art { opacity:.9; }
-    .platform-info-section { background:#07111f; color:#f5f7fb; }
-    .platform-info-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
-    .platform-info-card { min-width:0; padding:25px; border:1px solid rgba(190,204,224,.14); border-radius:12px; background:linear-gradient(145deg,#122033,#0c1725); box-shadow:0 12px 30px rgba(0,0,0,.12); transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; }
-    .platform-info-card:hover { transform:translateY(-6px); border-color:rgba(232,184,77,.55); box-shadow:0 18px 36px rgba(0,0,0,.22); }
-    .platform-info-icon { display:flex; width:46px; height:46px; align-items:center; justify-content:center; margin-bottom:20px; border:1px solid rgba(232,184,77,.35); border-radius:10px; background:rgba(232,184,77,.09); color:#f0c96e; font-size:23px; font-weight:800; }
-    .platform-info-index { color:#dcb55d; font-size:10px; font-weight:800; letter-spacing:1.5px; }
-    .platform-info-card h3 { margin:9px 0 10px; color:#fff; font-size:19px; }
-    .platform-info-card p { min-height:76px; margin:0 0 16px; color:#a9b9cf; font-size:13px; line-height:1.75; }
-    .platform-info-card .card-link { color:#f0c96e; font-weight:700; text-decoration:none; }
-    .platform-info-note { margin:22px 0 0; color:#91a2b8; font-size:12px; line-height:1.7; }
-    @media(max-width:1000px) {
-      .site-header { flex-wrap:wrap; }
-      .site-header .main-nav { flex-basis:100%; flex-wrap:wrap; }
-      .hero-gold-art { right:2vw; opacity:.45; }
-      .platform-info-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    }
-    @media(max-width:600px) {
-      .site-header { justify-content:space-between; }
-      .site-header .main-nav { display:none; }
-      .site-header .main-nav.is-open { display:flex; flex-direction:column; align-items:stretch; gap:12px; width:100%; padding:15px 0; }
-      .hero-gold-art { width:230px; right:-25px; top:72%; opacity:.22; }
-      .gold-bar-front { transform:scale(.78) rotate(-13deg); transform-origin:right center; }
-      .platform-info-grid { grid-template-columns:1fr; }
-      .platform-info-card p { min-height:0; }
-    }
-    @media(prefers-reduced-motion:reduce) {
-      .gold-bar-front,.gold-bar-back { animation:none !important; }
-      .button,.investment-button,.platform-info-card,.site-header .main-nav a { transition:none !important; }
-    }
-
+    /* Aurex-inspired SGE Core homepage additions */
+    .market-ticker{background:#050c16;border-top:1px solid rgba(220,181,93,.12);border-bottom:1px solid rgba(220,181,93,.18);overflow:hidden;color:#aebbd0}
+    .ticker-track{max-width:1240px;margin:auto;min-height:52px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:24px;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
+    .ticker-track::-webkit-scrollbar{display:none}.ticker-track>span{font-size:11px;letter-spacing:.04em}.ticker-track strong{display:inline-block;margin-left:6px;color:#f4f6fa;font-size:12px;font-variant-numeric:tabular-nums}.ticker-track em{margin-left:5px;color:#4bd69a;font-size:10px;font-style:normal}.ticker-track em.down{color:#ff8585}.ticker-label{color:#e8b84d!important;font-weight:800;letter-spacing:.12em!important}
+    .hero-inner{align-items:center}.hero-copy{max-width:760px}.hero-copy h1{max-width:780px;font-size:clamp(42px,6.2vw,76px);line-height:1.04;letter-spacing:-.045em}.hero-copy h1 span{color:#e8b84d}.hero-gold-card{width:min(100%,340px);padding:28px;border:1px solid rgba(232,184,77,.38);border-radius:14px;background:linear-gradient(145deg,rgba(20,32,49,.96),rgba(7,17,31,.96));box-shadow:0 24px 70px rgba(0,0,0,.28);backdrop-filter:blur(12px)}.gold-card-eyebrow,.gold-card-symbol,.gold-card-unit,.gold-card-updated{display:block}.gold-card-eyebrow{color:#dcb55d;font-size:10px;font-weight:800;letter-spacing:.15em}.gold-card-symbol{margin-top:7px;color:#aebbd0;font-size:12px}.hero-gold-card>strong{display:block;margin:9px 0 2px;color:#fff;font-size:clamp(28px,3vw,38px);font-variant-numeric:tabular-nums;letter-spacing:-.04em}.gold-card-unit{color:#9eafc5;font-size:11px;line-height:1.6}.gold-card-divider{height:1px;margin:20px 0;background:rgba(190,204,224,.16)}.hero-gold-card .gold-gram-price{margin:7px 0 2px;color:#e8b84d;font-size:28px}.gold-card-updated{margin-top:15px;color:#8e9eb4;font-size:10px}
+    .market-heading-new{align-items:end}.snapshot-panel{overflow:hidden;border:1px solid rgba(190,204,224,.14);border-radius:14px;background:linear-gradient(145deg,#101b2a,#0a1421);box-shadow:0 16px 40px rgba(0,0,0,.14)}.snapshot-toolbar{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 24px;border-bottom:1px solid rgba(190,204,224,.12)}.snapshot-toolbar strong,.snapshot-toolbar span{display:block}.snapshot-toolbar strong{color:#f5f7fb;font-size:16px}.snapshot-toolbar div span,.snapshot-toolbar>span{margin-top:5px;color:#92a3ba;font-size:11px}.snapshot-scroll{overflow-x:auto}.snapshot-table{width:100%;min-width:720px;border-collapse:collapse;text-align:left}.snapshot-table th{padding:15px 20px;color:#8294ab;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.snapshot-table td{padding:15px 20px;border-top:1px solid rgba(190,204,224,.09);color:#e9edf4;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}.snapshot-table tbody tr:hover{background:rgba(220,181,93,.035)}.snapshot-asset{display:flex;align-items:center;gap:12px}.snapshot-asset>span:last-child strong,.snapshot-asset small{display:block}.snapshot-asset strong{color:#f4f6fa;font-size:12px}.snapshot-asset small{margin-top:4px;color:#8496ad;font-size:10px}.snapshot-coin{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(220,181,93,.2);border-radius:50%;background:rgba(220,181,93,.08);color:#e8b84d;font-size:16px}.snapshot-coin.gold-coin{font-size:12px}.snapshot-table .muted-cell{color:#718198;font-size:11px}.snapshot-table .positive{color:#4bd69a}.snapshot-table .negative{color:#ff8585}.sparkline{width:110px;height:32px;overflow:visible}.sparkline path{fill:none;stroke:#dcb55d;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.sparkline.negative path{stroke:#ff8585}.snapshot-footnote{padding:14px 22px;border-top:1px solid rgba(190,204,224,.1);color:#8192a8;font-size:10px;line-height:1.7}.market-disclaimer{margin-top:18px}
+    .why-section{background:#081321;color:#f5f7fb}.why-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.why-card{position:relative;min-height:230px;padding:24px;border:1px solid rgba(190,204,224,.13);border-radius:12px;background:linear-gradient(145deg,#111e2e,#0b1522);transition:transform .2s ease,border-color .2s ease}.why-card:hover{transform:translateY(-4px);border-color:rgba(232,184,77,.45)}.why-number{position:absolute;top:20px;right:20px;color:#6f8096;font-size:10px;letter-spacing:.12em}.why-icon{display:grid;place-items:center;width:44px;height:44px;margin-bottom:24px;border:1px solid rgba(232,184,77,.28);border-radius:10px;background:rgba(232,184,77,.08);color:#e8b84d;font-size:22px}.why-card h3{margin:0 0 10px;color:#f4f6fa;font-size:17px}.why-card p{margin:0;color:#9eafc5;font-size:12px;line-height:1.8}
+    @media(max-width:900px){.ticker-track{justify-content:flex-start}.hero-inner{gap:28px}.hero-gold-card{width:280px;padding:22px}.why-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:650px){.hero-inner{align-items:flex-start;flex-direction:column}.hero-gold-card{width:100%;box-sizing:border-box;max-width:390px}.hero-copy h1{font-size:clamp(38px,11vw,58px)}.ticker-track{padding:0 16px;gap:22px}.snapshot-toolbar{align-items:flex-start;flex-direction:column;padding:18px}.why-grid{grid-template-columns:1fr}.why-card{min-height:0}.snapshot-table th,.snapshot-table td{padding:13px 14px}}
   </style>
+
+  <style>
+    .sge-account-menu { position: relative; }
+    .sge-account-trigger { display:flex; align-items:center; gap:9px; padding:8px 12px; border:1px solid rgba(217,180,93,.42); border-radius:8px; background:rgba(217,180,93,.08); color:#f5f7fb; cursor:pointer; font:inherit; }
+    .sge-account-avatar { display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:#d9b45d; color:#07111f; font-size:12px; }
+    .sge-account-label { display:flex; flex-direction:column; align-items:flex-start; line-height:1.25; }
+    .sge-account-label strong { font-size:13px; }
+    .sge-account-label small { max-width:145px; color:#d9b45d; font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .sge-account-chevron { color:#d9b45d; }
+    .sge-account-dropdown { position:absolute; z-index:1000; top:calc(100% + 9px); right:0; min-width:190px; padding:7px; border:1px solid rgba(217,180,93,.28); border-radius:10px; background:#0b1726; box-shadow:0 14px 35px rgba(0,0,0,.35); }
+    .sge-account-dropdown a, .sge-account-dropdown button { display:block; width:100%; padding:11px 12px; border:0; border-radius:6px; background:transparent; color:#eaf0f8; text-align:left; text-decoration:none; font:inherit; font-size:13px; cursor:pointer; box-sizing:border-box; }
+    .sge-account-dropdown a:hover, .sge-account-dropdown button:hover { background:rgba(217,180,93,.12); color:#f0d58c; }
+    .sge-account-dropdown button { border-top:1px solid rgba(255,255,255,.09); margin-top:4px; color:#f0d58c; }
+    [hidden] { display:none !important; }
+    @media(max-width:760px) { .sge-account-dropdown { right:0; } }
+  </style>
+
+
+  <style>
+    /* Header alignment: brand + navigation on the left, account on the right */
+    @media (min-width: 900px) {
+      header.site-header {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 0 !important;
+        min-height: 88px;
+        padding: 14px clamp(22px, 3.5vw, 58px) !important;
+        box-sizing: border-box;
+      }
+      header.site-header > .brand {
+        display: inline-flex;
+        align-items: center;
+        flex: 0 0 auto;
+        margin: 0 !important;
+      }
+      header.site-header > .brand .brand-mark {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        font-size: 15px;
+      }
+      header.site-header > .brand .brand-copy strong { font-size: 18px; }
+      header.site-header > .brand .brand-copy small { font-size: 9px; letter-spacing: .13em; }
+      header.site-header > .menu-toggle { display: none !important; }
+      header.site-header > .main-nav {
+        position: static !important;
+        inset: auto !important;
+        display: flex !important;
+        flex: 1 1 auto;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: clamp(17px, 2vw, 30px) !important;
+        width: auto !important;
+        margin: 0 24px 0 clamp(28px, 4vw, 62px) !important;
+        padding: 0 !important;
+        transform: none !important;
+      }
+      header.site-header > .main-nav a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        font-size: 14px !important;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      header.site-header > .header-actions {
+        display: flex !important;
+        flex: 0 0 auto;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 12px;
+        margin: 0 0 0 auto !important;
+      }
+      .sge-account-trigger {
+        min-height: 46px;
+        padding: 8px 15px !important;
+        gap: 11px !important;
+      }
+      .sge-account-avatar { width: 32px !important; height: 32px !important; font-size: 14px !important; }
+      .sge-account-label strong { font-size: 14px !important; }
+      .sge-account-label small { max-width: 155px; font-size: 11px !important; }
+    }
+    @media (min-width: 900px) and (max-width: 1120px) {
+      header.site-header > .main-nav { gap: 13px !important; margin-left: 22px !important; margin-right: 14px !important; }
+      header.site-header > .main-nav a { font-size: 12px !important; }
+      header.site-header > .brand .brand-copy small { font-size: 8px; }
+    }
+  </style>
+
 </head>
 <body>
   <div class="topbar">
     <div class="topbar-inner">
       <span><span class="status-dot"></span> PRECIOUS METALS MARKETPLACE</span>
       <span class="topbar-note">Market information · Investment insights · Gold</span>
+    </div>
+  </div>
+
+  <div class="market-ticker" aria-label="Live market ticker">
+    <div class="tradingview-widget-container" style="width:100%;height:58px;overflow:hidden">
+      <div class="tradingview-widget-container__widget"></div>
+      <div class="tradingview-widget-copyright" style="display:none"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+      {
+        "symbols"; [
+          {"proName":"BINANCE:BTCUSDT","title":"BTC"},
+          {"proName":"BINANCE:ETHUSDT","title":"ETH"},
+          {"proName":"BINANCE:BNBUSDT","title":"BNB"},
+          {"proName":"BINANCE:SOLUSDT","title":"SOL"},
+          {"proName":"BINANCE:XRPUSDT","title":"XRP"},
+          {"proName":"BINANCE:DOGEUSDT","title":"DOGE"},
+          {"proName":"BINANCE:ADAUSDT","title":"ADA"},
+          {"proName":"OANDA:XAUUSD","title":"Gold"},
+          {"proName":"OANDA:XAGUSD","title":"Silver"},
+          {"proName":"OANDA:XPTUSD","title":"Platinum"},
+          {"proName":"OANDA:XPDUSD","title":"Palladium"},
+          {"proName":"FX_IDC:EURUSD","title":"EUR/USD"},
+          {"proName":"FX_IDC:GBPUSD","title":"GBP/USD"},
+          {"proName":"FX_IDC:USDJPY","title":"USD/JPY"},
+          {"proName":"FX_IDC:USDPKR","title":"USD/PKR"},
+          {"proName":"SP:SPX","title":"S&P 500"},
+          {"proName":"NASDAQ:NDX","title":"NASDAQ 100"},
+          {"proName":"DJ:DJI","title":"Dow Jones"},
+          {"proName":"TVC:UKX","title":"FTSE 100"},
+          {"proName":"XETR:DAX","title":"DAX"},
+          {"proName":"TVC:NI225","title":"Nikkei 225"},
+          {"proName":"TVC:USOIL","title":"WTI Oil"},
+          {"proName":"TVC:UKOIL","title":"Brent Oil"},
+          {"proName":"NYMEX:自然ガス1!","title":"Natural Gas"}
+        ],
+        "showSymbolLogo"; true,
+        "colorTheme"; "dark",
+        "isTransparent"; true,
+        "displayMode"; "adaptive",
+        "locale"; "en"
+      }
+      </script>
     </div>
   </div>
 
@@ -285,9 +375,24 @@
       <a href="#investments">Mining Investments</a>
       <a href="#about">About Us</a>
       <a href="#contact">Contact</a>
-      <a class="nav-login" href="pages/login.html">Login</a>
-      <a class="nav-register" href="pages/register.html">Register <span>↗</span></a>
     </nav>
+    <div class="header-actions" id="sgeAccountNav" aria-label="Account navigation">
+      <a class="login-btn" href="pages/login.html" id="sgeLoginLink">Login</a>
+      <a class="register-btn" href="pages/register.html" id="sgeRegisterLink">Register <span>↗</span></a>
+      <div class="sge-account-menu" id="sgeAccountMenu" hidden>
+        <button class="sge-account-trigger" id="sgeAccountTrigger" type="button" aria-expanded="false" aria-haspopup="true">
+          <span class="sge-account-avatar" aria-hidden="true">●</span>
+          <span class="sge-account-label"><strong>Account</strong><small id="sgeAccountUid">UID: —</small></span>
+          <span class="sge-account-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div class="sge-account-dropdown" id="sgeAccountDropdown" hidden>
+          <a href="pages/dashboard.html">Dashboard</a>
+          <a href="pages/account-settings.html">Account Settings</a>
+          <a href="pages/my-assets.html">My Assets</a>
+          <button type="button" id="sgeLogoutButton">Log Out</button>
+        </div>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -296,11 +401,11 @@
       <div class="hero-shade"></div>
       <div class="hero-inner">
         <div class="hero-copy">
-          <div class="hero-kicker"><span></span> YOUR VIEW OF THE GOLD MARKET</div>
-          <h1>Where Gold Meets<br><span>Opportunity.</span></h1>
+          <div class="hero-kicker"><span></span> THE GOLD & DIGITAL ASSET MARKETPLACE</div>
+          <h1>Trade gold and crypto.<br><span>Put idle funds to work.</span></h1>
           <p class="hero-description">
-            Discover gold-market information, explore precious metals
-            and learn about mining opportunities with SGE Core.
+            Track precious metals and leading digital assets, explore mining plan information,
+            and manage your SGE Core account from one platform.
           </p>
           <div class="hero-actions">
             <a class="button button-gold" href="#markets">Explore Markets <span>→</span></a>
@@ -312,16 +417,17 @@
             <span><i>✓</i> Mining plan information</span>
           </div>
         </div>
-        <div class="hero-gold-art" aria-hidden="true">
-        <div class="gold-bar gold-bar-back"></div>
-        <div class="gold-bar gold-bar-front"><span>SGE</span><small>FINE GOLD · 999.9</small></div>
-        <span class="gold-art-glow"></span>
-      </div>
-      <div class="hero-side-note">
-        <span class="side-line"></span>
-          <span>PRECIOUS METALS</span>
-          <strong>Built around<br>the value of gold.</strong>
-        </div>
+        <aside class="hero-gold-card" aria-label="Live gold price">
+          <span class="gold-card-eyebrow">LIVE GOLD SPOT</span>
+          <span class="gold-card-symbol">XAU / USD</span>
+          <strong id="heroGoldPrice">—</strong>
+          <span class="gold-card-unit">USD per troy ounce</span>
+          <div class="gold-card-divider"></div>
+          <span class="gold-card-eyebrow">PRICE PER GRAM</span>
+          <strong class="gold-gram-price" id="heroGoldGram">—</strong>
+          <span class="gold-card-unit">USD / gram · based on 31.1034768 g per troy oz</span>
+          <span class="gold-card-updated" id="heroGoldUpdated">Waiting for live feed…</span>
+        </aside>
       </div>
       <div class="hero-bottom">
         <span>SGE CORE <span class="hero-bottom-dot">/</span> GOLD MARKETS</span>
@@ -329,75 +435,46 @@
       </div>
     </section>
 
-    <!-- Market overview -->
+    <!-- Market snapshot -->
     <section class="market-section section-pad" id="markets">
-      <div class="section-heading">
+      <div class="section-heading market-heading-new">
         <div>
           <div class="section-label">MARKET OVERVIEW</div>
-          <h2>Stay close to the <span>market.</span></h2>
-          <p class="section-description">Live spot prices for gold and silver, plus leading cryptocurrency markets.</p>
+          <h2>Market snapshot <span>at a glance.</span></h2>
+          <p class="section-description">Live exchange quotes, market capitalization and seven-day price history where the data provider supplies them.</p>
         </div>
         <div class="market-status" id="liveMarketStatus" aria-live="polite"><span class="status-dot status-dot-muted"></span> Connecting to live feeds…</div>
       </div>
-      <div class="market-grid">
-        <article class="market-card market-card-featured">
-          <div class="market-card-top">
-            <div class="asset-icon gold-icon">Au</div>
-            <div><h3>Gold Spot</h3><span class="asset-symbol">XAU / USD</span></div>
-            <span class="asset-tag">GOLD</span>
-          </div>
-          <div class="market-value">— <small>USD / oz</small></div>
-          <p class="market-footnote">Price will appear when a live market feed is connected.</p>
-          <div class="mini-chart gold-chart" aria-hidden="true">
-            <svg viewBox="0 0 320 65" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="goldFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#dcb55d" stop-opacity=".28"/>
-                  <stop offset="100%" stop-color="#dcb55d" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path d="M0 48 L24 43 L44 49 L66 30 L88 36 L108 24 L129 34 L151 18 L173 28 L195 15 L216 24 L240 11 L260 19 L283 7 L300 14 L320 4 L320 65 L0 65 Z" fill="url(#goldFill)"/>
-              <path d="M0 48 L24 43 L44 49 L66 30 L88 36 L108 24 L129 34 L151 18 L173 28 L195 15 L216 24 L240 11 L260 19 L283 7 L300 14 L320 4" fill="none" stroke="#dcb55d" stroke-width="2"/>
-            </svg>
-          </div>
-          <span class="chart-caption" id="goldChartCaption">Illustrative graphic · Live price feed does not provide this chart</span>
-        </article>
-        <article class="market-card">
-          <div class="market-card-top">
-            <div class="asset-icon silver-icon">Ag</div>
-            <div><h3>Silver Spot</h3><span class="asset-symbol">XAG / USD</span></div>
-          </div>
-          <div class="market-value">— <small>USD / oz</small></div>
-          <p class="market-footnote">Awaiting a connected price feed.</p>
-          <div class="card-bottom"><span>PRECIOUS METAL</span><span>01</span></div>
-        </article>
-        <article class="market-card">
-          <div class="market-card-top">
-            <div class="asset-icon market-icon">↗</div>
-            <div><h3>Market Insights</h3><span class="asset-symbol">ANALYSIS &amp; TRENDS</span></div>
-          </div>
-          <p class="insight-copy">Understand market movements, price drivers and factors that influence precious metals.</p>
-          <a class="card-link" href="#services">Explore insights <span>→</span></a>
-          <div class="card-bottom"><span>MARKET EDUCATION</span><span>02</span></div>
-        </article>
+      <div class="snapshot-panel">
+        <div class="snapshot-toolbar"><div><strong>Top markets</strong><span>Crypto quotes in USD · Gold spot in USD</span></div><span id="snapshotUpdated">Updating market data…</span></div>
+        <div class="snapshot-scroll">
+          <table class="snapshot-table">
+            <thead><tr><th>Asset</th><th>Price</th><th>24h</th><th>Market cap</th><th>Last 7 days</th></tr></thead>
+            <tbody>
+              <tr data-market-row="BTC"><td><span class="snapshot-asset"><b class="snapshot-coin">₿</b><span><strong>Bitcoin</strong><small>BTC</small></span></span></td><td id="table-price-BTCUSDT">—</td><td id="table-change-BTCUSDT">—</td><td id="cap-BTC">—</td><td><svg class="sparkline" id="spark-BTC" viewBox="0 0 120 34" role="img" aria-label="Bitcoin seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td></tr>
+              <tr data-market-row="ETH"><td><span class="snapshot-asset"><b class="snapshot-coin">◆</b><span><strong>Ethereum</strong><small>ETH</small></span></span></td><td id="table-price-ETHUSDT">—</td><td id="table-change-ETHUSDT">—</td><td id="cap-ETH">—</td><td><svg class="sparkline" id="spark-ETH" viewBox="0 0 120 34" role="img" aria-label="Ethereum seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td></tr>
+              <tr data-market-row="BNB"><td><span class="snapshot-asset"><b class="snapshot-coin">◆</b><span><strong>BNB</strong><small>BNB</small></span></span></td><td id="table-price-BNBUSDT">—</td><td id="table-change-BNBUSDT">—</td><td id="cap-BNB">—</td><td><svg class="sparkline" id="spark-BNB" viewBox="0 0 120 34" role="img" aria-label="BNB seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td></tr>
+              <tr data-market-row="SOL"><td><span class="snapshot-asset"><b class="snapshot-coin">◎</b><span><strong>Solana</strong><small>SOL</small></span></span></td><td id="table-price-SOLUSDT">—</td><td id="table-change-SOLUSDT">—</td><td id="cap-SOL">—</td><td><svg class="sparkline" id="spark-SOL" viewBox="0 0 120 34" role="img" aria-label="Solana seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td></tr>
+              <tr data-market-row="XRP"><td><span class="snapshot-asset"><b class="snapshot-coin">✕</b><span><strong>XRP</strong><small>XRP</small></span></span></td><td id="table-price-XRPUSDT">—</td><td id="table-change-XRPUSDT">—</td><td id="cap-XRP">—</td><td><svg class="sparkline" id="spark-XRP" viewBox="0 0 120 34" role="img" aria-label="XRP seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td></tr>
+              <tr data-market-row="DOGE"><td><span class="snapshot-asset"><b class="snapshot-coin">Ð</b><span><strong>Dogecoin</strong><small>DOGE</small></span></span></td><td id="table-price-DOGEUSDT">—</td><td id="table-change-DOGEUSDT">—</td><td id="cap-DOGE">—</td><td><svg class="sparkline" id="spark-DOGE" viewBox="0 0 120 34" role="img" aria-label="Dogecoin seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td></tr>
+              <tr data-market-row="ADA"><td><span class="snapshot-asset"><b class="snapshot-coin">●</b><span><strong>Cardano</strong><small>ADA</small></span></span></td><td id="table-price-ADAUSDT">—</td><td id="table-change-ADAUSDT">—</td><td id="cap-ADA">—</td><td><svg class="sparkline" id="spark-ADA" viewBox="0 0 120 34" role="img" aria-label="Cardano seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td></tr>
+              <tr><td><span class="snapshot-asset"><b class="snapshot-coin gold-coin">Au</b><span><strong>Gold</strong><small>XAU</small></span></span></td><td id="table-price-XAU">—</td><td id="table-change-XAU">—</td><td class="muted-cell">Not supplied</td><td class="muted-cell">History unavailable</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="snapshot-footnote">Crypto prices and 24h changes: Binance market feed. Crypto market caps and seven-day sparklines: CoinGecko public market data, when available. Gold: XAU/USD spot feed from xaus.com. Data availability and update intervals may vary.</div>
       </div>
-      <div class="crypto-market-heading">
-        <div><div class="section-label">DIGITAL ASSETS</div><h3>Crypto markets <span>in real time.</span></h3></div>
-        <span class="crypto-updated" id="cryptoUpdated" aria-live="polite">Connecting to exchange…</span>
-      </div>
-      <div class="crypto-market-grid" id="cryptoMarketGrid" aria-live="polite">
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">₿</span><div><h4>BTC/USDT</h4><span>Bitcoin</span></div></div><div class="crypto-price" id="price-BTCUSDT">—</div><div class="crypto-change" id="change-BTCUSDT">Loading 24h change…</div></article>
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">◆</span><div><h4>ETH/USDT</h4><span>Ethereum</span></div></div><div class="crypto-price" id="price-ETHUSDT">—</div><div class="crypto-change" id="change-ETHUSDT">Loading 24h change…</div></article>
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">✕</span><div><h4>XRP/USDT</h4><span>XRP</span></div></div><div class="crypto-price" id="price-XRPUSDT">—</div><div class="crypto-change" id="change-XRPUSDT">Loading 24h change…</div></article>
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">Ð</span><div><h4>DOGE/USDT</h4><span>Dogecoin</span></div></div><div class="crypto-price" id="price-DOGEUSDT">—</div><div class="crypto-change" id="change-DOGEUSDT">Loading 24h change…</div></article>
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">◆</span><div><h4>BNB/USDT</h4><span>BNB</span></div></div><div class="crypto-price" id="price-BNBUSDT">—</div><div class="crypto-change" id="change-BNBUSDT">Loading 24h change…</div></article>
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">◉</span><div><h4>SOL/USDT</h4><span>Solana</span></div></div><div class="crypto-price" id="price-SOLUSDT">—</div><div class="crypto-change" id="change-SOLUSDT">Loading 24h change…</div></article>
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">●</span><div><h4>ADA/USDT</h4><span>Cardano</span></div></div><div class="crypto-price" id="price-ADAUSDT">—</div><div class="crypto-change" id="change-ADAUSDT">Loading 24h change…</div></article>
-        <article class="crypto-market-card"><div class="crypto-market-top"><span class="crypto-coin-icon">▲</span><div><h4>TRX/USDT</h4><span>TRON</span></div></div><div class="crypto-price" id="price-TRXUSDT">—</div><div class="crypto-change" id="change-TRXUSDT">Loading 24h change…</div></article>
-      </div>
-      <div class="market-disclaimer" id="marketDataDisclaimer">
-        <span>ⓘ</span>
-        Live market data is provided by external sources and may be delayed, unavailable, or differ across exchanges. Crypto prices are Binance USDT pairs; gold and silver are spot prices in USD per troy ounce. This page is informational and is not investment advice.
+      <div class="market-disclaimer" id="marketDataDisclaimer"><span>ⓘ</span> Market information is for general reference only, may be delayed or unavailable, and is not investment advice. Market capitalization is not provided for spot gold in this table.</div>
+    </section>
+
+    <!-- Why SGE Core -->
+    <section class="why-section section-pad" id="why-sge">
+      <div class="section-heading"><div><div class="section-label">THE SGE CORE DIFFERENCE</div><h2>Why choose <span>SGE Core?</span></h2><p class="section-description">A connected view of precious metals, digital assets and account tools.</p></div></div>
+      <div class="why-grid">
+        <article class="why-card"><span class="why-number">01</span><div class="why-icon">◈</div><h3>Gold market access</h3><p>Follow spot gold prices and understand the value of precious metals with clear market information.</p></article>
+        <article class="why-card"><span class="why-number">02</span><div class="why-icon">⌁</div><h3>Digital asset overview</h3><p>Monitor leading cryptocurrency markets with live price and 24-hour movement data.</p></article>
+        <article class="why-card"><span class="why-number">03</span><div class="why-icon">▤</div><h3>Mining plan information</h3><p>Review listed mining plans, their stated periods and investment limits before making a decision.</p></article>
+        <article class="why-card"><span class="why-number">04</span><div class="why-icon">◉</div><h3>Account tools</h3><p>Access your SGE Core account and available wallet tools through the member area.</p></article>
       </div>
     </section>
 
@@ -412,7 +489,7 @@
       </div>
       <div class="services-grid">
         <article class="service-card">
-          <div class="service-number">01 / MARKETS</div><div class="service-icon">â—‡</div>
+          <div class="service-number">01 / MARKETS</div><div class="service-icon" aria-hidden="true">Au</div>
           <h3>Gold Market Information</h3>
           <p>Explore spot-market information and follow developments in gold pricing.</p>
           <a href="#markets" class="card-link">View market overview <span>→</span></a>
@@ -430,26 +507,6 @@
           <a href="#about" class="card-link">Learn about SGE Core <span>→</span></a>
         </article>
       </div>
-    </section>
-
-    <!-- SGE Core platform information -->
-    <section class="platform-info-section section-pad" id="platform">
-      <div class="section-heading">
-        <div>
-          <div class="section-label">THE SGE CORE PLATFORM</div>
-          <h2>One platform. <span>More perspective.</span></h2>
-          <p class="section-description">Explore the tools and information currently presented across SGE Core.</p>
-        </div>
-      </div>
-      <div class="platform-info-grid">
-        <article class="platform-info-card"><span class="platform-info-icon">Au</span><span class="platform-info-index">01 / METALS</span><h3>Gold &amp; Silver Markets</h3><p>Follow spot-market quotes for gold and silver, displayed in US dollars per troy ounce when feeds are available.</p><a href="#markets" class="card-link">View market overview <span>→</span></a></article>
-        <article class="platform-info-card"><span class="platform-info-icon">₿</span><span class="platform-info-index">02 / DIGITAL ASSETS</span><h3>Crypto Market Quotes</h3><p>Review selected cryptocurrency trading pairs and their reported 24-hour price changes.</p><a href="#markets" class="card-link">Explore crypto markets <span>→</span></a></article>
-        <article class="platform-info-card"><span class="platform-info-icon">◇</span><span class="platform-info-index">03 / INSIGHTS</span><h3>Market Information</h3><p>Explore market terminology, price movements and factors that may influence precious-metal markets.</p><a href="#services" class="card-link">Explore services <span>→</span></a></article>
-        <article class="platform-info-card"><span class="platform-info-icon">▤</span><span class="platform-info-index">04 / PLAN LISTINGS</span><h3>Mining Plan Information</h3><p>Review the listed mining-plan names, periods, rates and minimum and maximum amounts, alongside the stated risk notice.</p><a href="#investments" class="card-link">View listed plans <span>→</span></a></article>
-        <article class="platform-info-card"><span class="platform-info-icon">◎</span><span class="platform-info-index">05 / MEMBER AREA</span><h3>Member Dashboard</h3><p>Registered members can access their account area and view available wallet and account information.</p><a href="pages/login.html" class="card-link">Member login <span>→</span></a></article>
-        <article class="platform-info-card"><span class="platform-info-icon">＋</span><span class="platform-info-index">06 / ACCOUNT FUNDING</span><h3>Quick Recharge</h3><p>Open the recharge page to review the available account-funding process and instructions.</p><a href="pages/quick-recharge.html" class="card-link">Open quick recharge <span>→</span></a></article>
-      </div>
-      <p class="platform-info-note">Market information may be delayed or unavailable. Listed mining-plan terms are not independently verified or guaranteed. Review all risks and terms before making financial decisions.</p>
     </section>
 
     <!-- Mining investment listings: all 12 supplied plans -->
@@ -725,7 +782,7 @@
           <h2>Let's talk <span>gold markets.</span></h2>
           <p>Contact details and enquiry options can be added after confirming your official business information.</p>
         </div>
-        <a class="button button-gold" href="mailto:">Contact SGE Core <span>→</span></a>
+        <a class="button button-gold" href="#about">Explore SGE Core <span>→</span></a>
       </div>
     </section>
   </main>
@@ -744,15 +801,84 @@
     </div>
     <div class="footer-bottom">
       <span>© 2026 Sovereign Gold Exchange. All rights reserved.</span>
-      <span>Live market data · External sources</span>
+      <span>Market information · Updates periodically</span>
     </div>
   </footer>
 
-  
-<script src="js/main.js"></script>
+  <script src="js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/auth-ui.js"></script>
+<script>
+(function () {
+  "use strict";
+  const client = typeof sgecoreSupabase !== "undefined" ? sgecoreSupabase : null;
+  const loginLink = document.getElementById("sgeLoginLink");
+  const registerLink = document.getElementById("sgeRegisterLink");
+  const accountMenu = document.getElementById("sgeAccountMenu");
+  const accountTrigger = document.getElementById("sgeAccountTrigger");
+  const accountDropdown = document.getElementById("sgeAccountDropdown");
+  const uidLabel = document.getElementById("sgeAccountUid");
+  const logoutButton = document.getElementById("sgeLogoutButton");
+
+  function setLoggedIn(user) {
+    const loggedIn = Boolean(user && user.id);
+    if (loginLink) loginLink.hidden = loggedIn;
+    if (registerLink) registerLink.hidden = loggedIn;
+    if (accountMenu) accountMenu.hidden = !loggedIn;
+    if (uidLabel && loggedIn) {
+      const uid = user.user_metadata?.uid || user.user_metadata?.member_id || user.id;
+      uidLabel.textContent = "UID: " + String(uid);
+      uidLabel.title = "Supabase account UID: " + String(uid);
+    }
+  }
+
+  function closeDropdown() {
+    if (accountDropdown) accountDropdown.hidden = true;
+    if (accountTrigger) accountTrigger.setAttribute("aria-expanded", "false");
+  }
+
+  if (accountTrigger) accountTrigger.addEventListener("click", function (event) {
+    event.stopPropagation();
+    const open = accountDropdown && accountDropdown.hidden;
+    if (accountDropdown) accountDropdown.hidden = !open;
+    accountTrigger.setAttribute("aria-expanded", String(Boolean(open)));
+  });
+  document.addEventListener("click", closeDropdown);
+  document.addEventListener("keydown", function (event) { if (event.key === "Escape") closeDropdown(); });
+  if (accountDropdown) accountDropdown.addEventListener("click", function (event) { event.stopPropagation(); });
+
+  if (!client || !client.auth) {
+    console.warn("SGE Core auth navigation: Supabase client not found. Check js/supabase.js.");
+    return;
+  }
+
+  client.auth.getSession().then(function (result) {
+    setLoggedIn(result.data && result.data.session ? result.data.session.user : null);
+  }).catch(function (error) { console.error("Could not read Supabase session:", error); });
+
+  client.auth.onAuthStateChange(function (_event, session) {
+    setLoggedIn(session ? session.user : null);
+    closeDropdown();
+  });
+
+  if (logoutButton) logoutButton.addEventListener("click", async function () {
+    logoutButton.disabled = true;
+    logoutButton.textContent = "Logging out…";
+    try {
+      const result = await client.auth.signOut();
+      if (result.error) throw result.error;
+      setLoggedIn(null);
+      window.location.href = "index.html";
+    } catch (error) {
+      console.error("SGE Core logout failed:", error);
+      logoutButton.disabled = false;
+      logoutButton.textContent = "Log Out";
+      alert("Logout failed. Please try again.");
+    }
+  });
+})();
+</script>
 
   <script>
     /*
@@ -787,12 +913,25 @@
   <script>
     (function () {
       "use strict";
-      const cryptoSymbols = ["BTCUSDT", "ETHUSDT", "XRPUSDT", "DOGEUSDT", "BNBUSDT", "SOLUSDT", "ADAUSDT", "TRXUSDT"];
+      const cryptoSymbols = ["BTCUSDT", "ETHUSDT", "XRPUSDT", "DOGEUSDT", "BNBUSDT", "SOLUSDT", "ADAUSDT", "TRXUSDT", "LINKUSDT", "AVAXUSDT", "DOTUSDT", "SHIBUSDT", "TONUSDT"];
       const goldEndpoint = "https://xaus.com/api/v1/spot?compact=1";
       const binanceEndpoints = [
         "https://api.binance.com/api/v3/ticker/24hr?symbols=" + encodeURIComponent(JSON.stringify(cryptoSymbols)),
         "https://api.binance.us/api/v3/ticker/24hr?symbols=" + encodeURIComponent(JSON.stringify(cryptoSymbols))
       ];
+      const coinGeckoIds = { BTC: "bitcoin", ETH: "ethereum", BNB: "binancecoin", SOL: "solana", XRP: "ripple", DOGE: "dogecoin", ADA: "cardano", TRX: "tron", LINK: "chainlink", AVAX: "avalanche-2", DOT: "polkadot", SHIB: "shiba-inu", TON: "the-open-network" };
+      const symbolByTicker = { BTC: "BTCUSDT", ETH: "ETHUSDT", BNB: "BNBUSDT", SOL: "SOLUSDT", XRP: "XRPUSDT", DOGE: "DOGEUSDT", ADA: "ADAUSDT" };
+      // Public Yahoo Finance chart quotes: forex, indices and energy futures.
+      // These are market quotes, not guaranteed real-time exchange execution prices.
+      const yahooMarkets = {
+        EURUSD: { symbol: "EURUSD=X", digits: 5 }, GBPUSD: { symbol: "GBPUSD=X", digits: 5 },
+        USDJPY: { symbol: "JPY=X", digits: 3 },
+        XPT: { symbol: "XPTUSD=X", digits: 2 }, XPD: { symbol: "XPDUSD=X", digits: 2 },
+        SP500: { symbol: "%5EGSPC", digits: 2 }, NASDAQ: { symbol: "%5EIXIC", digits: 2 },
+        DOW: { symbol: "%5EDJI", digits: 2 }, FTSE: { symbol: "%5EFTSE", digits: 2 },
+        DAX: { symbol: "%5EGDAXI", digits: 2 }, NIKKEI: { symbol: "%5EN225", digits: 2 },
+        WTI: { symbol: "CL=F", digits: 2 }, BRENT: { symbol: "BZ=F", digits: 2 }, NATGAS: { symbol: "NG=F", digits: 3 }
+      };
       const numberFormatters = new Map();
       function formatPrice(value, maxDigits) {
         const n = Number(value);
@@ -824,10 +963,32 @@
           const data = await fetchJson(goldEndpoint, 10000);
           const gold = Number(data && (data.spot_usd_oz || (data.xau && data.xau.price)));
           const silver = Number(data && data.silver_usd_oz);
-          if (Number.isFinite(gold) && gold > 0) { setText("xauPrice", formatPrice(gold, 2) + " USD / oz"); setText("xauUpdated", "Spot price · " + new Date(data.updated_at || data.price_as_of || Date.now()).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" })); }
+          if (Number.isFinite(gold) && gold > 0) {
+            const stamp = new Date(data.updated_at || data.price_as_of || Date.now()).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" });
+            const perGram = gold / 31.1034768;
+            setText("xauPrice", formatPrice(gold, 2) + " USD / oz");
+            setText("xauUpdated", "Spot price · " + stamp);
+            setText("heroGoldPrice", "$" + formatPrice(gold, 2));
+            setText("heroGoldGram", "$" + formatPrice(perGram, 2));
+            setText("heroGoldUpdated", "Feed timestamp · " + stamp);
+            setText("ticker-XAU", "$" + formatPrice(perGram, 2));
+            setText("table-price-XAU", "$" + formatPrice(gold, 2));
+          }
           else { setText("xauUpdated", "Gold price currently unavailable."); }
-          if (Number.isFinite(silver) && silver > 0) { setText("xagPrice", formatPrice(silver, 4) + " USD / oz"); setText("xagUpdated", "Spot price · " + new Date(data.updated_at || data.price_as_of || Date.now()).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" })); }
-          else { setText("xagUpdated", "Silver price currently unavailable."); }
+          if (Number.isFinite(silver) && silver > 0) {
+            setText("xagPrice", formatPrice(silver, 4) + " USD / oz");
+            setText("xagUpdated", "Spot price · " + new Date(data.updated_at || data.price_as_of || Date.now()).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }));
+            setText("ticker-XAG", "$" + formatPrice(silver, 2));
+          } else { setText("xagUpdated", "Silver price currently unavailable."); }
+          // XPT/XPD are not provided by this endpoint; leave them marked unavailable until a verified feed is configured.
+          setText("ticker-XPT", "Feed unavailable"); setText("ticker-XPD", "Feed unavailable");
+          // USD/PKR is intentionally sourced separately and may be delayed.
+          try {
+            const fx = await fetchJson("https://open.er-api.com/v6/latest/USD", 9000);
+            const pkr = Number(fx && fx.rates && fx.rates.PKR);
+            if (Number.isFinite(pkr) && pkr > 0) setText("ticker-USDPKR", "₨" + formatPrice(pkr, 2));
+            else setText("ticker-USDPKR", "Unavailable");
+          } catch (_) { setText("ticker-USDPKR", "Unavailable"); }
           return Number.isFinite(gold) && gold > 0;
         } catch (error) {
           setText("xauUpdated", "Gold feed unavailable; retrying automatically.");
@@ -845,9 +1006,16 @@
         const bySymbol = new Map(rows.map(function (row) { return [row.symbol, row]; }));
         cryptoSymbols.forEach(function (symbol) {
           const row = bySymbol.get(symbol);
-          if (!row) { setText("price-" + symbol, "Unavailable"); setText("change-" + symbol, "No quote from exchange"); return; }
+          if (!row) { setText("price-" + symbol, "Unavailable"); setText("change-" + symbol, "No quote from exchange"); setText("ticker-" + symbol, "Unavailable"); return; }
           setText("price-" + symbol, formatPrice(row.lastPrice, 6));
+          const tickerCode = symbol.replace("USDT", "");
+          setText("ticker-" + symbol, "$" + formatPrice(row.lastPrice, 6));
+          setText("table-price-" + symbol, "$" + formatPrice(row.lastPrice, 6));
           const change = Number(row.priceChangePercent);
+          const tickerChange = document.getElementById("ticker-change-" + symbol);
+          if (tickerChange && Number.isFinite(change)) { tickerChange.textContent = (change > 0 ? "+" : "") + change.toFixed(2) + "%"; tickerChange.className = change < 0 ? "down" : ""; }
+          const tableChange = document.getElementById("table-change-" + symbol);
+          if (tableChange && Number.isFinite(change)) { tableChange.textContent = (change > 0 ? "+" : "") + change.toFixed(2) + "%"; tableChange.className = change > 0 ? "positive" : change < 0 ? "negative" : ""; }
           const changeNode = document.getElementById("change-" + symbol);
           if (changeNode && Number.isFinite(change)) {
             changeNode.textContent = (change > 0 ? "+" : "") + change.toFixed(2) + "% · 24h";
@@ -856,8 +1024,55 @@
         });
         setText("cryptoUpdated", "Updated " + new Date().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit", second:"2-digit" }) + " · refreshes every 30s");
       }
+      async function loadMarketDetails() {
+        const ids = Object.values(coinGeckoIds).join(",");
+        const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" + encodeURIComponent(ids) + "&sparkline=true";
+        try {
+          const rows = await fetchJson(url, 12000);
+          rows.forEach(function (coin) {
+            const ticker = Object.keys(coinGeckoIds).find(function (key) { return coinGeckoIds[key] === coin.id; });
+            if (!ticker) return;
+            const cap = Number(coin.market_cap);
+            setText("cap-" + ticker, Number.isFinite(cap) ? "$" + new Intl.NumberFormat("en-US", { notation:"compact", maximumFractionDigits:2 }).format(cap) : "—");
+            const spark = document.getElementById("spark-" + ticker);
+            const values = coin.sparkline_in_7d && coin.sparkline_in_7d.price;
+            if (spark && Array.isArray(values) && values.length > 1) {
+              const min = Math.min.apply(null, values), max = Math.max.apply(null, values), range = max - min || 1;
+              const points = values.filter(function (_, i) { return i % Math.max(1, Math.floor(values.length / 35)) === 0; });
+              const d = points.map(function (value, i) { const x = 2 + (i / Math.max(1, points.length - 1)) * 116; const y = 3 + (1 - (value - min) / range) * 27; return (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }).join(" ");
+              const path = spark.querySelector("path"); if (path) path.setAttribute("d", d);
+              const last = values[values.length - 1], first = values[0]; spark.classList.toggle("negative", last < first);
+            }
+          });
+          setText("snapshotUpdated", "Market details updated · " + new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}));
+        } catch (error) {
+          setText("snapshotUpdated", "Market-cap and 7-day history feed unavailable; retrying later.");
+          Object.keys(coinGeckoIds).forEach(function (ticker) { setText("cap-" + ticker, "Unavailable"); });
+        }
+      }
+      async function loadOtherMarkets() {
+        const entries = Object.entries(yahooMarkets);
+        await Promise.all(entries.map(async function ([key, item]) {
+          try {
+            const url = "https://query1.finance.yahoo.com/v8/finance/chart/" + item.symbol + "?range=5d&interval=1d";
+            const data = await fetchJson(url, 10000);
+            const result = data && data.chart && data.chart.result && data.chart.result[0];
+            const meta = result && result.meta;
+            const price = Number(meta && (meta.regularMarketPrice || (result.indicators && result.indicators.quote && result.indicators.quote[0] && result.indicators.quote[0].close && result.indicators.quote[0].close.slice(-1)[0])));
+            const previous = Number(meta && meta.chartPreviousClose);
+            if (!Number.isFinite(price)) throw new Error("Quote unavailable");
+            const prefix = key === "USDJPY" ? "¥" : (key.startsWith("EUR") || key.startsWith("GBP") ? "" : "$" );
+            setText("ticker-" + key, prefix + formatPrice(price, item.digits));
+            if (Number.isFinite(previous) && previous !== 0) {
+              const change = ((price - previous) / previous) * 100;
+              const node = document.getElementById("ticker-change-" + key);
+              if (node) { node.textContent = (change > 0 ? "+" : "") + change.toFixed(2) + "%"; node.className = change < 0 ? "down" : ""; }
+            }
+          } catch (_) { setText("ticker-" + key, "Unavailable"); }
+        }));
+      }
       async function refreshMarkets() {
-        const results = await Promise.allSettled([loadMetals(), loadCrypto()]);
+        const results = await Promise.allSettled([loadMetals(), loadCrypto(), loadMarketDetails(), loadOtherMarkets()]);
         const metalsOk = results[0].status === "fulfilled" && results[0].value === true;
         const cryptoOk = results[1].status === "fulfilled";
         if (!cryptoOk) {
@@ -868,7 +1083,9 @@
       }
       refreshMarkets();
       window.setInterval(refreshMarkets, 30000);
+      window.setInterval(loadMarketDetails, 300000);
     })();
   </script>
 </body>
 </html>
+
