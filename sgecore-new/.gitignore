@@ -1,0 +1,24 @@
+﻿# Dependencies and build output
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and operating-system files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local backups and test files
+*.bak
+*.backup
+server-test.html
+
+# Supabase local temporary metadata
+supabase/.temp/

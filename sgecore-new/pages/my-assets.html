@@ -1,0 +1,1805 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assets | SDE Core</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    .assets-page {
+      min-height: 100vh;
+      background: #07111f;
+      color: #f5f7fb;
+      padding: 35px 0 70px;
+    }
+
+    .assets-page * { box-sizing: border-box; }
+
+    .assets-container {
+      width: min(1180px, calc(100% - 36px));
+      margin: auto;
+    }
+
+    .assets-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .assets-heading h1 {
+      margin: 0 0 9px;
+      font-size: clamp(27px, 4vw, 36px);
+      color: #f5f7fb;
+    }
+
+    .assets-heading p {
+      color: #a9b8cc;
+      margin: 0;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .assets-home-link {
+      color: #f0d58c;
+      text-decoration: none;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .assets-home-link:hover { text-decoration: underline; }
+
+    .assets-card {
+      background: #0d1929;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 15px;
+      padding: 22px;
+      min-width: 0;
+    }
+
+    .assets-card h2 {
+      margin: 0 0 17px;
+      font-size: 16px;
+      color: #f5f7fb;
+    }
+
+    .assets-card h3 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: #f5f7fb;
+    }
+
+    .assets-overview-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .assets-total-card {
+      background: linear-gradient(135deg, #152941, #0d1929);
+      border-color: rgba(220,181,93,.24);
+    }
+
+    .assets-label {
+      color: #a9b8cc;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .assets-total {
+      font-size: clamp(26px, 4vw, 35px);
+      font-weight: 700;
+      letter-spacing: -.8px;
+      overflow-wrap: anywhere;
+    }
+
+    .assets-total small {
+      color: #a9b8cc;
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .assets-wallet-value {
+      font-size: 24px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .assets-wallet-type {
+      color: #a9b8cc;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .assets-gold { color: #f0d58c; }
+    .assets-green { color: #4bd69a; }
+    .assets-muted { color: #91a2b8; }
+
+    .assets-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255,255,255,.09);
+      margin: 28px 0 20px;
+    }
+
+    .assets-tab {
+      background: transparent;
+      color: #a9b8cc;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      padding: 13px 17px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    .assets-tab.active {
+      color: #f0d58c;
+      border-bottom-color: #dcb55d;
+    }
+
+    .assets-panel { display: none; }
+    .assets-panel.active { display: block; }
+
+    .assets-section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .assets-allocation {
+      display: flex;
+      width: 100%;
+      height: 11px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #1b2a3c;
+      margin: 18px 0 13px;
+    }
+
+    .allocation-funding {
+      background: #dcb55d;
+      width: 0;
+    }
+
+    .allocation-delivery {
+      background: #5b91c9;
+      width: 0;
+    }
+
+    .assets-legend {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: #a9b8cc;
+      font-size: 12px;
+    }
+
+    .assets-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .assets-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .assets-table-wrap {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    .assets-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+      font-size: 13px;
+    }
+
+    .assets-table th {
+      color: #91a2b8;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      font-weight: 600;
+      text-align: left;
+      padding: 13px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.09);
+      white-space: nowrap;
+    }
+
+    .assets-table td {
+      padding: 15px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.055);
+      color: #e6ebf3;
+      white-space: nowrap;
+    }
+
+    .assets-table tr:last-child td { border-bottom: 0; }
+
+    .assets-coin {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .assets-coin-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 31px;
+      height: 31px;
+      background: #192a3e;
+      border-radius: 50%;
+      color: #f0d58c;
+      font-size: 11px;
+    }
+
+    .assets-small {
+      display: block;
+      font-size: 11px;
+      color: #91a2b8;
+      margin-top: 3px;
+    }
+
+    .assets-button {
+      border: 1px solid rgba(220,181,93,.4);
+      background: rgba(220,181,93,.09);
+      color: #f0d58c;
+      padding: 8px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .assets-button:hover { background: rgba(220,181,93,.17); }
+
+    .assets-button.primary {
+      background: #dcb55d;
+      color: #101722;
+      border-color: #dcb55d;
+    }
+
+    .assets-button.primary:hover { background: #f0d58c; }
+    .assets-button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .assets-button.secondary {
+      border-color: rgba(255,255,255,.12);
+      background: #17263a;
+      color: #d8e0ec;
+    }
+
+    .assets-transfer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .assets-field { margin-bottom: 17px; }
+
+    .assets-field label {
+      display: block;
+      color: #a9b8cc;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .assets-field select,
+    .assets-field input {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      background: #07111f;
+      color: #f5f7fb;
+      outline: none;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    .assets-field select:focus,
+    .assets-field input:focus { border-color: #dcb55d; }
+
+    .assets-amount-row { display: flex; gap: 9px; }
+
+    .assets-amount-row input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .assets-available {
+      color: #91a2b8;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+
+    .assets-switch {
+      display: flex;
+      justify-content: center;
+      margin: -3px 0 15px;
+    }
+
+    .assets-switch button {
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(220,181,93,.35);
+      background: #17263a;
+      color: #f0d58c;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 19px;
+    }
+
+    .assets-message {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .assets-message.success {
+      display: block;
+      color: #4bd69a;
+      background: rgba(75,214,154,.09);
+      border: 1px solid rgba(75,214,154,.2);
+    }
+
+    .assets-message.error {
+      display: block;
+      color: #ff8585;
+      background: rgba(255,133,133,.08);
+      border: 1px solid rgba(255,133,133,.2);
+    }
+
+    .assets-message.info {
+      display: block;
+      color: #a9b8cc;
+      background: rgba(169,184,204,.07);
+      border: 1px solid rgba(169,184,204,.15);
+    }
+
+    .assets-empty {
+      padding: 30px 15px;
+      text-align: center;
+      color: #91a2b8;
+      font-size: 13px;
+    }
+
+    .assets-empty strong {
+      display: block;
+      color: #dce4ef;
+      margin-bottom: 7px;
+    }
+
+    .assets-info {
+      color: #a9b8cc;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .assets-info a {
+      color: #f0d58c;
+      text-decoration: none;
+    }
+
+    .assets-info a:hover { text-decoration: underline; }
+
+    .assets-summary-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .assets-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: 13px;
+    }
+
+    .assets-summary-row:last-child { border-bottom: 0; }
+
+    .assets-summary-row span:first-child { color: #a9b8cc; }
+
+    .assets-summary-row strong {
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .assets-status {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 20px;
+      background: rgba(75,214,154,.09);
+      color: #4bd69a;
+      font-size: 10px;
+      text-transform: capitalize;
+    }
+
+    .assets-status.other {
+      background: rgba(169,184,204,.1);
+      color: #a9b8cc;
+    }
+
+    .assets-page-footer {
+      margin-top: 35px;
+      text-align: center;
+      color: #72849b;
+      font-size: 11px;
+    }
+
+    .assets-loading {
+      color: #a9b8cc;
+      text-align: center;
+      padding: 45px 15px;
+      font-size: 13px;
+    }
+
+    .assets-disabled-card { opacity: .75; }
+
+    .assets-public-hero {
+      background: linear-gradient(135deg, #10243b, #172d45);
+      border: 1px solid rgba(217,180,93,.35);
+      border-radius: 15px;
+      padding: clamp(22px, 4vw, 38px);
+      margin-bottom: 20px;
+    }
+
+    .assets-public-eyebrow {
+      color: #f0d58c;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .assets-public-hero h2 {
+      color: #f0d58c;
+      font-size: clamp(25px, 4vw, 34px);
+      margin: 0 0 13px;
+    }
+
+    .assets-public-hero p {
+      color: #c5d0df;
+      line-height: 1.8;
+      font-size: 14px;
+      max-width: 760px;
+      margin: 0 0 22px;
+    }
+
+    .assets-public-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .assets-public-feature {
+      background: #102238;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .assets-public-feature-icon {
+      color: #f0d58c;
+      font-size: 23px;
+      margin-bottom: 12px;
+    }
+
+    .assets-public-feature strong {
+      display: block;
+      color: #f5f7fb;
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .assets-public-feature p {
+      color: #a9b8cc;
+      font-size: 12px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .assets-public-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .assets-public-register {
+      color: #f0d58c;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .assets-public-register:hover { text-decoration: underline; }
+
+    .assets-public-note {
+      background: #0d1929;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+      padding: 20px 22px;
+      color: #a9b8cc;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 850px) {
+      .assets-overview-grid { grid-template-columns: 1fr 1fr; }
+      .assets-total-card { grid-column: 1 / -1; }
+      .assets-public-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 650px) {
+      .assets-page { padding-top: 25px; }
+
+      .assets-container {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .assets-heading { flex-direction: column; }
+
+      .assets-overview-grid,
+      .assets-section-grid,
+      .assets-transfer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assets-total-card { grid-column: auto; }
+      .assets-card { padding: 17px; }
+      .assets-tab { padding: 12px 13px; }
+      .assets-public-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="assets-page">
+    <div class="assets-container">
+
+      <div class="assets-heading">
+        <div>
+          <h1>Assets</h1>
+          <p>
+            Manage your investments, wallet balances, trading funds,
+            and asset transfers.
+          </p>
+        </div>
+
+        <a href="../index.html" class="assets-home-link">
+          ← Back to Home
+        </a>
+      </div>
+
+      <div id="assetsLoading" class="assets-card assets-loading">
+        Loading your account assets...
+      </div>
+
+      <div id="assetsContent" hidden>
+
+        <!-- OVERVIEW BALANCES -->
+
+        <section class="assets-overview-grid">
+
+          <div class="assets-card assets-total-card">
+            <div class="assets-label">Known USDT Wallet Value</div>
+            <div class="assets-total" id="totalAssets">
+              0.00 <small>USDT</small>
+            </div>
+            <div class="assets-wallet-type">
+              Sum of your Funding and Delivery USDT balances.
+              Other asset prices are not included.
+            </div>
+          </div>
+
+          <div class="assets-card">
+            <div class="assets-label">Funding Wallet</div>
+            <div class="assets-wallet-value assets-gold" id="fundingBalance">0.00</div>
+            <div class="assets-wallet-type">USDT · Mining investments</div>
+          </div>
+
+          <div class="assets-card">
+            <div class="assets-label">Delivery Wallet</div>
+            <div class="assets-wallet-value" id="deliveryBalance">0.00</div>
+            <div class="assets-wallet-type">USDT · Trading funds</div>
+          </div>
+
+        </section>
+
+        <!-- TABS -->
+
+        <div class="assets-tabs">
+          <button class="assets-tab active" data-tab="overview">Overview</button>
+          <button class="assets-tab" data-tab="funding">Funding</button>
+          <button class="assets-tab" data-tab="delivery">Delivery</button>
+          <button class="assets-tab" data-tab="transfer">Transfer</button>
+          <button class="assets-tab" data-tab="history">History</button>
+        </div>
+
+        <!-- OVERVIEW -->
+
+        <section class="assets-panel active" id="panel-overview">
+
+          <div class="assets-section-grid">
+
+            <div class="assets-card">
+              <h2>Wallet Allocation</h2>
+
+              <div class="assets-allocation">
+                <div class="allocation-funding" id="fundingAllocation"></div>
+                <div class="allocation-delivery" id="deliveryAllocation"></div>
+              </div>
+
+              <div class="assets-legend">
+                <span>
+                  <i class="assets-dot" style="background:#dcb55d"></i>
+                  Funding <strong id="fundingPercent">0%</strong>
+                </span>
+
+                <span>
+                  <i class="assets-dot" style="background:#5b91c9"></i>
+                  Delivery <strong id="deliveryPercent">0%</strong>
+                </span>
+              </div>
+            </div>
+
+            <div class="assets-card">
+              <h2>Account Summary</h2>
+
+              <div class="assets-summary-list">
+                <div class="assets-summary-row">
+                  <span>Supported wallet currencies</span>
+                  <strong id="assetCount">0</strong>
+                </div>
+
+                <div class="assets-summary-row">
+                  <span>Active mining principal</span>
+                  <strong id="activeMiningPrincipal">0.00 USDT</strong>
+                </div>
+
+                <div class="assets-summary-row">
+                  <span>Expected active mining profit</span>
+                  <strong id="activeMiningProfit">0.00 USDT</strong>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="assets-card">
+            <h2>Your Holdings</h2>
+
+            <div class="assets-table-wrap">
+              <table class="assets-table">
+                <thead>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Funding</th>
+                    <th>Delivery</th>
+                    <th>Total</th>
+                    <th>Known Value</th>
+                  </tr>
+                </thead>
+
+                <tbody id="holdingsBody">
+                  <tr>
+                    <td colspan="5" class="assets-empty">Loading holdings...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="assets-section-grid" style="margin-top:18px">
+
+            <div class="assets-card">
+              <h2>Transfer Assets</h2>
+              <p class="assets-info">
+                Move USDT between your Funding and Delivery wallets
+                using the existing secure transfer service.
+              </p>
+
+              <button class="assets-button primary" data-open-tab="transfer">
+                Transfer USDT
+              </button>
+            </div>
+
+            <div class="assets-card assets-disabled-card">
+              <h2>Swap Assets</h2>
+              <p class="assets-info">
+                Asset conversion is not currently connected to a verified
+                swap service. Swap functionality will be available once
+                the backend supports it.
+              </p>
+
+              <button class="assets-button secondary" disabled>
+                Swap unavailable
+              </button>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- FUNDING -->
+
+        <section class="assets-panel" id="panel-funding">
+
+          <div class="assets-section-grid">
+
+            <div class="assets-card">
+              <div class="assets-label">Available Funding Balance</div>
+              <div class="assets-total assets-gold" id="fundingTabBalance">0.00 USDT</div>
+
+              <p class="assets-info" style="margin-top:13px">
+                Your Funding Wallet is used for mining plan investments
+                and receives principal and profit when eligible mining
+                subscriptions mature and their payout is processed.
+              </p>
+
+              <a href="mining.html" class="assets-button primary">View Mining Plans</a>
+            </div>
+
+            <div class="assets-card">
+              <h2>Mining Summary</h2>
+
+              <div class="assets-summary-list">
+                <div class="assets-summary-row">
+                  <span>Active principal</span>
+                  <strong id="fundingPrincipal">0.00 USDT</strong>
+                </div>
+
+                <div class="assets-summary-row">
+                  <span>Expected profit on active subscriptions</span>
+                  <strong id="fundingProfit">0.00 USDT</strong>
+                </div>
+
+                <div class="assets-summary-row">
+                  <span>Active subscriptions</span>
+                  <strong id="fundingActiveCount">0</strong>
+                </div>
+
+                <div class="assets-summary-row">
+                  <span>Matured subscriptions</span>
+                  <strong id="fundingMaturedCount">0</strong>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="assets-card">
+            <h2>Mining Subscriptions</h2>
+
+            <div class="assets-table-wrap">
+              <table class="assets-table">
+                <thead>
+                  <tr>
+                    <th>Subscription</th>
+                    <th>Principal</th>
+                    <th>Expected Profit</th>
+                    <th>Maturity</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody id="miningBody">
+                  <tr>
+                    <td colspan="5" class="assets-empty">Loading mining subscriptions...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- DELIVERY -->
+
+        <section class="assets-panel" id="panel-delivery">
+
+          <div class="assets-section-grid">
+
+            <div class="assets-card">
+              <div class="assets-label">Available Delivery Balance</div>
+              <div class="assets-total" id="deliveryTabBalance">0.00 USDT</div>
+
+              <p class="assets-info" style="margin-top:13px">
+                Your Delivery Wallet is designated for trading funds.
+                Only actual wallet balances and recorded transactions
+                are displayed here.
+              </p>
+            </div>
+
+            <div class="assets-card">
+              <h2>Trading Availability</h2>
+
+              <p class="assets-info">
+                The trading execution service has not been confirmed
+                in the available backend functions. This page will not
+                create trades or deduct funds without a verified trading
+                service.
+              </p>
+
+              <button class="assets-button secondary" disabled>Trading not connected</button>
+            </div>
+
+          </div>
+
+          <div class="assets-card">
+            <h2>Delivery Wallet Holdings</h2>
+
+            <div class="assets-table-wrap">
+              <table class="assets-table">
+                <thead>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Available Balance</th>
+                    <th>Currency</th>
+                  </tr>
+                </thead>
+
+                <tbody id="deliveryHoldingsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- TRANSFER -->
+
+        <section class="assets-panel" id="panel-transfer">
+
+          <div class="assets-section-grid">
+
+            <div class="assets-card">
+              <h2>Transfer Between Wallets</h2>
+
+              <p class="assets-info" style="margin-bottom:20px">
+                Move your USDT between Funding and Delivery wallets.
+                Transfers are processed securely by your existing
+                Supabase transfer function.
+              </p>
+
+              <div class="assets-field">
+                <label for="transferFrom">From Wallet</label>
+
+                <select id="transferFrom">
+                  <option value="delivery">Delivery Wallet</option>
+                  <option value="funding">Funding Wallet</option>
+                </select>
+              </div>
+
+              <div class="assets-switch">
+                <button type="button" id="switchWallets" title="Switch wallets">↕</button>
+              </div>
+
+              <div class="assets-field">
+                <label for="transferTo">To Wallet</label>
+
+                <select id="transferTo">
+                  <option value="funding">Funding Wallet</option>
+                  <option value="delivery">Delivery Wallet</option>
+                </select>
+              </div>
+
+              <div class="assets-field">
+                <label for="transferAmount">Transfer Amount (USDT)</label>
+
+                <div class="assets-amount-row">
+                  <input
+                    id="transferAmount"
+                    type="number"
+                    min="0.00000001"
+                    step="0.00000001"
+                    placeholder="Enter amount"
+                  >
+
+                  <button type="button" class="assets-button" id="maxTransfer">MAX</button>
+                </div>
+
+                <div class="assets-available" id="availableTransfer">
+                  Available: 0.00 USDT
+                </div>
+              </div>
+
+              <div id="transferMessage" class="assets-message"></div>
+
+              <button
+                type="button"
+                class="assets-button primary"
+                id="submitTransfer"
+                style="width:100%;padding:13px"
+              >
+                Confirm Transfer
+              </button>
+            </div>
+
+            <div class="assets-card">
+              <h2>Wallet Balances</h2>
+
+              <div class="assets-summary-list">
+                <div class="assets-summary-row">
+                  <span>Funding Wallet</span>
+                  <strong id="transferFundingBalance">0.00 USDT</strong>
+                </div>
+
+                <div class="assets-summary-row">
+                  <span>Delivery Wallet</span>
+                  <strong id="transferDeliveryBalance">0.00 USDT</strong>
+                </div>
+              </div>
+
+              <div class="assets-message info" style="margin-top:18px">
+                <strong>Important:</strong>
+                Only USDT transfers are supported by the existing
+                transfer function. The server validates your balance
+                and records both sides of the transfer.
+              </div>
+
+              <p class="assets-info">
+                Do not close the page while a transfer is being processed.
+                Your balances will refresh after the server confirms
+                the transaction.
+              </p>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- HISTORY -->
+
+        <section class="assets-panel" id="panel-history">
+
+          <div class="assets-card">
+            <h2>Transaction History</h2>
+
+            <p class="assets-info" style="margin-bottom:18px">
+              This list displays transaction records returned by your
+              existing wallet transaction table.
+            </p>
+
+            <div class="assets-table-wrap">
+              <table class="assets-table">
+                <thead>
+                  <tr>
+                    <th>Date & Time</th>
+                    <th>Type</th>
+                    <th>Asset</th>
+                    <th>Amount</th>
+                    <th>Wallet</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody id="historyBody">
+                  <tr>
+                    <td colspan="6" class="assets-empty">Loading transaction history...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+      <div class="assets-page-footer">
+        SDE Core · Secure Digital Asset Management
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Existing Supabase configuration -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+
+      const state = {
+        client: null,
+        user: null,
+        wallets: [],
+        transactions: [],
+        subscriptions: [],
+        investments: []
+      };
+
+      const number = (value) => {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : 0;
+      };
+
+      const money = (value, digits = 2) => {
+        return number(value).toLocaleString("en-US", {
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits
+        });
+      };
+
+      const escapeHTML = (value) => {
+        return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        })[char]);
+      };
+
+      const walletBalance = (type, currency = "USDT") => {
+        const wallet = state.wallets.find(
+          (item) =>
+            item.wallet_type === type &&
+            item.currency === currency
+        );
+
+        return wallet ? number(wallet.balance) : 0;
+      };
+
+      const walletById = (id) => {
+        return state.wallets.find((wallet) => wallet.id === id);
+      };
+
+      const showMessage = (element, message, type) => {
+        element.className = "assets-message " + type;
+        element.textContent = message;
+      };
+
+      const clearMessage = (element) => {
+        element.className = "assets-message";
+        element.textContent = "";
+      };
+
+      function activateTab(tabName) {
+        document.querySelectorAll(".assets-tab").forEach((button) => {
+          button.classList.toggle(
+            "active",
+            button.dataset.tab === tabName
+          );
+        });
+
+        document.querySelectorAll(".assets-panel").forEach((panel) => {
+          panel.classList.toggle(
+            "active",
+            panel.id === "panel-" + tabName
+          );
+        });
+      }
+
+      document.querySelectorAll(".assets-tab").forEach((button) => {
+        button.addEventListener("click", () => {
+          activateTab(button.dataset.tab);
+        });
+      });
+
+      document.querySelectorAll("[data-open-tab]").forEach((button) => {
+        button.addEventListener("click", () => {
+          activateTab(button.dataset.openTab);
+        });
+      });
+
+      function showPublicAssets() {
+        const content = $("assetsContent");
+
+        content.innerHTML = `
+          <section class="assets-public-hero">
+            <div class="assets-public-eyebrow">
+              SDE CORE · ASSET MANAGEMENT
+            </div>
+
+            <h2>Your Digital Assets</h2>
+
+            <p>
+              Explore the SDE Core wallet ecosystem. Manage your digital
+              funds, access your wallet services, and monitor your
+              transactions from one secure account.
+            </p>
+
+            <div class="assets-public-actions">
+              <a href="login.html" class="assets-button primary"
+                style="padding:12px 24px">
+                Log In to Your Account
+              </a>
+
+              <a href="register.html" class="assets-public-register">
+                Create Account →
+              </a>
+            </div>
+          </section>
+
+          <section class="assets-public-grid">
+
+            <div class="assets-public-feature">
+              <div class="assets-public-feature-icon">◈</div>
+              <strong>Delivery Wallet</strong>
+              <p>
+                Access your Delivery Wallet and manage your available
+                wallet funds.
+              </p>
+            </div>
+
+            <div class="assets-public-feature">
+              <div class="assets-public-feature-icon">◈</div>
+              <strong>Funding Wallet</strong>
+              <p>
+                Manage your Funding Wallet for eligible mining
+                investments and related activity.
+              </p>
+            </div>
+
+            <div class="assets-public-feature">
+              <div class="assets-public-feature-icon">⇄</div>
+              <strong>Wallet Transfers</strong>
+              <p>
+                Transfer supported USDT funds between your Funding
+                and Delivery wallets.
+              </p>
+            </div>
+
+            <div class="assets-public-feature">
+              <div class="assets-public-feature-icon">◷</div>
+              <strong>Transaction History</strong>
+              <p>
+                Review your recorded wallet transactions and account
+                activity after signing in.
+              </p>
+            </div>
+
+          </section>
+
+          <div class="assets-public-note">
+            <strong style="color:#f0d58c">Member access</strong><br>
+            Personal wallet balances, transfers, mining subscriptions,
+            and transaction records are private account information.
+            Please log in to view your own account data. No personal
+            balances are displayed on this public preview.
+          </div>
+        `;
+
+        $("assetsLoading").hidden = true;
+        content.hidden = false;
+      }
+
+      function renderOverview() {
+        const funding = walletBalance("funding");
+        const delivery = walletBalance("delivery");
+        const total = funding + delivery;
+
+        $("totalAssets").innerHTML =
+          escapeHTML(money(total)) + " <small>USDT</small>";
+
+        $("fundingBalance").textContent = money(funding);
+        $("deliveryBalance").textContent = money(delivery);
+
+        $("fundingTabBalance").textContent = money(funding) + " USDT";
+        $("deliveryTabBalance").textContent = money(delivery) + " USDT";
+
+        $("transferFundingBalance").textContent =
+          money(funding) + " USDT";
+
+        $("transferDeliveryBalance").textContent =
+          money(delivery) + " USDT";
+
+        const fundingPercent = total > 0 ? (funding / total) * 100 : 0;
+        const deliveryPercent = total > 0 ? (delivery / total) * 100 : 0;
+
+        $("fundingAllocation").style.width = fundingPercent + "%";
+        $("deliveryAllocation").style.width = deliveryPercent + "%";
+
+        $("fundingPercent").textContent =
+          fundingPercent.toFixed(1) + "%";
+
+        $("deliveryPercent").textContent =
+          deliveryPercent.toFixed(1) + "%";
+
+        const currencies = [...new Set(
+          state.wallets.map((wallet) => wallet.currency)
+        )];
+
+        $("assetCount").textContent = currencies.length;
+
+        const active = state.subscriptions.filter(
+          (item) => item.status === "active"
+        );
+
+        const matured = state.subscriptions.filter(
+          (item) => item.status === "matured"
+        );
+
+        const activePrincipal = active.reduce(
+          (sum, item) => sum + number(item.principal),
+          0
+        );
+
+        const activeProfit = active.reduce(
+          (sum, item) => sum + number(item.expected_profit),
+          0
+        );
+
+        $("activeMiningPrincipal").textContent =
+          money(activePrincipal) + " USDT";
+
+        $("activeMiningProfit").textContent =
+          money(activeProfit) + " USDT";
+
+        $("fundingPrincipal").textContent =
+          money(activePrincipal) + " USDT";
+
+        $("fundingProfit").textContent =
+          money(activeProfit) + " USDT";
+
+        $("fundingActiveCount").textContent = active.length;
+        $("fundingMaturedCount").textContent = matured.length;
+
+        renderHoldings();
+        renderDeliveryHoldings();
+      }
+
+      function renderHoldings() {
+        const currencies = [...new Set(
+          state.wallets.map((wallet) => wallet.currency)
+        )];
+
+        if (!currencies.length) {
+          $("holdingsBody").innerHTML = `
+            <tr>
+              <td colspan="5" class="assets-empty">
+                <strong>No wallet holdings found</strong>
+                Your wallet balances will appear here when available.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        $("holdingsBody").innerHTML = currencies.map((currency) => {
+          const funding = walletBalance("funding", currency);
+          const delivery = walletBalance("delivery", currency);
+          const total = funding + delivery;
+
+          const knownValue = currency === "USDT"
+            ? money(total) + " USDT"
+            : "Price unavailable";
+
+          return `
+            <tr>
+              <td>
+                <div class="assets-coin">
+                  <span class="assets-coin-icon">
+                    ${escapeHTML(currency.slice(0, 3))}
+                  </span>
+                  <span>
+                    ${escapeHTML(currency)}
+                    <span class="assets-small">Wallet asset</span>
+                  </span>
+                </div>
+              </td>
+              <td>${money(funding, 8)}</td>
+              <td>${money(delivery, 8)}</td>
+              <td><strong>${money(total, 8)}</strong></td>
+              <td>${escapeHTML(knownValue)}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      function renderDeliveryHoldings() {
+        const deliveryWallets = state.wallets.filter(
+          (wallet) => wallet.wallet_type === "delivery"
+        );
+
+        if (!deliveryWallets.length) {
+          $("deliveryHoldingsBody").innerHTML = `
+            <tr>
+              <td colspan="3" class="assets-empty">
+                No Delivery Wallet holdings found.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        $("deliveryHoldingsBody").innerHTML =
+          deliveryWallets.map((wallet) => `
+            <tr>
+              <td>
+                <div class="assets-coin">
+                  <span class="assets-coin-icon">
+                    ${escapeHTML(wallet.currency.slice(0, 3))}
+                  </span>
+                  ${escapeHTML(wallet.currency)}
+                </div>
+              </td>
+              <td>${money(wallet.balance, 8)}</td>
+              <td>${escapeHTML(wallet.currency)}</td>
+            </tr>
+          `).join("");
+      }
+
+      function renderMining() {
+        if (!state.subscriptions.length) {
+          $("miningBody").innerHTML = `
+            <tr>
+              <td colspan="5" class="assets-empty">
+                <strong>No mining subscriptions found</strong>
+                Your mining subscriptions will appear here.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        const sorted = [...state.subscriptions].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+
+        $("miningBody").innerHTML = sorted.map((item) => {
+          const status = String(item.status || "unknown");
+          const statusClass = status === "active" || status === "matured"
+            ? ""
+            : "other";
+
+          return `
+            <tr>
+              <td>
+                ${escapeHTML(String(item.id).slice(0, 8))}...
+                <span class="assets-small">
+                  ${escapeHTML(item.plan_id)}
+                </span>
+              </td>
+              <td>${money(item.principal)} ${escapeHTML(item.currency)}</td>
+              <td>${money(item.expected_profit)} ${escapeHTML(item.currency)}</td>
+              <td>${escapeHTML(
+                item.matures_at
+                  ? new Date(item.matures_at).toLocaleString()
+                  : "—"
+              )}</td>
+              <td>
+                <span class="assets-status ${statusClass}">
+                  ${escapeHTML(status)}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      function readableType(type) {
+        const labels = {
+          transfer_in: "Transfer Received",
+          transfer_out: "Transfer Sent",
+          investment: "Mining Investment",
+          investment_return: "Mining Return",
+          deposit: "Deposit",
+          withdrawal: "Withdrawal",
+          swap: "Swap",
+          trade: "Trade"
+        };
+
+        return labels[type] || String(type || "Transaction")
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (letter) => letter.toUpperCase());
+      }
+
+      function renderHistory() {
+        if (!state.transactions.length) {
+          $("historyBody").innerHTML = `
+            <tr>
+              <td colspan="6" class="assets-empty">
+                <strong>No transactions found</strong>
+                Your recorded wallet transactions will appear here.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        $("historyBody").innerHTML = state.transactions.map((item) => {
+          const wallet = walletById(item.wallet_id);
+          const walletName = wallet
+            ? wallet.wallet_type.charAt(0).toUpperCase() +
+              wallet.wallet_type.slice(1)
+            : "Wallet";
+
+          const date = item.created_at
+            ? new Date(item.created_at).toLocaleString()
+            : "—";
+
+          const status = String(item.status || "unknown");
+
+          return `
+            <tr>
+              <td>${escapeHTML(date)}</td>
+              <td>${escapeHTML(readableType(item.transaction_type))}</td>
+              <td>${escapeHTML(item.currency)}</td>
+              <td>${money(item.amount, 8)}</td>
+              <td>${escapeHTML(walletName)}</td>
+              <td>
+                <span class="assets-status ${
+                  status === "completed" ? "" : "other"
+                }">
+                  ${escapeHTML(status)}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      async function loadWallets() {
+        const { data, error } = await state.client
+          .from("wallets")
+          .select("id, wallet_type, currency, balance, updated_at")
+          .eq("user_id", state.user.id)
+          .order("wallet_type", { ascending: true });
+
+        if (error) throw error;
+
+        state.wallets = data || [];
+      }
+
+      async function loadTransactions() {
+        const ids = state.wallets.map((wallet) => wallet.id);
+
+        if (!ids.length) {
+          state.transactions = [];
+          return;
+        }
+
+        const { data, error } = await state.client
+          .from("wallet_transactions")
+          .select(`
+            id,
+            wallet_id,
+            transaction_type,
+            amount,
+            currency,
+            status,
+            reference_id,
+            description,
+            created_at
+          `)
+          .eq("user_id", state.user.id)
+          .in("wallet_id", ids)
+          .order("created_at", { ascending: false })
+          .limit(100);
+
+        if (error) throw error;
+
+        state.transactions = data || [];
+      }
+
+      async function loadMining() {
+        const { data, error } = await state.client
+          .from("mining_subscriptions")
+          .select(`
+            id,
+            plan_id,
+            currency,
+            principal,
+            daily_rate_snapshot,
+            duration_days_snapshot,
+            expected_profit,
+            started_at,
+            matures_at,
+            status,
+            payout_processed_at,
+            created_at
+          `)
+          .eq("user_id", state.user.id)
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        state.subscriptions = data || [];
+      }
+
+      async function loadInvestments() {
+        const { data, error } = await state.client
+          .from("investments")
+          .select(`
+            id,
+            plan_id,
+            wallet_id,
+            principal,
+            currency,
+            status,
+            created_at
+          `)
+          .eq("user_id", state.user.id)
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.warn("Investment records could not be loaded:", error);
+          state.investments = [];
+          return;
+        }
+
+        state.investments = data || [];
+      }
+
+      async function refreshData() {
+        await loadWallets();
+
+        const results = await Promise.allSettled([
+          loadTransactions(),
+          loadMining(),
+          loadInvestments()
+        ]);
+
+        results.forEach((result, index) => {
+          if (result.status === "rejected") {
+            console.error("Assets data request failed:", index, result.reason);
+          }
+        });
+
+        renderOverview();
+        renderMining();
+        renderHistory();
+        updateAvailableBalance();
+      }
+
+      function updateAvailableBalance() {
+        const from = $("transferFrom").value;
+        const balance = walletBalance(from);
+
+        $("availableTransfer").textContent =
+          "Available: " + money(balance, 8) + " USDT";
+      }
+
+      $("transferFrom").addEventListener("change", () => {
+        const from = $("transferFrom").value;
+
+        $("transferTo").value =
+          from === "funding" ? "delivery" : "funding";
+
+        updateAvailableBalance();
+      });
+
+      $("transferTo").addEventListener("change", () => {
+        const to = $("transferTo").value;
+
+        $("transferFrom").value =
+          to === "funding" ? "delivery" : "funding";
+
+        updateAvailableBalance();
+      });
+
+      $("switchWallets").addEventListener("click", () => {
+        const from = $("transferFrom").value;
+        const to = $("transferTo").value;
+
+        $("transferFrom").value = to;
+        $("transferTo").value = from;
+
+        updateAvailableBalance();
+      });
+
+      $("maxTransfer").addEventListener("click", () => {
+        const balance = walletBalance($("transferFrom").value);
+
+        $("transferAmount").value = balance > 0
+          ? balance.toFixed(8).replace(/0+$/, "").replace(/\.$/, "")
+          : "";
+      });
+
+      $("submitTransfer").addEventListener("click", async () => {
+        const button = $("submitTransfer");
+        const message = $("transferMessage");
+
+        clearMessage(message);
+
+        // Extra client-side guard: transfers require an authenticated user.
+        if (!state.user || !state.client) {
+          showMessage(
+            message,
+            "Please log in before making a wallet transfer.",
+            "error"
+          );
+          return;
+        }
+
+        const from = $("transferFrom").value;
+        const to = $("transferTo").value;
+        const amountText = $("transferAmount").value.trim();
+        const amount = Number(amountText);
+
+        if (from === to) {
+          showMessage(
+            message,
+            "Please select two different wallets.",
+            "error"
+          );
+          return;
+        }
+
+        if (
+          !amountText ||
+          !Number.isFinite(amount) ||
+          amount <= 0 ||
+          !/^\d+(\.\d{1,8})?$/.test(amountText)
+        ) {
+          showMessage(
+            message,
+            "Enter a valid positive amount with no more than 8 decimal places.",
+            "error"
+          );
+          return;
+        }
+
+        const available = walletBalance(from);
+
+        if (amount > available) {
+          showMessage(
+            message,
+            "Insufficient available balance in your selected wallet.",
+            "error"
+          );
+          return;
+        }
+
+        const fromWallet = state.wallets.find(
+          (wallet) =>
+            wallet.wallet_type === from &&
+            wallet.currency === "USDT"
+        );
+
+        const toWallet = state.wallets.find(
+          (wallet) =>
+            wallet.wallet_type === to &&
+            wallet.currency === "USDT"
+        );
+
+        if (!fromWallet || !toWallet) {
+          showMessage(
+            message,
+            "Both USDT wallets must exist before a transfer can be made.",
+            "error"
+          );
+          return;
+        }
+
+        const confirmed = window.confirm(
+          "Confirm transfer of " +
+          amountText +
+          " USDT from " +
+          from +
+          " wallet to " +
+          to +
+          " wallet?"
+        );
+
+        if (!confirmed) return;
+
+        button.disabled = true;
+        button.textContent = "Processing...";
+
+        try {
+          const { data, error } = await state.client.rpc(
+            "transfer_sge_funds",
+            {
+              p_from: from,
+              p_to: to,
+              p_amount: amount
+            }
+          );
+
+          if (error) throw error;
+
+          await refreshData();
+
+          $("transferAmount").value = "";
+
+          showMessage(
+            message,
+            "Transfer completed successfully. Reference: " +
+            String(data),
+            "success"
+          );
+
+        } catch (error) {
+          console.error("Transfer failed:", error);
+
+          showMessage(
+            message,
+            error.message || "The transfer could not be completed.",
+            "error"
+          );
+
+        } finally {
+          button.disabled = false;
+          button.textContent = "Confirm Transfer";
+        }
+      });
+
+      async function initialize() {
+        const client =
+          typeof sgecoreSupabase !== "undefined"
+            ? sgecoreSupabase
+            : null;
+
+        if (!client) {
+          $("assetsLoading").textContent =
+            "Unable to connect to the account service. Please refresh and try again.";
+          return;
+        }
+
+        state.client = client;
+
+        try {
+          /*
+           * IMPORTANT:
+           * getSession() safely checks the locally stored session.
+           * getUser() can return "Auth session missing!" for visitors
+           * who are not logged in.
+           */
+          const { data, error } = await client.auth.getSession();
+
+          if (error) throw error;
+
+          const session = data?.session;
+
+          // PUBLIC VIEW: Visitors can view the Assets introduction.
+          // No private balances or wallet controls are displayed.
+          if (!session?.user) {
+            showPublicAssets();
+            return;
+          }
+
+          // PRIVATE VIEW: Existing authenticated member functionality.
+          state.user = session.user;
+
+          await refreshData();
+
+          $("assetsLoading").hidden = true;
+          $("assetsContent").hidden = false;
+
+        } catch (error) {
+          console.error("Assets page initialization failed:", error);
+
+          $("assetsLoading").textContent =
+            "Unable to load your assets: " +
+            (error?.message || "Please refresh the page.");
+        }
+      }
+
+      initialize();
+    })();
+  </script>
+
+</body>
+</html>

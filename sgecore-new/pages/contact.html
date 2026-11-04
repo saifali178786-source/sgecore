@@ -1,0 +1,1037 @@
+﻿```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | SDE Core</title>
+  <meta name="description" content="Contact SDE Core for platform assistance, account enquiries and business support.">
+
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    :root {
+      --contact-bg: #07111f;
+      --contact-card: #101d2d;
+      --contact-gold: #d9b45d;
+      --contact-gold-light: #f0d58c;
+      --contact-text: #f5f5f5;
+      --contact-muted: #aab5c3;
+      --contact-border: rgba(217,180,93,.2);
+    }
+
+    body {
+      background: var(--contact-bg);
+      color: var(--contact-text);
+    }
+
+    /* HEADER: keep logo, menu and buttons in ONE LINE */
+    .site-header {
+      width: 100%;
+      min-height: 76px;
+      height: auto;
+      padding: 0 4%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 18px;
+      position: relative;
+      z-index: 1000;
+    }
+
+    .site-header .brand {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      margin: 0;
+    }
+
+    .site-header .main-nav {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 22px;
+      margin: 0;
+      padding: 0;
+      white-space: nowrap;
+    }
+
+    .site-header .header-actions {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      white-space: nowrap;
+    }
+
+    .site-header .menu-toggle {
+      display: none;
+    }
+
+    .site-header .brand-copy,
+    .site-header .brand-mark {
+      margin: 0;
+    }
+
+    @media (max-width: 1050px) {
+      .site-header {
+        gap: 12px;
+        padding: 0 2%;
+      }
+
+      .site-header .main-nav {
+        gap: 12px;
+      }
+
+      .site-header .main-nav a {
+        font-size: 13px;
+      }
+
+      .site-header .header-actions {
+        gap: 7px;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .site-header {
+        min-height: 76px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .site-header .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .site-header .main-nav {
+        display: none;
+        width: 100%;
+        flex: 0 0 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 18px 0;
+        white-space: normal;
+      }
+
+      .site-header .main-nav.active {
+        display: flex;
+      }
+
+      .site-header .header-actions {
+        margin-left: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .site-header {
+        padding: 0 15px;
+      }
+
+      .site-header .header-actions {
+        gap: 6px;
+      }
+    }
+
+    /* GENERAL */
+    .contact-page {
+      overflow: hidden;
+    }
+
+    .contact-container {
+      width: min(1150px, 90%);
+      margin: auto;
+    }
+
+    .contact-label {
+      display: inline-block;
+      color: var(--contact-gold);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .contact-heading {
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.15;
+      margin: 0 0 20px;
+      color: #fff;
+    }
+
+    .contact-heading span {
+      color: var(--contact-gold);
+    }
+
+    .contact-description {
+      color: var(--contact-muted);
+      font-size: 16px;
+      line-height: 1.8;
+      max-width: 680px;
+    }
+
+    /* HERO */
+    .contact-hero {
+      padding: 105px 20px 95px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(217,180,93,.15), transparent 60%),
+        linear-gradient(180deg, #0b1929, #07111f);
+      border-bottom: 1px solid var(--contact-border);
+    }
+
+    .contact-hero h1 {
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1.08;
+      margin: 0 auto 24px;
+      max-width: 850px;
+      color: #fff;
+    }
+
+    .contact-hero h1 span {
+      color: var(--contact-gold);
+    }
+
+    .contact-hero p {
+      max-width: 680px;
+      margin: 0 auto 32px;
+      color: var(--contact-muted);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .contact-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      border-radius: 5px;
+      background: var(--contact-gold);
+      color: #101722;
+      font-weight: 700;
+      text-decoration: none;
+      transition: .25s;
+      border: 1px solid var(--contact-gold);
+    }
+
+    .contact-button:hover {
+      background: var(--contact-gold-light);
+      transform: translateY(-2px);
+    }
+
+    /* CONTACT DETAILS */
+    .contact-info-section {
+      padding: 85px 0;
+    }
+
+    .contact-section-heading {
+      text-align: center;
+      margin-bottom: 45px;
+    }
+
+    .contact-section-heading .contact-description {
+      margin: auto;
+    }
+
+    .contact-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .contact-info-card {
+      background: var(--contact-card);
+      border: 1px solid var(--contact-border);
+      border-radius: 12px;
+      padding: 32px 25px;
+      text-align: center;
+      transition: .3s;
+    }
+
+    .contact-info-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--contact-gold);
+    }
+
+    .contact-icon {
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: rgba(217,180,93,.12);
+      color: var(--contact-gold);
+      font-size: 24px;
+    }
+
+    .contact-info-card h3 {
+      color: #fff;
+      margin: 0 0 12px;
+      font-size: 19px;
+    }
+
+    .contact-info-card p {
+      color: var(--contact-muted);
+      line-height: 1.7;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .contact-info-card a {
+      color: var(--contact-gold);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    /* FORM */
+    .contact-form-section {
+      padding: 85px 0;
+      background: #0a1726;
+      border-top: 1px solid var(--contact-border);
+      border-bottom: 1px solid var(--contact-border);
+    }
+
+    .contact-form-layout {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 55px;
+      align-items: start;
+    }
+
+    .contact-form-copy {
+      padding-top: 20px;
+    }
+
+    .contact-form-copy h2 {
+      font-size: clamp(30px, 4vw, 43px);
+      line-height: 1.2;
+      margin: 0 0 20px;
+    }
+
+    .contact-form-copy h2 span {
+      color: var(--contact-gold);
+    }
+
+    .contact-form-copy p {
+      color: var(--contact-muted);
+      line-height: 1.8;
+    }
+
+    .contact-form-copy ul {
+      padding-left: 20px;
+      color: var(--contact-muted);
+      line-height: 2.2;
+      margin-top: 25px;
+    }
+
+    .contact-form-box {
+      padding: 35px;
+      border-radius: 12px;
+      background: var(--contact-card);
+      border: 1px solid var(--contact-border);
+    }
+
+    .contact-form-box h3 {
+      font-size: 23px;
+      margin: 0 0 25px;
+    }
+
+    .contact-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .contact-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .contact-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .contact-field label {
+      color: #dce3eb;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .contact-field input,
+    .contact-field select,
+    .contact-field textarea {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 5px;
+      background: #091524;
+      color: #fff;
+      outline: none;
+      font: inherit;
+      box-sizing: border-box;
+    }
+
+    .contact-field input:focus,
+    .contact-field select:focus,
+    .contact-field textarea:focus {
+      border-color: var(--contact-gold);
+    }
+
+    .contact-field textarea {
+      min-height: 135px;
+      resize: vertical;
+    }
+
+    .contact-field select option {
+      background: #091524;
+    }
+
+    .contact-submit {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      border: 0;
+      border-radius: 5px;
+      background: var(--contact-gold);
+      color: #101722;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: .25s;
+    }
+
+    .contact-submit:hover {
+      background: var(--contact-gold-light);
+    }
+
+    .contact-form-note {
+      color: var(--contact-muted);
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+
+    /* OFFICES */
+    .contact-offices-section {
+      padding: 90px 0;
+    }
+
+    .contact-office-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .contact-office-card {
+      background: var(--contact-card);
+      border: 1px solid var(--contact-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .contact-office-top {
+      padding: 30px;
+      background: linear-gradient(135deg, rgba(217,180,93,.14), transparent);
+      border-bottom: 1px solid var(--contact-border);
+    }
+
+    .contact-office-top small {
+      color: var(--contact-gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .contact-office-top h3 {
+      margin: 10px 0 0;
+      font-size: 27px;
+    }
+
+    .contact-office-details {
+      padding: 25px 30px 30px;
+    }
+
+    .contact-office-details p {
+      color: var(--contact-muted);
+      line-height: 1.8;
+      margin: 8px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .contact-office-details strong {
+      color: #fff;
+    }
+
+    .contact-office-details a {
+      color: var(--contact-gold);
+      text-decoration: none;
+    }
+
+    /* BUSINESS HOURS */
+    .contact-hours-section {
+      padding: 70px 0;
+      background: #0a1726;
+      border-top: 1px solid var(--contact-border);
+      border-bottom: 1px solid var(--contact-border);
+    }
+
+    .contact-hours-card {
+      max-width: 750px;
+      margin: auto;
+      padding: 35px;
+      background: var(--contact-card);
+      border: 1px solid var(--contact-border);
+      border-radius: 12px;
+    }
+
+    .contact-hours-card h2 {
+      text-align: center;
+      margin: 0 0 25px;
+      font-size: 29px;
+    }
+
+    .contact-hours-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      color: var(--contact-muted);
+    }
+
+    .contact-hours-row:last-child {
+      border-bottom: 0;
+    }
+
+    .contact-hours-row strong {
+      color: var(--contact-gold);
+      text-align: right;
+    }
+
+    /* FAQ */
+    .contact-faq-section {
+      padding: 90px 0;
+    }
+
+    .contact-faq-list {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .contact-faq-item {
+      margin-bottom: 14px;
+      border: 1px solid var(--contact-border);
+      border-radius: 8px;
+      background: var(--contact-card);
+      overflow: hidden;
+    }
+
+    .contact-faq-item summary {
+      padding: 20px 22px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 600;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .contact-faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .contact-faq-item summary::after {
+      content: "+";
+      color: var(--contact-gold);
+      font-size: 23px;
+    }
+
+    .contact-faq-item[open] summary::after {
+      content: "âˆ’";
+    }
+
+    .contact-faq-item p {
+      padding: 0 22px 20px;
+      margin: 0;
+      color: var(--contact-muted);
+      line-height: 1.8;
+    }
+
+    /* FINAL CTA */
+    .contact-final-cta {
+      padding: 80px 20px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at center, rgba(217,180,93,.15), transparent 70%),
+        #0a1726;
+      border-top: 1px solid var(--contact-border);
+    }
+
+    .contact-final-cta h2 {
+      font-size: clamp(30px, 5vw, 45px);
+      margin: 0 0 18px;
+    }
+
+    .contact-final-cta p {
+      max-width: 650px;
+      margin: 0 auto 28px;
+      color: var(--contact-muted);
+      line-height: 1.8;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      margin-top: 0;
+    }
+
+    @media (max-width: 750px) {
+      .contact-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-form-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .contact-office-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-hero {
+        padding: 75px 18px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .contact-container {
+        width: 92%;
+      }
+
+      .contact-form-box {
+        padding: 22px 17px;
+      }
+
+      .contact-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-field.full {
+        grid-column: auto;
+      }
+
+      .contact-hours-card {
+        padding: 25px 18px;
+      }
+
+      .contact-hours-row {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a class="brand" href="../index.html#home">
+      <span class="brand-mark">SDE</span>
+      <span class="brand-copy">
+        <strong>SDE CORE</strong>
+        <small>SOVEREIGN DIGITAL EXCHANGE</small>
+      </span>
+    </a>
+
+    <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="main-nav">
+      <a href="../index.html#home">Home</a>
+      <a href="../index.html#markets">Markets</a>
+      <a href="../index.html#investments">Mining Plans</a>
+      <a href="my-assets.html">Assets</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html" class="active">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="login.html" class="login-link">Login</a>
+      <a href="register.html" class="register-link">Register â†—</a>
+    </div>
+  </header>
+
+  <main class="contact-page">
+
+    <!-- HERO -->
+    <section class="contact-hero">
+      <div class="contact-container">
+        <span class="contact-label">We're Here to Help</span>
+        <h1>Let's Start a <span>Conversation.</span></h1>
+        <p>
+          Have a question about SDE Core or need assistance with our platform?
+          Our team is here to help you find the information you need.
+        </p>
+        <a href="#contact-form" class="contact-button">Get in Touch â†’</a>
+      </div>
+    </section>
+
+    <!-- CONTACT INFORMATION -->
+    <section class="contact-info-section">
+      <div class="contact-container">
+        <div class="contact-section-heading">
+          <span class="contact-label">Reach Out to Us</span>
+          <h2 class="contact-heading">We're Just a <span>Message Away</span></h2>
+          <p class="contact-description">
+            Choose the most convenient way to contact our team. We're happy
+            to assist with general enquiries, account questions and platform support.
+          </p>
+        </div>
+
+        <div class="contact-info-grid">
+          <div class="contact-info-card">
+            <div class="contact-icon">âœ‰</div>
+            <h3>Email Support</h3>
+            <p>
+              Send your questions and enquiries to:<br>
+              <a href="mailto:contact.sdecore@gmail.com">contact.sdecore@gmail.com</a>
+            </p>
+          </div>
+
+          <div class="contact-info-card">
+            <div class="contact-icon">â˜Ž</div>
+            <h3>United States</h3>
+            <p>
+              New York office<br>
+              <a href="tel:+12125550147">+1 (212) 555-0147</a>
+            </p>
+          </div>
+
+          <div class="contact-info-card">
+            <div class="contact-icon">ðŸŒ</div>
+            <h3>Singapore</h3>
+            <p>
+              Singapore office<br>
+              <a href="tel:+6555500147">+65 5550 0147</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT FORM -->
+    <section class="contact-form-section" id="contact-form">
+      <div class="contact-container">
+        <div class="contact-form-layout">
+
+          <div class="contact-form-copy">
+            <span class="contact-label">Contact Our Team</span>
+            <h2>How Can We <span>Help You?</span></h2>
+            <p>
+              Whether you need help navigating the platform, have a question
+              about your account, or want to discuss a business enquiry,
+              send us a message.
+            </p>
+
+            <ul>
+              <li>General enquiries</li>
+              <li>Account and platform assistance</li>
+              <li>Technical support</li>
+              <li>Business and partnership enquiries</li>
+            </ul>
+          </div>
+
+          <div class="contact-form-box">
+            <h3>Send Us a Message</h3>
+
+            <form id="contactForm">
+              <div class="contact-form-grid">
+
+                <div class="contact-field">
+                  <label for="contactName">Full Name</label>
+                  <input type="text" id="contactName" name="name"
+                    placeholder="Enter your full name" required>
+                </div>
+
+                <div class="contact-field">
+                  <label for="contactEmail">Email Address</label>
+                  <input type="email" id="contactEmail" name="email"
+                    placeholder="Enter your email" required>
+                </div>
+
+                <div class="contact-field full">
+                  <label for="contactSubject">Subject</label>
+                  <select id="contactSubject" name="subject" required>
+                    <option value="">Select an enquiry type</option>
+                    <option>General Enquiry</option>
+                    <option>Account Support</option>
+                    <option>Technical Support</option>
+                    <option>Business Partnership</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+
+                <div class="contact-field full">
+                  <label for="contactMessage">Your Message</label>
+                  <textarea id="contactMessage" name="message"
+                    placeholder="Write your message here..." required></textarea>
+                </div>
+
+              </div>
+
+              <button type="submit" class="contact-submit">Send Message â†’</button>
+
+              <p class="contact-form-note">
+                Submitting this form opens your email application with your
+                message prepared. It does not send or store the message automatically.
+              </p>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- OFFICE LOCATIONS -->
+    <section class="contact-offices-section">
+      <div class="contact-container">
+        <div class="contact-section-heading">
+          <span class="contact-label">Our Locations</span>
+          <h2 class="contact-heading">Connect With Our <span>Offices</span></h2>
+          <p class="contact-description">
+            Find our listed office locations in the United States and Singapore.
+          </p>
+        </div>
+
+        <div class="contact-office-grid">
+
+          <div class="contact-office-card">
+            <div class="contact-office-top">
+              <small>United States Â· Main Office</small>
+              <h3>New York</h3>
+            </div>
+            <div class="contact-office-details">
+              <p><strong>Office:</strong> SDE Core</p>
+              <p><strong>Address:</strong> 100 Example Avenue, New York, NY 10001, United States</p>
+              <p><strong>Phone:</strong> <a href="tel:+12125550147">+1 (212) 555-0147</a></p>
+              <p><strong>Email:</strong> <a href="mailto:contact.sdecore@gmail.com">contact.sdecore@gmail.com</a></p>
+            </div>
+          </div>
+
+          <div class="contact-office-card">
+            <div class="contact-office-top">
+              <small>Asia Pacific Â· Branch Office</small>
+              <h3>Singapore</h3>
+            </div>
+            <div class="contact-office-details">
+              <p><strong>Office:</strong> SDE Core</p>
+              <p><strong>Address:</strong> 10 Example Road, Singapore 018956, Singapore</p>
+              <p><strong>Phone:</strong> <a href="tel:+6555500147">+65 5550 0147</a></p>
+              <p><strong>Email:</strong> <a href="mailto:contact.sdecore@gmail.com">contact.sdecore@gmail.com</a></p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- BUSINESS HOURS -->
+    <section class="contact-hours-section">
+      <div class="contact-container">
+        <div class="contact-hours-card">
+          <h2>Business Hours</h2>
+
+          <div class="contact-hours-row">
+            <span>Monday â€“ Friday</span>
+            <strong>9:00 AM â€“ 6:00 PM</strong>
+          </div>
+
+          <div class="contact-hours-row">
+            <span>Saturday</span>
+            <strong>10:00 AM â€“ 2:00 PM</strong>
+          </div>
+
+          <div class="contact-hours-row">
+            <span>Sunday</span>
+            <strong>Closed</strong>
+          </div>
+
+          <div class="contact-hours-row">
+            <span>Public Holidays</span>
+            <strong>Hours May Vary</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="contact-faq-section">
+      <div class="contact-container">
+        <div class="contact-section-heading">
+          <span class="contact-label">Need More Information?</span>
+          <h2 class="contact-heading">Frequently Asked <span>Questions</span></h2>
+          <p class="contact-description">
+            Here are answers to some common questions about contacting SDE Core.
+          </p>
+        </div>
+
+        <div class="contact-faq-list">
+
+          <details class="contact-faq-item">
+            <summary>How can I contact SDE Core support?</summary>
+            <p>
+              You can contact us through the enquiry form on this page or by
+              emailing contact.sdecore@gmail.com.
+            </p>
+          </details>
+
+          <details class="contact-faq-item">
+            <summary>Where are your offices located?</summary>
+            <p>
+              The office locations listed on this page are New York, United States,
+              and Singapore.
+            </p>
+          </details>
+
+          <details class="contact-faq-item">
+            <summary>How can I get help with my account?</summary>
+            <p>
+              Select Account Support in the contact form and describe the issue
+              you are experiencing. Do not include your password or other
+              confidential login information.
+            </p>
+          </details>
+
+          <details class="contact-faq-item">
+            <summary>Can I contact you about business partnerships?</summary>
+            <p>
+              Yes. Select Business Partnership in the enquiry form and provide
+              details about your proposal.
+            </p>
+          </details>
+
+          <details class="contact-faq-item">
+            <summary>How long does it take to receive a response?</summary>
+            <p>
+              Response times may vary depending on the nature and volume of
+              enquiries. Please include clear details so the team can understand
+              your request.
+            </p>
+          </details>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="contact-final-cta">
+      <div class="contact-container">
+        <span class="contact-label">We're Ready to Listen</span>
+        <h2>Let's Make Things <span style="color:var(--contact-gold)">Clear.</span></h2>
+        <p>
+          Have another question or need assistance? Get in touch with our team
+          and let us know how we can help.
+        </p>
+        <a href="#contact-form" class="contact-button">Contact Our Team â†’</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-main">
+      <a class="brand footer-brand" href="../index.html#home">
+        <span class="brand-mark">SDE</span>
+        <span class="brand-copy">
+          <strong>SDE CORE</strong>
+          <small>SOVEREIGN DIGITAL EXCHANGE</small>
+        </span>
+      </a>
+
+      <div class="footer-links">
+        <a href="../index.html#home">Home</a>
+        <a href="../index.html#markets">Markets</a>
+        <a href="../index.html#investments">Mining Plans</a>
+        <a href="my-assets.html">Assets</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>Â© <span id="currentYear"></span> SDE Core. All rights reserved.</p>
+      <p>Sovereign Digital Exchange</p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile navigation
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mainNav = document.querySelector(".main-nav");
+
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => {
+        const isOpen = mainNav.classList.toggle("active");
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+      });
+    }
+
+    // Contact form: opens an email draft
+    const contactForm = document.getElementById("contactForm");
+
+    if (contactForm) {
+      contactForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("contactName").value.trim();
+        const email = document.getElementById("contactEmail").value.trim();
+        const subject = document.getElementById("contactSubject").value;
+        const message = document.getElementById("contactMessage").value.trim();
+
+        const emailSubject = encodeURIComponent("SDE Core - " + subject);
+        const emailBody = encodeURIComponent(
+          "Name: " + name +
+          "\nEmail: " + email +
+          "\nSubject: " + subject +
+          "\n\nMessage:\n" + message
+        );
+
+        window.location.href =
+          "mailto:contact.sdecore@gmail.com?subject=" +
+          emailSubject + "&body=" + emailBody;
+      });
+    }
+
+    // Footer year
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
+  </script>
+
+  <script src="../js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth-ui.js"></script>
+
+</body>
+</html>
+```

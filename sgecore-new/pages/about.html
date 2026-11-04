@@ -1,0 +1,1193 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+
+  <title>About Us | SDE Core</title>
+
+  <meta name="description" content="Discover SDE Core, our vision, our values and our approach to digital financial technology and asset management.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Homepage stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-light: #0b1929;
+      --card: #101f30;
+      --gold: #d9b45d;
+      --gold-light: #f3d98e;
+      --white: #ffffff;
+      --muted: #a5b1c0;
+      --border: rgba(217,180,93,.17);
+      --max-width: 1200px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
+    body {
+      font-family: "DM Sans", sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(92%, var(--max-width));
+      margin: auto;
+    }
+
+    .gold {
+      color: var(--gold-light);
+    }
+
+    .section {
+      padding: 100px 0;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold-light);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .section-label::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .section-heading {
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(30px, 4vw, 45px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .section-description {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 650px;
+    }
+
+    /* HERO */
+
+    .hero {
+      position: relative;
+      min-height: 650px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(5,14,26,.97) 0%, rgba(5,14,26,.85) 48%, rgba(5,14,26,.28) 100%),
+        url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2000&q=85") center/cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 150px;
+      background: linear-gradient(transparent, var(--bg));
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      padding: 100px 0 150px;
+      animation: heroIn 1s ease both;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 15px;
+      border: 1px solid rgba(217,180,93,.4);
+      background: rgba(217,180,93,.08);
+      color: var(--gold-light);
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 28px;
+    }
+
+    .hero-tag span {
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--gold);
+    }
+
+    .hero h1 {
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(43px, 6vw, 72px);
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -2.8px;
+      margin-bottom: 25px;
+    }
+
+    .hero h1 span {
+      color: var(--gold-light);
+    }
+
+    .hero p {
+      max-width: 600px;
+      font-size: 17px;
+      line-height: 1.9;
+      color: #c0cad7;
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 23px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #f0d58c, #c69b42);
+      color: #101927;
+      font-weight: 800;
+      font-size: 13px;
+      transition: .3s;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(217,180,93,.2);
+    }
+
+    .text-link {
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      transition: .3s;
+    }
+
+    .text-link:hover {
+      color: var(--gold-light);
+    }
+
+    /* INTRO */
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 75px;
+    }
+
+    .intro-image {
+      position: relative;
+    }
+
+    .intro-image img {
+      width: 100%;
+      height: 470px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .image-caption {
+      position: absolute;
+      bottom: 22px;
+      left: 22px;
+      right: 22px;
+      padding: 18px;
+      background: rgba(7,17,31,.87);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+    }
+
+    .image-caption strong {
+      display: block;
+      color: var(--gold-light);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .image-caption span {
+      color: #c0cad5;
+      font-size: 12px;
+    }
+
+    .intro-text p {
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    .intro-points {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 28px;
+    }
+
+    .intro-point {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #e6eaf0;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .check {
+      width: 23px;
+      height: 23px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(217,180,93,.13);
+      color: var(--gold-light);
+    }
+
+    /* MISSION VISION */
+
+    .mission-section {
+      background: linear-gradient(180deg, #0a1727, #07111f);
+    }
+
+    .center-heading {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 55px;
+    }
+
+    .center-heading .section-description {
+      margin: auto;
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+    }
+
+    .mission-card {
+      position: relative;
+      overflow: hidden;
+      padding: 40px;
+      min-height: 300px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, #12243a, #0c1929);
+      border: 1px solid var(--border);
+      transition: .4s;
+    }
+
+    .mission-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(217,180,93,.55);
+    }
+
+    .mission-card::after {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      right: -70px;
+      bottom: -80px;
+      border-radius: 50%;
+      background: rgba(217,180,93,.06);
+      filter: blur(2px);
+    }
+
+    .feature-icon {
+      width: 55px;
+      height: 55px;
+      display: grid;
+      place-items: center;
+      color: var(--gold-light);
+      background: rgba(217,180,93,.12);
+      border: 1px solid rgba(217,180,93,.25);
+      border-radius: 12px;
+      font-size: 25px;
+      margin-bottom: 25px;
+    }
+
+    .mission-card h3 {
+      font-family: "Manrope", sans-serif;
+      font-size: 23px;
+      margin-bottom: 15px;
+    }
+
+    .mission-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    /* FEATURES */
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .feature-card {
+      padding: 30px 26px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      transition: .35s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-7px);
+      background: #14263a;
+      border-color: rgba(217,180,93,.5);
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.85;
+    }
+
+    /* IMAGE BANNER */
+
+    .banner {
+      position: relative;
+      min-height: 410px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(5,14,26,.96), rgba(5,14,26,.65)),
+        url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=85") center/cover no-repeat;
+    }
+
+    .banner-content {
+      max-width: 720px;
+      padding: 80px 0;
+    }
+
+    .banner h2 {
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .banner p {
+      color: #c1cbd8;
+      max-width: 600px;
+      font-size: 15px;
+      margin-bottom: 28px;
+    }
+
+    /* VALUES */
+
+    .values-section {
+      background: #0a1727;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 45px;
+    }
+
+    .value-card {
+      padding: 28px 20px;
+      text-align: center;
+      border-radius: 12px;
+      background: #101f30;
+      border: 1px solid var(--border);
+      transition: .35s;
+    }
+
+    .value-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+    }
+
+    .value-card .feature-icon {
+      margin: 0 auto 20px;
+    }
+
+    .value-card h3 {
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .value-card p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    /* RESPONSIBILITY */
+
+    .responsibility-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .responsibility-image img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .responsibility-content p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .responsibility-item {
+      display: flex;
+      gap: 15px;
+      margin-top: 23px;
+    }
+
+    .responsibility-item .feature-icon {
+      width: 43px;
+      height: 43px;
+      min-width: 43px;
+      font-size: 19px;
+      margin: 0;
+    }
+
+    .responsibility-item h4 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .responsibility-item p {
+      font-size: 12px;
+      margin: 0;
+    }
+
+    /* CTA */
+
+    .cta-section {
+      padding: 85px 0;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at center, rgba(217,180,93,.10), transparent 65%),
+        #0b1929;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cta-section h2 {
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(30px, 4vw, 44px);
+      margin-bottom: 18px;
+    }
+
+    .cta-section p {
+      max-width: 620px;
+      color: var(--muted);
+      margin: 0 auto 28px;
+      font-size: 14px;
+    }
+
+    /* ANIMATIONS */
+
+    @keyframes heroIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+
+    @media(max-width: 900px) {
+      .intro-grid,
+      .responsibility-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .intro-image {
+        order: 2;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 650px) {
+      .hero {
+        min-height: 590px;
+        background-position: 60% center;
+      }
+
+      .hero-content {
+        padding: 90px 0 120px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1.5px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .section {
+        padding: 75px 0;
+      }
+
+      .intro-image img {
+        height: 340px;
+      }
+
+      .intro-points {
+        grid-template-columns: 1fr;
+      }
+
+      .mission-grid,
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mission-card {
+        padding: 30px;
+      }
+
+      .values-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .responsibility-image img {
+        height: 320px;
+      }
+    }
+
+    @media(prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HOMEPAGE HEADER -->
+
+  <header class="site-header">
+    <a class="brand" href="../index.html#home" aria-label="SDE Core home">
+      <span class="brand-mark">SDE</span>
+      <span class="brand-copy">
+        <strong>SDE CORE</strong>
+        <small>SOVEREIGN DIGITAL EXCHANGE</small>
+      </span>
+    </a>
+
+    <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="../index.html#home">Home</a>
+      <a href="../index.html#markets">Markets</a>
+      <a href="../index.html#markets">Market Data</a>
+      <a href="../index.html#investments">Mining Plans</a>
+      <a href="my-assets.html">Assets</a>
+      <a class="active" href="about.html">About Us</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions" id="sgeAccountNav" aria-label="Account navigation">
+      <a class="login-btn" href="login.html" id="sgeLoginLink">Login</a>
+      <a class="register-btn" href="register.html" id="sgeRegisterLink">Register <span>â†—</span></a>
+
+      <div class="sge-account-menu" id="sgeAccountMenu" hidden>
+        <button class="sge-account-trigger" id="sgeAccountTrigger" type="button" aria-expanded="false" aria-haspopup="true">
+          <span class="sge-account-avatar" aria-hidden="true">â—</span>
+          <span class="sge-account-label">
+            <strong>Account</strong>
+            <small id="sgeAccountUid">UID: â€”</small>
+          </span>
+          <span class="sge-account-chevron" aria-hidden="true">âŒ„</span>
+        </button>
+
+        <div class="sge-account-dropdown" id="sgeAccountDropdown" hidden>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="my-assets.html">My Assets</a>
+          <a href="account-settings.html">Account Settings</a>
+          <button type="button" id="sgeLogoutButton">Log Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+
+        <div class="hero-tag">
+          <span></span>
+          DISCOVER SDE CORE
+        </div>
+
+        <h1>
+          A Smarter Vision.<br>
+          A <span>Digital Future.</span>
+        </h1>
+
+        <p>
+          Welcome to SDE Core â€” a digital platform designed to bring
+          market information, financial technology and digital asset
+          management together in one accessible experience.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#who-we-are" class="primary-btn">
+            Discover Our Story â†’
+          </a>
+
+          <a href="#our-vision" class="text-link">
+            Explore Our Vision â†“
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE ARE -->
+
+  <section class="section" id="who-we-are">
+    <div class="container intro-grid">
+
+      <div class="intro-image reveal">
+        <img
+          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1100&q=85"
+          alt="Modern financial district architecture"
+          loading="lazy"
+        >
+
+        <div class="image-caption">
+          <strong>Technology Meets Opportunity</strong>
+          <span>A platform built around a modern digital experience.</span>
+        </div>
+      </div>
+
+      <div class="intro-text reveal">
+
+        <div class="section-label">WHO WE ARE</div>
+
+        <h2 class="section-heading">
+          More Than a Platform.<br>
+          A <span class="gold">Forward-Looking Vision.</span>
+        </h2>
+
+        <p>
+          SDE Core is a digital financial technology platform focused
+          on creating a structured and accessible environment for
+          exploring financial markets and managing supported digital
+          asset balances.
+        </p>
+
+        <p>
+          We bring different platform experiences together through
+          a unified interface, helping users navigate market
+          information, account services and digital asset features.
+        </p>
+
+        <p>
+          Our approach is centred on usability, transparency,
+          responsible development and continuous improvement.
+          We believe technology should make complex digital
+          experiences easier to understand and use.
+        </p>
+
+        <div class="intro-points">
+          <div class="intro-point">
+            <span class="check">âœ“</span>
+            User-focused experience
+          </div>
+
+          <div class="intro-point">
+            <span class="check">âœ“</span>
+            Transparent information
+          </div>
+
+          <div class="intro-point">
+            <span class="check">âœ“</span>
+            Digital innovation
+          </div>
+
+          <div class="intro-point">
+            <span class="check">âœ“</span>
+            Continuous improvement
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MISSION AND VISION -->
+
+  <section class="section mission-section" id="our-vision">
+    <div class="container">
+
+      <div class="center-heading reveal">
+        <div class="section-label">OUR PURPOSE</div>
+
+        <h2 class="section-heading">
+          Driven by Purpose.<br>
+          Guided by <span class="gold">Innovation.</span>
+        </h2>
+
+        <p class="section-description">
+          Our direction is shaped by a simple idea: build a more
+          understandable, accessible and thoughtful digital
+          financial experience.
+        </p>
+      </div>
+
+      <div class="mission-grid">
+
+        <article class="mission-card reveal">
+          <div class="feature-icon">â—Ž</div>
+          <h3>Our Mission</h3>
+          <p>
+            To develop a reliable and user-friendly digital platform
+            that brings market information, account management and
+            supported digital asset services into one organized
+            environment.
+          </p>
+        </article>
+
+        <article class="mission-card reveal">
+          <div class="feature-icon">âœ§</div>
+          <h3>Our Vision</h3>
+          <p>
+            To build a forward-looking digital ecosystem where
+            innovation, accessibility and responsible technology
+            help shape the next generation of financial platform
+            experiences.
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PLATFORM FEATURES -->
+
+  <section class="section" id="what-we-do">
+    <div class="container">
+
+      <div class="reveal">
+        <div class="section-label">OUR PLATFORM</div>
+
+        <h2 class="section-heading">
+          One Ecosystem.<br>
+          Multiple <span class="gold">Digital Experiences.</span>
+        </h2>
+
+        <p class="section-description">
+          SDE Core brings together a range of digital platform
+          features designed to help users access information
+          and manage their accounts.
+        </p>
+      </div>
+
+      <div class="features-grid">
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">â—ˆ</div>
+          <h3>Market Information</h3>
+          <p>
+            Explore supported market prices and financial asset
+            information through an organized market interface.
+          </p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">â–£</div>
+          <h3>Digital Wallets</h3>
+          <p>
+            Access supported internal wallet balances and review
+            account activity through your personal dashboard.
+          </p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">â‡„</div>
+          <h3>Asset Management</h3>
+          <p>
+            Explore supported digital asset management features
+            and platform tools as they become available.
+          </p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">âŒ</div>
+          <h3>Mining Services</h3>
+          <p>
+            Explore available mining plan information, subscription
+            details and related account activity.
+          </p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">â–¤</div>
+          <h3>Account Dashboard</h3>
+          <p>
+            Access your account information, wallet overview
+            and available platform services in one place.
+          </p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">â—‡</div>
+          <h3>Digital Innovation</h3>
+          <p>
+            We continuously explore ways to improve the platform
+            through thoughtful technology and better usability.
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- IMAGE BANNER -->
+
+  <section class="banner">
+    <div class="container">
+      <div class="banner-content reveal">
+
+        <div class="section-label">THE SDE CORE APPROACH</div>
+
+        <h2>
+          Technology Should Empower.<br>
+          Information Should Be Clear.
+        </h2>
+
+        <p>
+          We believe a strong digital platform starts with a
+          straightforward experience. Our focus is on making
+          platform information easier to access, services easier
+          to navigate and digital tools easier to understand.
+        </p>
+
+        <a href="#our-values" class="primary-btn">
+          Discover Our Values â†’
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+
+  <section class="section values-section" id="our-values">
+    <div class="container">
+
+      <div class="center-heading reveal">
+        <div class="section-label">WHAT GUIDES US</div>
+
+        <h2 class="section-heading">
+          The Principles Behind <span class="gold">Our Work.</span>
+        </h2>
+
+        <p class="section-description">
+          Our values shape how we approach technology,
+          platform development and the user experience.
+        </p>
+      </div>
+
+      <div class="values-grid">
+
+        <article class="value-card reveal">
+          <div class="feature-icon">â—‡</div>
+          <h3>Transparency</h3>
+          <p>
+            Clear platform information and straightforward
+            communication matter.
+          </p>
+        </article>
+
+        <article class="value-card reveal">
+          <div class="feature-icon">â¬¡</div>
+          <h3>Responsibility</h3>
+          <p>
+            We value thoughtful development and responsible
+            handling of digital services.
+          </p>
+        </article>
+
+        <article class="value-card reveal">
+          <div class="feature-icon">âœ§</div>
+          <h3>Innovation</h3>
+          <p>
+            We continuously look for meaningful ways to
+            improve digital experiences.
+          </p>
+        </article>
+
+        <article class="value-card reveal">
+          <div class="feature-icon">â—Ž</div>
+          <h3>User Focus</h3>
+          <p>
+            We aim to make our platform intuitive,
+            accessible and easy to navigate.
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECURITY AND RESPONSIBILITY -->
+
+  <section class="section">
+    <div class="container responsibility-grid">
+
+      <div class="responsibility-image reveal">
+        <img
+          src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1100&q=85"
+          alt="Digital security and technology"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="responsibility-content reveal">
+
+        <div class="section-label">OUR COMMITMENT</div>
+
+        <h2 class="section-heading">
+          Built with a Focus on <span class="gold">Responsibility.</span>
+        </h2>
+
+        <p>
+          Digital financial services require careful attention
+          to information, security and user expectations.
+          We believe trust is built through responsible
+          practices and clear communication.
+        </p>
+
+        <div class="responsibility-item">
+          <div class="feature-icon">âœ“</div>
+          <div>
+            <h4>Account Protection</h4>
+            <p>
+              We prioritize appropriate safeguards and
+              responsible account access practices.
+            </p>
+          </div>
+        </div>
+
+        <div class="responsibility-item">
+          <div class="feature-icon">â—ˆ</div>
+          <div>
+            <h4>Clear Information</h4>
+            <p>
+              We aim to present platform information
+              and service details in an understandable way.
+            </p>
+          </div>
+        </div>
+
+        <div class="responsibility-item">
+          <div class="feature-icon">â—Ž</div>
+          <div>
+            <h4>Continuous Development</h4>
+            <p>
+              We work toward improving the platform
+              experience and its available features.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING CTA -->
+
+  <section class="cta-section">
+    <div class="container reveal">
+
+      <div class="section-label">YOUR DIGITAL JOURNEY</div>
+
+      <h2>
+        Explore the World of <span class="gold">SDE Core.</span>
+      </h2>
+
+      <p>
+        Discover the platform, explore available services
+        and access your personal SDE Core dashboard.
+      </p>
+
+      <a href="dashboard.html" class="primary-btn">
+        Explore Your Dashboard â†’
+      </a>
+
+    </div>
+  </section>
+
+  <!-- HOMEPAGE FOOTER -->
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="../index.html#home">
+      <span class="brand-mark">SDE</span>
+      <span class="brand-copy">
+        <strong>SDE CORE</strong>
+        <small>SOVEREIGN DIGITAL EXCHANGE</small>
+      </span>
+    </a>
+
+    <div class="footer-links">
+      <a href="../index.html#markets">Markets</a>
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#investments">Mining Plans</a>
+      <a href="my-assets.html">Assets</a>
+      <a href="about.html">About</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+
+    <div class="footer-bottom">
+      <span>Â© 2026 SDE Core. All rights reserved.</span>
+      <span>Market information Â· Updates periodically</span>
+    </div>
+  </footer>
+
+  <!-- EXISTING WEBSITE SCRIPTS -->
+
+  <script src="../js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth-ui.js"></script>
+
+  <!-- ORIGINAL ABOUT PAGE ANIMATIONS -->
+
+  <script>
+    const revealElements = document.querySelectorAll(".reveal");
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries, observerInstance) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observerInstance.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.12
+        }
+      );
+
+      revealElements.forEach(element => {
+        observer.observe(element);
+      });
+    } else {
+      revealElements.forEach(element => {
+        element.classList.add("visible");
+      });
+    }
+  </script>
+
+</body>
+</html>
