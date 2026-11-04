@@ -1,6 +1,6 @@
 
 /* =========================================================
-   SGE CORE — MAIN WEBSITE STYLESHEET
+   SDE CORE — MAIN WEBSITE STYLESHEET
    Dark Navy & Gold | Consolidated Responsive Layout
    ========================================================= */
 
@@ -1087,7 +1087,7 @@ section {
   text-align: center;
 }
 
-/* 9. ABOUT SGE CORE
+/* 9. ABOUT SDE CORE
    .about-content and .about-panel are sibling elements
    inside .about-section, as confirmed by your HTML.
 */
@@ -1745,7 +1745,7 @@ section {
 }
 
 /* =========================================================
-   SGE CORE — FINAL MARKET OVERVIEW RESPONSIVE DESIGN
+   SDE CORE — FINAL MARKET OVERVIEW RESPONSIVE DESIGN
    ========================================================= */
 
 /* Desktop: three compact market cards */
@@ -1979,7 +1979,7 @@ section {
   }
 }
 /* =========================================================
-   SGE CORE — CONSOLIDATED HEADER & LIVE TICKER
+   SDE CORE — CONSOLIDATED HEADER & LIVE TICKER
    ========================================================= */
 
 /* Desktop header: brand, navigation and actions on one row */
@@ -2288,7 +2288,7 @@ section {
 }
 
 /* =========================================
-   SGE CORE HEADER — SINGLE ROW
+   SDE CORE HEADER — SINGLE ROW
 ========================================= */
 
 .site-header {

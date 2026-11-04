@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olimpiada Gold Mine | SDE CORE</title>
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <style>
+    .mine-page{min-height:100vh;background:#07111f;color:#e8edf5;padding-bottom:60px}
+    .mine-nav{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;padding:20px max(5%,calc((100% - 1200px)/2));border-bottom:1px solid rgba(217,180,93,.2);background:#091525}
+    .mine-brand{font-size:22px;font-weight:800;letter-spacing:2px;color:#f0d58c;text-decoration:none}
+    .mine-links{display:flex;gap:18px;flex-wrap:wrap}
+    .mine-links a{color:#cbd5e1;text-decoration:none;font-size:14px}
+    .mine-links a:hover{color:#f0d58c}
+    .mine-container{width:min(1150px,90%);margin:0 auto}
+    .mine-hero{margin:35px auto 28px;min-height:310px;border:1px solid rgba(217,180,93,.25);border-radius:18px;overflow:hidden;background:linear-gradient(90deg,rgba(5,13,25,.96),rgba(5,13,25,.65)),url('https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=1400&q=85') center/cover;display:flex;align-items:center;padding:42px}
+    .mine-hero-content{max-width:680px}
+    .mine-label{color:#d9b45d;text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:700}
+    .mine-hero h1{font-size:clamp(30px,5vw,48px);line-height:1.15;margin:12px 0;color:#fff}
+    .mine-hero p{color:#cbd5e1;line-height:1.8;margin:0}
+    .mine-section{margin:32px 0}
+    .mine-section h2{color:#f0d58c;font-size:25px;margin:0 0 15px}
+    .mine-section p{color:#cbd5e1;line-height:1.85}
+    .mine-section h3{color:#f0d58c;font-size:19px;margin:25px 0 10px}
+    .mine-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:20px}
+    .mine-fact{background:#0c1b2d;border:1px solid rgba(217,180,93,.18);border-radius:12px;padding:18px}
+    .mine-fact span{display:block;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+    .mine-fact strong{color:#f0d58c;font-size:16px}
+    .mine-plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:20px}
+    .mine-plan{background:linear-gradient(145deg,#102238,#0a1728);border:1px solid rgba(217,180,93,.28);border-radius:15px;padding:23px}
+    .mine-plan .plan-number{color:#d9b45d;font-size:12px;font-weight:700;letter-spacing:1.5px}
+    .mine-plan h3{color:#fff;font-size:20px;margin:10px 0 18px}
+    .mine-rate{font-size:36px;font-weight:800;color:#f0d58c;margin-bottom:18px}
+    .mine-rate small{font-size:13px;color:#94a3b8;font-weight:500}
+    .mine-detail{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:14px}
+    .mine-detail span{color:#94a3b8}
+    .mine-detail strong{color:#e8edf5;text-align:right}
+    .mine-subscribe{display:block;text-align:center;background:#d9b45d;color:#07111f;text-decoration:none;font-weight:800;padding:13px;border-radius:8px;margin-top:20px}
+    .mine-subscribe:hover{background:#f0d58c}
+    .mine-back{display:inline-block;color:#f0d58c;text-decoration:none;margin:12px 0 0}
+    .mine-disclaimer{background:#0b192a;border-left:3px solid #d9b45d;padding:17px 20px;border-radius:8px;color:#aebdce;font-size:13px;line-height:1.7}
+    .mine-footer{text-align:center;color:#718096;font-size:12px;padding:30px 15px;border-top:1px solid rgba(217,180,93,.15);margin-top:50px}
+    @media(max-width:600px){.mine-hero{padding:25px;min-height:280px}.mine-nav{padding:17px 5%}.mine-links{gap:12px}}
+  </style>
+</head>
+
+<body>
+<div class="mine-page">
+
+  <header class="mine-nav">
+    <a class="mine-brand" href="../../index.html">SDE CORE</a>
+    <nav class="mine-links">
+      <a href="../../index.html">Home</a>
+      <a href="../markets.html">Markets</a>
+      <a href="../mining-plans.html">Mining</a>
+      <a href="../my-assets.html">Assets</a>
+      <a href="../about.html">About</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../login.html">Login</a>
+    </nav>
+  </header>
+
+  <main class="mine-container">
+
+    <section class="mine-hero">
+      <div class="mine-hero-content">
+        <div class="mine-label">Mining Company Profile · Siberia, Russia</div>
+        <h1>Olimpiada Gold Mine</h1>
+        <p>Explore one of Russia's major gold-mining operations, known for its large mineral deposits, advanced processing facilities and extensive mining infrastructure.</p>
+      </div>
+    </section>
+
+    <section class="mine-section">
+      <h2>About Olimpiada Gold Mine</h2>
+
+      <p>
+        Olimpiada Gold Mine is one of the largest gold-mining
+        operations in Russia. It is located in the Severo-Yeniseysky
+        District of Krasnoyarsk Krai, in the remote Siberian region
+        of the country. The mine is known for its substantial
+        gold resources, large-scale extraction activities and
+        specialized ore-processing technology.
+      </p>
+
+      <p>
+        The operation forms an important part of Russia's gold
+        mining industry. Its development has involved extensive
+        geological exploration, major infrastructure investment
+        and the construction of processing facilities capable
+        of treating complex gold-bearing ores.
+      </p>
+
+      <h3>Location and Mining History</h3>
+
+      <p>
+        Olimpiada is situated in a remote area of the Krasnoyarsk
+        region of Siberia. The surrounding environment includes
+        extensive forests, seasonal temperature variations
+        and challenging winter conditions.
+      </p>
+
+      <p>
+        Geological exploration identified significant gold
+        mineralization in the area, leading to the development
+        of the mine during the late twentieth century.
+        Commercial production began in the 1990s, and the
+        operation subsequently expanded through additional
+        mining and processing infrastructure.
+      </p>
+
+      <h3>Geology and Gold Deposits</h3>
+
+      <p>
+        The Olimpiada deposit contains large quantities of
+        gold-bearing ore within a complex geological setting.
+        Its mineralization is associated with altered rocks
+        and sulfide-bearing formations that require
+        specialized processing techniques.
+      </p>
+
+      <p>
+        Geological teams use exploration drilling, sampling,
+        laboratory testing and resource modelling to assess
+        mineral distribution and support long-term mine planning.
+        These studies help determine extraction sequences
+        and appropriate processing methods.
+      </p>
+
+      <h3>Open-Pit Mining Operations</h3>
+
+      <p>
+        Olimpiada is developed primarily through large-scale
+        open-pit mining. The process involves removing
+        overburden and extracting gold-bearing material
+        from engineered benches within the mining area.
+      </p>
+
+      <p>
+        Heavy-duty excavators, drilling equipment and haulage
+        trucks are used to support extraction and transportation.
+        Mining activities are organized through detailed
+        production schedules, geological monitoring and
+        engineering assessments.
+      </p>
+
+      <p>
+        Mine planning also considers slope stability,
+        equipment maintenance, transportation distances
+        and the efficient movement of ore and waste material.
+      </p>
+
+      <h3>Ore Processing and Gold Recovery</h3>
+
+      <p>
+        One of the important technical characteristics of
+        Olimpiada is the treatment of complex gold-bearing
+        ore. Processing involves several stages designed
+        to separate valuable minerals and recover gold
+        from the extracted material.
+      </p>
+
+      <p>
+        Depending on ore characteristics, processing can
+        include crushing, grinding, flotation, oxidation
+        and leaching. These stages are supported by
+        laboratory analysis and process monitoring to
+        help maintain consistent recovery performance.
+      </p>
+
+      <h3>Advanced Processing Technology</h3>
+
+      <p>
+        The mine is particularly known for the use of
+        specialized processing technology to treat
+        refractory gold ores. Such ores can contain
+        minerals that make conventional gold recovery
+        more difficult.
+      </p>
+
+      <p>
+        Pressure oxidation and other advanced treatment
+        processes can help make gold more accessible
+        for subsequent recovery stages. The use of
+        specialized processing infrastructure is an
+        important part of the operation's technical
+        development.
+      </p>
+
+      <h3>Infrastructure and Modern Mining</h3>
+
+      <p>
+        Operating in a remote Siberian environment requires
+        substantial infrastructure for transportation,
+        power, equipment maintenance, accommodation and
+        processing. Reliable logistics are essential
+        for supporting continuous mining operations.
+      </p>
+
+      <p>
+        Modern equipment, monitoring systems and
+        engineering controls help coordinate production,
+        improve equipment availability and support
+        operational planning.
+      </p>
+
+      <h3>Environmental Management and Safety</h3>
+
+      <p>
+        Large mining operations require ongoing management
+        of land disturbance, water resources, waste rock,
+        tailings and energy use. Environmental monitoring
+        and operational controls are important in
+        reducing potential impacts on surrounding areas.
+      </p>
+
+      <p>
+        Safety procedures include workforce training,
+        equipment inspections, slope monitoring,
+        emergency response planning and controls
+        for mining and processing activities.
+      </p>
+
+      <h3>Economic and Industrial Importance</h3>
+
+      <p>
+        Olimpiada is a significant part of the Russian
+        gold-mining industry. Its large-scale production
+        and specialized processing facilities demonstrate
+        the importance of engineering, technology and
+        investment in developing complex mineral deposits.
+      </p>
+
+      <p>
+        The operation also supports a network of mining,
+        transportation, maintenance and industrial
+        services associated with large-scale mineral
+        production in Siberia.
+      </p>
+
+      <h3>SDE CORE Mining Plans</h3>
+
+      <p>
+        SDE CORE presents the Olimpiada Gold Mine listing
+        with two configured mining plans. Visitors can
+        review the displayed daily rates, investment
+        limits and plan durations in the Mining Plan
+        Options section below.
+      </p>
+
+      <p>
+        These rates and terms are configurations displayed
+        by SDE CORE. They are not actual returns generated
+        by Olimpiada Gold Mine, and this listing does not
+        imply a partnership, endorsement or investment
+        relationship with the mine operator.
+      </p>
+
+      <div class="mine-facts">
+        <div class="mine-fact"><span>Location</span><strong>Krasnoyarsk Krai, Russia</strong></div>
+        <div class="mine-fact"><span>Industry</span><strong>Gold Mining</strong></div>
+        <div class="mine-fact"><span>Mining Method</span><strong>Open-Pit Mining</strong></div>
+        <div class="mine-fact"><span>Mining Region</span><strong>Siberia, Russia</strong></div>
+      </div>
+    </section>
+
+    <section class="mine-section">
+      <h2>Mining Plan Options</h2>
+      <p>Select a plan below to continue through the existing SDE CORE login and subscription process.</p>
+
+      <div class="mine-plans">
+
+        <article class="mine-plan">
+          <div class="plan-number">PLAN 01</div>
+          <h3>Olimpiada Gold Mines</h3>
+          <div class="mine-rate">1.2% <small>/ day</small></div>
+          <div class="mine-detail"><span>Period</span><strong>30 Days</strong></div>
+          <div class="mine-detail"><span>Minimum</span><strong>100,000 USDT</strong></div>
+          <div class="mine-detail"><span>Maximum</span><strong>199,999 USDT</strong></div>
+          <a class="mine-subscribe" href="../login.html?plan=olimpiada-1&name=Olimpiada%20Gold%20Mines&rate=1.2%25&period=30%20days&min=100000&max=199999">Subscribe Now</a>
+        </article>
+
+        <article class="mine-plan">
+          <div class="plan-number">PLAN 02</div>
+          <h3>Olimpiada Gold Mines</h3>
+          <div class="mine-rate">1.4% <small>/ day</small></div>
+          <div class="mine-detail"><span>Period</span><strong>30 Days</strong></div>
+          <div class="mine-detail"><span>Minimum</span><strong>200,000 USDT</strong></div>
+          <div class="mine-detail"><span>Maximum</span><strong>299,999 USDT</strong></div>
+          <a class="mine-subscribe" href="../login.html?plan=olimpiada-2&name=Olimpiada%20Gold%20Mines&rate=1.4%25&period=30%20days&min=200000&max=299999">Subscribe Now</a>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="mine-section">
+      <div class="mine-disclaimer">
+        <strong>Important information:</strong> The rates, periods, and investment limits above are SDE CORE listing settings. They are not verified mine production returns, guaranteed profits, or an endorsement by Olimpiada Gold Mine or its operator. Mining involves operational, market, financial, and regulatory risks. Review all terms before subscribing.
+      </div>
+      <a class="mine-back" href="../../index.html#investments">← Back to Mining Listings</a>
+    </section>
+
+  </main>
+
+  <footer class="mine-footer">© <span id="mine-year"></span> SDE CORE. All rights reserved.</footer>
+
+</div>
+
+<script>
+  document.getElementById("mine-year").textContent = new Date().getFullYear();
+</script>
+<script src="../../js/main.js"></script>
+
+</body>
+</html>
