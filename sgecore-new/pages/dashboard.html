@@ -1,2660 +1,5236 @@
 
 
+
+
 <!DOCTYPE html>
+
+
 
 <html lang="en">
 
+
+
 <head>
 
-  <meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="theme-color" content="#07111f">
+  <meta charset="UTF-8">
 
-  <title>Dashboard | SDE CORE</title>
 
-  <link rel="stylesheet" href="../css/style.css">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-  <style>
 
-    :root {
+  <meta name="theme-color" content="#07111f">
 
-      color-scheme: dark;
 
-      --dash-bg: #07111f;
 
-      --dash-panel: #0d1a2b;
+  <title>Dashboard | SDE CORE</title>
 
-      --dash-panel-light: #112239;
 
-      --dash-gold: #d9b45d;
 
-      --dash-gold-light: #f0d58c;
+  <link rel="stylesheet" href="../css/style.css">
 
-      --dash-text: #f5f7fb;
 
-      --dash-muted: #aeb9ca;
 
-      --dash-border: rgba(217,180,93,.24);
 
-      --dash-radius: 12px;
 
-    }
 
 
+  <style>
 
-    * { box-sizing: border-box; }
 
 
+    :root {
 
-    body {
 
-      min-height: 100vh;
 
-      margin: 0;
+color-scheme: dark;
 
-      background: var(--dash-bg);
 
-      color: var(--dash-text);
 
-      font-family: Arial, Helvetica, sans-serif;
+--dash-bg: #07111f;
 
-    }
 
 
+--dash-panel: #0d1a2b;
 
-    a { color: inherit; }
 
-    button, input, select { font: inherit; }
 
-    button { cursor: pointer; }
+--dash-panel-light: #112239;
 
-    button:disabled { cursor: wait; opacity: .65; }
 
 
+--dash-gold: #d9b45d;
 
-    .dashboard-header {
 
-      display: flex;
 
-      align-items: center;
+--dash-gold-light: #f0d58c;
 
-      justify-content: space-between;
 
-      gap: 18px;
 
-      padding: 18px max(5%, calc((100% - 1180px) / 2));
+--dash-text: #f5f7fb;
 
-      border-bottom: 1px solid var(--dash-border);
 
-      background: var(--dash-panel);
 
-    }
+--dash-muted: #aeb9ca;
 
 
 
-    .dashboard-brand {
+--dash-border: rgba(217,180,93,.24);
 
-      color: var(--dash-gold);
 
-      font-size: 20px;
 
-      font-weight: 800;
+--dash-radius: 12px;
 
-      letter-spacing: 2px;
 
-      text-decoration: none;
 
-      white-space: nowrap;
+}
 
-    }
 
 
 
-    .header-actions {
 
-      display: flex;
 
-      align-items: center;
 
-      gap: 12px;
+    * { box-sizing: border-box; }
 
-    }
 
 
 
-    .header-link {
 
-      color: var(--dash-muted);
 
-      font-size: 14px;
 
-      text-decoration: none;
+    body {
 
-    }
 
 
+min-height: 100vh;
 
-    .header-link:hover { color: var(--dash-gold-light); }
 
 
+margin: 0;
 
-    .logout-button, .secondary-button {
 
-      padding: 10px 15px;
 
-      border: 1px solid var(--dash-gold);
+background: var(--dash-bg);
 
-      border-radius: 6px;
 
-      background: transparent;
 
-      color: var(--dash-gold-light);
+color: var(--dash-text);
 
-      font-size: 14px;
 
-      font-weight: 700;
 
-    }
+font-family: Arial, Helvetica, sans-serif;
 
 
 
-    .logout-button:hover:not(:disabled),
+}
 
-    .secondary-button:hover:not(:disabled) {
 
-      background: var(--dash-gold);
 
-      color: var(--dash-bg);
 
-    }
 
 
 
-    .dashboard-main {
+    a { color: inherit; }
 
-      width: min(1180px, 90%);
 
-      margin: 38px auto 56px;
 
-    }
+    button, input, select { font: inherit; }
 
 
 
-    .eyebrow {
+    button { cursor: pointer; }
 
-      margin: 0 0 10px;
 
-      color: var(--dash-gold);
 
-      font-size: 12px;
+    button:disabled { cursor: wait; opacity: .65; }
 
-      font-weight: 800;
 
-      letter-spacing: 2px;
 
-      text-transform: uppercase;
 
-    }
 
 
 
-    .page-heading {
+    .dashboard-header {
 
-      margin: 0;
 
-      font-size: clamp(28px, 4vw, 40px);
 
-      line-height: 1.2;
+display: flex;
 
-    }
 
 
+align-items: center;
 
-    .page-heading span { color: var(--dash-gold); }
 
 
+justify-content: space-between;
 
-    .page-description {
 
-      max-width: 690px;
 
-      margin: 14px 0 0;
+gap: 18px;
 
-      color: var(--dash-muted);
 
-      line-height: 1.8;
 
-    }
+padding: 18px max(5%, calc((100% - 1180px) / 2));
 
 
 
-    .welcome-card {
+border-bottom: 1px solid var(--dash-border);
 
-      position: relative;
 
-      overflow: hidden;
 
-      padding: clamp(24px, 4vw, 40px);
+background: var(--dash-panel);
 
-      border: 1px solid var(--dash-border);
 
-      border-radius: var(--dash-radius);
 
-      background:
+}
 
-        radial-gradient(ellipse at top right, rgba(217,180,93,.12), transparent 48%),
 
-        var(--dash-panel);
 
-    }
 
 
 
-    .status-line {
 
-      display: flex;
+    .dashboard-brand {
 
-      align-items: center;
 
-      gap: 10px;
 
-      margin: 24px 0 0;
+color: var(--dash-gold);
 
-      color: var(--dash-muted);
 
-      font-size: 14px;
 
-      line-height: 1.6;
+font-size: 20px;
 
-    }
 
 
+font-weight: 800;
 
-    .status-dot {
 
-      flex: 0 0 9px;
 
-      width: 9px;
+letter-spacing: 2px;
 
-      height: 9px;
 
-      border-radius: 50%;
 
-      background: #48c78e;
+text-decoration: none;
 
-    }
 
 
+white-space: nowrap;
 
-    .status-dot.is-error { background: #ef7777; }
 
 
+}
 
-    .dashboard-grid {
 
-      display: grid;
 
-      grid-template-columns: minmax(0,1.25fr) minmax(0,.75fr);
 
-      gap: 20px;
 
-      margin-top: 22px;
 
-    }
 
+    .header-actions {
 
 
-    .dashboard-card {
 
-      min-width: 0;
+display: flex;
 
-      padding: 26px;
 
-      border: 1px solid #26384f;
 
-      border-radius: var(--dash-radius);
+align-items: center;
 
-      background: var(--dash-panel);
 
-    }
 
+gap: 12px;
 
 
-    .card-heading {
+}
 
-      margin: 0 0 7px;
+    .header-link {
 
-      font-size: 19px;
 
-    }
 
+color: var(--dash-muted);
 
 
-    .card-description {
 
-      margin: 0 0 22px;
+font-size: 14px;
 
-      color: var(--dash-muted);
 
-      font-size: 14px;
 
-      line-height: 1.7;
+text-decoration: none;
 
-    }
+}
 
 
+    .header-link:hover { color: var(--dash-gold-light); }
 
-    .wallet-section { margin-top: 28px; }
 
 
 
-    .wallet-grid {
 
-      display: grid;
 
-      grid-template-columns: repeat(2,minmax(0,1fr));
 
-      gap: 20px;
+    .logout-button, .secondary-button {
 
-      margin-top: 18px;
 
-    }
 
+padding: 10px 15px;
 
 
-    .wallet-card {
 
-      min-width: 0;
+border: 1px solid var(--dash-gold);
 
-      padding: 25px;
 
-      border: 1px solid var(--dash-border);
 
-      border-radius: var(--dash-radius);
+border-radius: 6px;
 
-      background:
 
-        radial-gradient(ellipse at top right, rgba(217,180,93,.08), transparent 55%),
 
-        var(--dash-panel);
+background: transparent;
 
-    }
 
 
+color: var(--dash-gold-light);
 
-    .wallet-top {
 
-      display: flex;
 
-      align-items: center;
+font-size: 14px;
 
-      justify-content: space-between;
 
-      gap: 12px;
 
-    }
+font-weight: 700;
 
+}
 
+    .logout-button:hover:not(:disabled),
 
-    .wallet-title { margin: 0; font-size: 17px; }
 
 
+    .secondary-button:hover:not(:disabled) {
 
-    .wallet-icon {
 
-      display: grid;
 
-      width: 42px;
+background: var(--dash-gold);
 
-      height: 42px;
 
-      flex: 0 0 42px;
 
-      place-items: center;
+color: var(--dash-bg);
 
-      border: 1px solid var(--dash-border);
 
-      border-radius: 10px;
 
-      background: var(--dash-panel-light);
+}
 
-      color: var(--dash-gold-light);
 
-      font-size: 20px;
+    .dashboard-main {
 
-    }
 
 
+width: min(1180px, 90%);
 
-    .wallet-label {
 
-      margin: 23px 0 7px;
+margin: 38px auto 56px;
 
-      color: var(--dash-muted);
+}
 
-      font-size: 13px;
 
-    }
+    .eyebrow {
 
 
 
-    .wallet-balance {
+margin: 0 0 10px;
 
-      margin: 0;
 
-      color: var(--dash-gold-light);
+color: var(--dash-gold);
 
-      font-size: clamp(25px,3vw,34px);
 
-      font-weight: 800;
 
-      overflow-wrap: anywhere;
+font-size: 12px;
 
-    }
 
+font-weight: 800;
 
 
-    .wallet-currency {
 
-      color: var(--dash-muted);
+letter-spacing: 2px;
 
-      font-size: 14px;
 
-      font-weight: 600;
 
-    }
+text-transform: uppercase;
 
 
 
-    .wallet-description {
+}
 
-      margin: 12px 0 0;
+    .page-heading {
 
-      color: var(--dash-muted);
 
-      font-size: 13px;
+margin: 0;
 
-      line-height: 1.6;
 
-    }
 
+font-size: clamp(28px, 4vw, 40px);
 
 
-    .wallet-status, .wallet-message {
 
-      margin: 14px 0 0;
+line-height: 1.2;
 
-      color: var(--dash-muted);
 
-      font-size: 12px;
 
-      line-height: 1.6;
+}
 
-    }
 
+    .page-heading span { color: var(--dash-gold); }
 
 
-    .wallet-status:empty, .wallet-message:empty { display: none; }
+    .page-description {
 
 
 
-    .wallet-message, .form-message { color: #ffaaaa; }
+max-width: 690px;
 
-    .form-message.success { color: #8be0b5; }
 
-    .form-message:empty { display: none; }
+margin: 14px 0 0;
 
 
 
-    .account-avatar {
+color: var(--dash-muted);
 
-      display: grid;
 
-      width: 54px;
 
-      height: 54px;
+line-height: 1.8;
 
-      margin-bottom: 20px;
 
-      place-items: center;
 
-      border: 1px solid var(--dash-border);
+}
 
-      border-radius: 50%;
 
-      background: var(--dash-panel-light);
+    .welcome-card {
 
-      color: var(--dash-gold-light);
 
-      font-size: 22px;
 
-      font-weight: 800;
+position: relative;
 
-    }
 
 
+overflow: hidden;
 
-    .account-details { display: grid; gap: 0; margin: 0; }
 
 
+padding: clamp(24px, 4vw, 40px);
 
-    .account-row {
 
-      display: grid;
 
-      grid-template-columns: 125px minmax(0,1fr);
+border: 1px solid var(--dash-border);
 
-      gap: 14px;
 
-      padding: 15px 0;
 
-      border-top: 1px solid #26384f;
+border-radius: var(--dash-radius);
 
-    }
 
 
+background:
 
-    .account-row dt {
 
-      color: var(--dash-muted);
 
-      font-size: 13px;
+        radial-gradient(ellipse at top right, rgba(217,180,93,.12), transparent 48%),
 
-    }
 
 
+        var(--dash-panel);
 
-    .account-row dd {
 
-      min-width: 0;
 
-      margin: 0;
+}
 
-      overflow-wrap: anywhere;
 
-      font-size: 14px;
+    .status-line {
 
-      font-weight: 600;
 
-    }
 
+display: flex;
 
 
-    .member-id { color: var(--dash-gold-light); font-weight: 800; }
 
 
+display: flex;
 
-    .account-badge, .verification-badge {
 
-      display: inline-flex;
 
-      align-items: center;
+align-items: center;
 
-      gap: 7px;
 
-      padding: 6px 10px;
 
-      border: 1px solid #52647b;
+gap: 10px;
 
-      border-radius: 999px;
 
-      color: var(--dash-muted);
 
-      font-size: 12px;
+margin: 24px 0 0;
 
-      font-weight: 700;
 
-    }
 
+color: var(--dash-muted);
 
 
-    .account-badge {
 
-      border-color: rgba(72,199,142,.3);
+font-size: 14px;
 
-      background: rgba(72,199,142,.08);
 
-      color: #8be0b5;
 
-    }
+line-height: 1.6;
 
 
+}
 
-    .account-badge::before {
 
-      width: 6px;
+    .status-dot {
 
-      height: 6px;
 
-      border-radius: 50%;
 
-      background: currentColor;
+flex: 0 0 9px;
 
-      content: "";
 
-    }
 
+width: 9px;
 
 
-    .verification-badge.verified {
 
-      border-color: rgba(72,199,142,.3);
+height: 9px;
 
-      background: rgba(72,199,142,.08);
 
-      color: #8be0b5;
 
-    }
+border-radius: 50%;
 
 
 
-    .verification-badge.unverified {
+background: #48c78e;
 
-      border-color: rgba(239,119,119,.3);
+}
 
-      background: rgba(239,119,119,.08);
 
-      color: #ffaaaa;
+    .status-dot.is-error { background: #ef7777; }
 
-    }
+    .dashboard-grid {
 
 
 
-    .form-field { margin-top: 17px; }
+display: grid;
 
 
 
-    .form-field label {
+grid-template-columns: minmax(0,1.25fr) minmax(0,.75fr);
 
-      display: block;
 
-      margin-bottom: 9px;
 
-      color: var(--dash-muted);
+gap: 20px;
 
-      font-size: 13px;
 
-      font-weight: 700;
 
-    }
+margin-top: 22px;
 
 
 
-    .form-field input, .form-field select {
+}
 
-      display: block;
+    .dashboard-card {
 
-      width: 100%;
 
-      min-height: 46px;
 
-      padding: 12px 13px;
+min-width: 0;
 
-      border: 1px solid #344861;
 
-      border-radius: 7px;
+padding: 26px;
 
-      outline: none;
 
-      background: #091626;
+border: 1px solid #26384f;
 
-      color: var(--dash-text);
 
-    }
 
+border-radius: var(--dash-radius);
 
 
-    .form-field input:focus, .form-field select:focus {
 
-      border-color: var(--dash-gold);
+background: var(--dash-panel);
 
-    }
+}
 
 
+    .card-heading {
 
-    .transfer-summary {
 
-      display: grid;
 
-      grid-template-columns: 1fr auto 1fr;
+margin: 0 0 7px;
 
-      align-items: center;
 
-      gap: 10px;
+font-size: 19px;
 
-      margin: 20px 0;
 
-    }
 
+}
 
 
-    .transfer-wallet {
+    .card-description {
 
-      min-width: 0;
+margin: 0 0 22px;
 
-      padding: 14px 10px;
 
-      border: 1px solid #2a3b52;
+color: var(--dash-muted);
 
-      border-radius: 8px;
 
-      background: var(--dash-panel-light);
 
-      text-align: center;
+font-size: 14px;
 
-    }
+line-height: 1.7;
 
 
+}
 
-    .transfer-wallet strong { display: block; font-size: 13px; }
 
-    .transfer-wallet span {
+    .wallet-section { margin-top: 28px; }
 
-      display: block;
 
-      margin-top: 6px;
+    .wallet-grid {
 
-      color: var(--dash-gold-light);
 
-      font-size: 12px;
+display: grid;
 
-      overflow-wrap: anywhere;
 
-    }
 
+grid-template-columns: repeat(2,minmax(0,1fr));
 
 
-    .transfer-arrow { color: var(--dash-gold); font-size: 22px; }
 
+gap: 20px;
 
 
-    .transfer-actions {
 
-      display: flex;
+margin-top: 18px;
 
-      align-items: center;
 
-      flex-wrap: wrap;
+}
 
-      gap: 12px;
 
-      margin-top: 20px;
+    .wallet-card {
 
-    }
 
 
+min-width: 0;
 
-    .primary-button {
 
-      min-height: 45px;
 
-      padding: 12px 18px;
+padding: 25px;
 
-      border: 1px solid var(--dash-gold);
 
-      border-radius: 6px;
 
-      background: var(--dash-gold);
+border: 1px solid var(--dash-border);
 
-      color: #07111f;
 
-      font-weight: 800;
 
-    }
+border-radius: var(--dash-radius);
 
 
 
-    .primary-button:hover:not(:disabled) {
+background:
 
-      background: var(--dash-gold-light);
 
-    }
 
+        radial-gradient(ellipse at top right, rgba(217,180,93,.08), transparent 55%),
 
 
-    .hint {
 
-      margin: 10px 0 0;
+        var(--dash-panel);
 
-      color: var(--dash-muted);
 
-      font-size: 12px;
 
-      line-height: 1.6;
+}
 
-    }
 
 
+    .wallet-top {
 
-    .quick-links { display: grid; gap: 12px; }
 
 
+display: flex;
 
-    .quick-link {
 
-      display: flex;
 
-      align-items: center;
+align-items: center;
 
-      justify-content: space-between;
 
-      gap: 12px;
 
-      padding: 16px;
+justify-content: space-between;
 
-      border: 1px solid #2a3b52;
 
-      border-radius: 8px;
 
-      background: var(--dash-panel-light);
+gap: 12px;
 
-      text-decoration: none;
 
-      transition: border-color .2s, transform .2s;
 
-    }
+}
 
 
+    .wallet-title { margin: 0; font-size: 17px; }
 
-    .quick-link:hover {
 
-      transform: translateY(-2px);
+    .wallet-icon {
 
-      border-color: var(--dash-gold);
 
-    }
 
+display: grid;
 
 
-    .quick-link strong { display: block; margin-bottom: 5px; font-size: 14px; }
 
-    .quick-link small {
+width: 42px;
 
-      display: block;
 
-      color: var(--dash-muted);
+height: 42px;
 
-      font-size: 12px;
 
-      line-height: 1.5;
+flex: 0 0 42px;
 
-    }
 
+place-items: center;
 
 
-    .quick-link .arrow { color: var(--dash-gold); font-size: 21px; }
 
+border: 1px solid var(--dash-border);
 
 
-    .transactions-card { margin-top: 22px; }
 
 
+border: 1px solid var(--dash-border);
 
-    .transactions-header {
 
-      display: flex;
 
-      justify-content: space-between;
+border-radius: 10px;
 
-      align-items: center;
 
-      gap: 12px;
 
-      margin-bottom: 16px;
+background: var(--dash-panel-light);
 
-    }
 
 
+color: var(--dash-gold-light);
 
-    .transactions-header .card-description { margin-bottom: 0; }
 
 
+font-size: 20px;
 
-    .transaction-list { display: grid; }
+}
 
 
+    .wallet-label {
 
-    .transaction-row {
 
-      display: grid;
 
-      grid-template-columns: minmax(0,1fr) auto;
+margin: 23px 0 7px;
 
-      gap: 12px;
 
-      align-items: center;
 
-      padding: 15px 0;
+color: var(--dash-muted);
 
-      border-top: 1px solid #26384f;
 
-    }
 
 
+color: var(--dash-muted);
 
-    .transaction-title { font-size: 14px; font-weight: 700; }
 
-    .transaction-meta {
 
-      margin-top: 5px;
+font-size: 13px;
 
-      color: var(--dash-muted);
 
-      font-size: 12px;
 
-      line-height: 1.5;
+}
 
-    }
 
+    .wallet-balance {
 
 
-    .transaction-amount {
 
-      text-align: right;
+margin: 0;
 
-      font-size: 14px;
 
-      font-weight: 800;
 
-      overflow-wrap: anywhere;
+color: var(--dash-gold-light);
 
-    }
 
 
+font-size: clamp(25px,3vw,34px);
 
-    .transaction-amount.in { color: #8be0b5; }
 
-    .transaction-amount.out { color: var(--dash-gold-light); }
 
+font-weight: 800;
 
 
-    .transaction-status {
 
-      display: block;
+overflow-wrap: anywhere;
 
-      margin-top: 5px;
 
-      color: var(--dash-muted);
 
-      font-size: 11px;
+}
 
-      font-weight: 500;
 
-    }
 
 
 
-    .empty-state {
 
-      padding: 22px 0;
 
-      color: var(--dash-muted);
+    .wallet-currency {
 
-      font-size: 13px;
 
-      line-height: 1.7;
 
-    }
+color: var(--dash-muted);
 
 
 
-    .dashboard-footer {
+font-size: 14px;
 
-      padding: 25px 5%;
 
-      border-top: 1px solid rgba(217,180,93,.12);
 
-      color: #8e9bad;
+font-weight: 600;
 
-      font-size: 13px;
 
-      text-align: center;
 
-    }
+}
 
 
 
-    @media (max-width: 760px) {
 
-      .dashboard-grid, .wallet-grid { grid-template-columns: 1fr; }
 
-      .dashboard-main { margin-top: 26px; }
 
-      .dashboard-card { padding: 22px; }
 
-    }
+    .wallet-description {
 
 
 
-    @media (max-width: 480px) {
+margin: 12px 0 0;
 
-      .dashboard-header { padding: 16px 5%; }
 
-      .dashboard-brand { font-size: 16px; letter-spacing: 1.5px; }
 
-      .header-actions { gap: 10px; }
+color: var(--dash-muted);
 
-      .header-link { display: none; }
 
-      .logout-button { padding: 9px 12px; }
+font-size: 13px;
 
-      .welcome-card { padding: 25px 20px; }
 
-      .account-row { grid-template-columns: 95px minmax(0,1fr); gap: 10px; }
 
-      .wallet-card { padding: 21px; }
+line-height: 1.6;
 
-      .transactions-header { align-items: flex-start; }
 
-    }
 
+}
 
-    .currency-control {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .currency-control label {
-      color: var(--dash-muted);
-      font-size: 12px;
-      white-space: nowrap;
-    }
-    .currency-control select {
-      min-height: 38px;
-      max-width: 112px;
-      padding: 8px 10px;
-      border: 1px solid var(--dash-border);
-      border-radius: 6px;
-      background: #091626;
-      color: var(--dash-text);
-    }
-    .quick-link.deposit-link,
-    .quick-link.withdraw-link {
-      border-color: var(--dash-border);
-    }
 
-  </style>
+
+
+
+
+
+    .wallet-status, .wallet-message {
+
+
+
+margin: 14px 0 0;
+
+
+color: var(--dash-muted);
+
+
+
+font-size: 12px;
+
+
+
+line-height: 1.6;
+
+
+
+}
+
+
+
+
+
+
+
+    .wallet-status:empty, .wallet-message:empty { display: none; }
+
+
+
+
+
+
+
+    .wallet-message, .form-message { color: #ffaaaa; }
+
+
+
+    .form-message.success { color: #8be0b5; }
+
+
+
+    .form-message:empty { display: none; }
+
+
+
+
+
+
+
+    .account-avatar {
+
+
+
+display: grid;
+
+
+
+width: 54px;
+
+
+
+height: 54px;
+
+
+
+margin-bottom: 20px;
+
+
+
+place-items: center;
+
+
+
+border: 1px solid var(--dash-border);
+
+
+
+border-radius: 50%;
+
+
+
+background: var(--dash-panel-light);
+
+
+
+color: var(--dash-gold-light);
+
+
+
+font-size: 22px;
+
+
+
+font-weight: 800;
+
+
+
+}
+
+
+
+
+
+
+
+    .account-details { display: grid; gap: 0; margin: 0; }
+
+
+
+
+
+
+
+    .account-row {
+
+
+
+display: grid;
+
+
+
+grid-template-columns: 125px minmax(0,1fr);
+
+
+
+gap: 14px;
+
+
+
+padding: 15px 0;
+
+
+
+border-top: 1px solid #26384f;
+
+
+
+}
+
+
+
+
+
+
+
+    .account-row dt {
+
+
+
+color: var(--dash-muted);
+
+
+
+font-size: 13px;
+
+
+
+}
+
+
+
+
+
+
+
+    .account-row dd {
+
+
+
+min-width: 0;
+
+
+
+margin: 0;
+
+
+
+overflow-wrap: anywhere;
+
+
+
+font-size: 14px;
+
+
+
+font-weight: 600;
+
+
+
+}
+
+
+
+
+
+
+
+    .member-id { color: var(--dash-gold-light); font-weight: 800; }
+
+
+
+
+
+
+
+    .account-badge, .verification-badge {
+
+
+
+display: inline-flex;
+
+
+
+align-items: center;
+
+
+
+gap: 7px;
+
+
+
+padding: 6px 10px;
+
+
+
+border: 1px solid #52647b;
+
+
+
+border-radius: 999px;
+
+
+
+color: var(--dash-muted);
+
+
+
+font-size: 12px;
+
+
+
+font-weight: 700;
+
+
+
+}
+
+
+
+
+
+
+
+    .account-badge {
+
+
+
+border-color: rgba(72,199,142,.3);
+
+
+
+background: rgba(72,199,142,.08);
+
+
+
+color: #8be0b5;
+
+
+
+}
+
+
+
+
+
+
+
+    .account-badge::before {
+
+
+
+width: 6px;
+
+
+
+height: 6px;
+
+
+
+border-radius: 50%;
+
+
+
+background: currentColor;
+
+
+
+content: "";
+
+
+
+}
+
+
+
+
+
+
+
+    .verification-badge.verified {
+
+
+
+border-color: rgba(72,199,142,.3);
+
+
+
+background: rgba(72,199,142,.08);
+
+
+
+color: #8be0b5;
+
+
+
+}
+
+
+
+
+
+
+
+    .verification-badge.unverified {
+
+
+
+border-color: rgba(239,119,119,.3);
+
+
+
+background: rgba(239,119,119,.08);
+
+
+
+color: #ffaaaa;
+
+
+
+}
+
+
+
+
+
+
+
+    .form-field { margin-top: 17px; }
+
+
+
+
+
+
+
+    .form-field label {
+
+
+
+display: block;
+
+
+
+margin-bottom: 9px;
+
+
+
+color: var(--dash-muted);
+
+
+font-size: 13px;
+
+
+
+font-weight: 700;
+
+
+
+}
+
+
+    .form-field input, .form-field select {
+
+
+
+display: block;
+
+
+
+width: 100%;
+
+
+
+min-height: 46px;
+
+
+
+padding: 12px 13px;
+
+
+
+border: 1px solid #344861;
+
+
+
+border-radius: 7px;
+
+
+
+outline: none;
+
+
+
+background: #091626;
+
+
+
+color: var(--dash-text);
+
+
+
+}
+
+
+
+
+
+
+
+    .form-field input:focus, .form-field select:focus {
+
+
+
+border-color: var(--dash-gold);
+
+
+}
+
+
+
+    .transfer-summary {
+
+
+
+display: grid;
+
+
+
+grid-template-columns: 1fr auto 1fr;
+
+
+
+align-items: center;
+
+
+gap: 10px;
+
+
+
+margin: 20px 0;
+
+
+
+}
+
+
+    .transfer-wallet {
+
+
+
+min-width: 0;
+
+
+
+padding: 14px 10px;
+
+
+
+border: 1px solid #2a3b52;
+
+
+
+border-radius: 8px;
+
+
+
+background: var(--dash-panel-light);
+
+
+
+text-align: center;
+
+
+
+}
+
+
+    .transfer-wallet strong { display: block; font-size: 13px; }
+
+
+
+    .transfer-wallet span {
+
+
+
+display: block;
+
+
+
+margin-top: 6px;
+
+
+
+color: var(--dash-gold-light);
+
+
+
+font-size: 12px;
+
+
+
+overflow-wrap: anywhere;
+
+
+}
+
+
+    .transfer-arrow { color: var(--dash-gold); font-size: 22px; }
+
+
+    .transfer-actions {
+
+
+display: flex;
+
+
+
+align-items: center;
+
+
+
+flex-wrap: wrap;
+
+
+
+gap: 12px;
+
+
+
+margin-top: 20px;
+
+
+
+}
+
+
+    .primary-button {
+
+
+
+min-height: 45px;
+
+
+padding: 12px 18px;
+
+
+
+border: 1px solid var(--dash-gold);
+
+
+
+border-radius: 6px;
+
+
+
+background: var(--dash-gold);
+
+
+
+color: #07111f;
+
+
+
+font-weight: 800;
+
+
+
+}
+
+
+    .primary-button:hover:not(:disabled) {
+
+
+
+background: var(--dash-gold-light);
+
+
+}
+
+
+
+    .hint {
+
+
+
+margin: 10px 0 0;
+
+
+
+color: var(--dash-muted);
+
+
+
+font-size: 12px;
+
+
+
+line-height: 1.6;
+
+
+
+}
+
+
+    .quick-links { display: grid; gap: 12px; }
+
+    .quick-link {
+
+display: flex;
+
+
+
+align-items: center;
+
+
+
+justify-content: space-between;
+
+
+
+gap: 12px;
+
+
+
+padding: 16px;
+
+
+
+border: 1px solid #2a3b52;
+
+
+
+border-radius: 8px;
+
+
+
+background: var(--dash-panel-light);
+
+
+
+text-decoration: none;
+
+
+
+transition: border-color .2s, transform .2s;
+
+
+
+}
+
+
+    .quick-link:hover {
+
+
+
+transform: translateY(-2px);
+
+
+
+border-color: var(--dash-gold);
+
+
+
+}
+
+
+    .quick-link strong { display: block; margin-bottom: 5px; font-size: 14px; }
+
+
+
+    .quick-link small {
+
+
+
+display: block;
+
+
+
+color: var(--dash-muted);
+
+
+
+font-size: 12px;
+
+
+
+line-height: 1.5;
+
+
+
+}
+
+    .quick-link .arrow { color: var(--dash-gold); font-size: 21px; }
+
+
+    .transactions-card { margin-top: 22px; }
+
+
+    .transactions-header {
+
+
+
+display: flex;
+
+
+
+justify-content: space-between;
+
+
+
+align-items: center;
+
+
+
+gap: 12px;
+
+
+
+margin-bottom: 16px;
+
+
+
+}
+
+
+
+
+
+
+
+    .transactions-header .card-description { margin-bottom: 0; }
+
+
+
+
+
+
+
+    .transaction-list { display: grid; }
+
+
+
+
+
+
+
+    .transaction-row {
+
+
+
+display: grid;
+
+
+
+grid-template-columns: minmax(0,1fr) auto;
+
+
+
+gap: 12px;
+
+
+
+align-items: center;
+
+
+
+padding: 15px 0;
+
+
+border-top: 1px solid #26384f;
+
+
+
+}
+
+
+
+
+
+
+
+    .transaction-title { font-size: 14px; font-weight: 700; }
+
+
+
+    .transaction-meta {
+
+
+
+margin-top: 5px;
+
+
+
+color: var(--dash-muted);
+
+
+
+font-size: 12px;
+
+
+
+line-height: 1.5;
+
+
+
+}
+
+    .transaction-amount {
+
+
+
+text-align: right;
+
+
+
+font-size: 14px;
+
+
+
+font-weight: 800;
+
+
+
+overflow-wrap: anywhere;
+
+
+
+}
+
+
+    .transaction-amount.in { color: #8be0b5; }
+
+
+
+    .transaction-amount.out { color: var(--dash-gold-light); }
+
+
+
+
+
+
+
+    .transaction-status {
+
+
+
+display: block;
+
+
+
+margin-top: 5px;
+
+
+
+color: var(--dash-muted);
+
+
+
+font-size: 11px;
+
+
+
+font-weight: 500;
+
+
+
+}
+
+
+
+
+
+
+
+    .empty-state {
+
+
+
+padding: 22px 0;
+
+
+color: var(--dash-muted);
+
+
+
+font-size: 13px;
+
+
+
+line-height: 1.7;
+
+
+
+}
+
+
+    .dashboard-footer {
+
+
+
+padding: 25px 5%;
+
+
+
+border-top: 1px solid rgba(217,180,93,.12);
+
+
+
+color: #8e9bad;
+
+
+
+font-size: 13px;
+
+
+
+text-align: center;
+
+
+
+}
+
+
+@media (max-width: 760px) {
+
+
+
+      .dashboard-grid, .wallet-grid { grid-template-columns: 1fr; }
+
+
+
+      .dashboard-main { margin-top: 26px; }
+
+
+
+      .dashboard-card { padding: 22px; }
+
+}
+
+
+
+
+
+
+
+@media (max-width: 480px) {
+
+
+
+      .dashboard-header { padding: 16px 5%; }
+
+
+
+      .dashboard-brand { font-size: 16px; letter-spacing: 1.5px; }
+
+
+
+      .header-actions { gap: 10px; }
+
+
+
+      .header-link { display: none; }
+
+
+
+      .logout-button { padding: 9px 12px; }
+
+
+
+      .welcome-card { padding: 25px 20px; }
+
+
+
+      .account-row { grid-template-columns: 95px minmax(0,1fr); gap: 10px; }
+
+
+
+      .wallet-card { padding: 21px; }
+
+
+
+      .transactions-header { align-items: flex-start; }
+
+
+
+}
+
+
+
+
+
+    .currency-control {
+
+display: flex;
+
+align-items: center;
+
+gap: 8px;
+
+}
+
+    .currency-control label {
+
+color: var(--dash-muted);
+
+font-size: 12px;
+
+white-space: nowrap;
+
+}
+
+    .currency-control select {
+
+min-height: 38px;
+
+max-width: 112px;
+
+padding: 8px 10px;
+
+border: 1px solid var(--dash-border);
+
+border-radius: 6px;
+
+background: #091626;
+
+color: var(--dash-text);
+
+}
+
+    .quick-link.deposit-link,
+
+    .quick-link.withdraw-link {
+
+border-color: var(--dash-border);
+
+}
+
+
+
+  
+    #customer-support-card[hidden] { display: none !important; }
+    #customer-support-card .support-form { display:grid; gap:9px; margin:16px 0; }
+    #customer-support-card .support-form input, #customer-support-card .support-form textarea,
+    #customer-support-card .support-chat textarea { width:100%; box-sizing:border-box; border:1px solid var(--dash-border); border-radius:10px; padding:11px 12px; background:var(--dash-panel); color:var(--dash-text); font:inherit; }
+    #customer-support-card .support-layout { display:grid; grid-template-columns:minmax(190px, .8fr) minmax(0, 1.6fr); gap:14px; margin-top:14px; }
+    #customer-support-card .support-ticket-list, #customer-support-card .support-chat { min-width:0; border:1px solid var(--dash-border); border-radius:12px; padding:12px; }
+    #customer-support-card .support-ticket { width:100%; display:block; text-align:left; padding:11px; margin-bottom:8px; border:1px solid var(--dash-border); border-radius:9px; background:transparent; color:var(--dash-text); cursor:pointer; }
+    #customer-support-card .support-ticket.active { border-color:var(--dash-gold); background:rgba(217,180,93,.08); }
+    #customer-support-card .support-message { padding:10px 12px; margin:9px 0; border-radius:10px; background:var(--dash-panel); overflow-wrap:anywhere; }
+    #customer-support-card .support-message.admin { border-left:3px solid var(--dash-gold); }
+    #customer-support-card .support-message p { white-space:pre-wrap; margin:7px 0 0; }
+    #customer-support-card .support-chat form { display:grid; gap:9px; margin-top:12px; }
+    @media(max-width:700px) { #customer-support-card .support-layout { grid-template-columns:1fr; } }
+
+</style>
+
+
 
 </head>
 
 
 
+
+
+
+
 <body>
 
-  <header class="dashboard-header">
 
-    <a class="dashboard-brand" href="../index.html">SDE CORE</a>
 
-    <nav class="header-actions" aria-label="Account navigation">
+  <header class="dashboard-header">
 
-      <a class="header-link" href="../index.html">Home</a>
 
-      <div class="currency-control">
-        <label for="display-currency">Currency</label>
-        <select id="display-currency" aria-label="Preferred display currency">
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="GBP">GBP</option>
-          <option value="INR">INR</option>
-          <option value="CNY">CNY</option>
-          <option value="AED">AED</option>
-          <option value="SAR">SAR</option>
-          <option value="TRY">TRY</option>
-          <option value="JPY">JPY</option>
-          <option value="CAD">CAD</option>
-          <option value="AUD">AUD</option>
-          <option value="CHF">CHF</option>
-          <option value="SGD">SGD</option>
-        </select>
-      </div>
 
-      <button class="secondary-button" id="refresh-button" type="button">Refresh</button>
+    <a class="dashboard-brand" href="../index.html">SDE CORE</a>
 
-      <button class="logout-button" id="logout-button" type="button">Logout</button>
 
-    </nav>
 
-  </header>
+    <nav class="header-actions" aria-label="Account navigation">
 
 
 
-  <main class="dashboard-main">
+      <a class="header-link" href="../index.html">Home</a>
 
-    <section class="welcome-card" aria-labelledby="dashboard-title">
 
-      <p class="eyebrow">Member area</p>
 
-      <h1 class="page-heading" id="dashboard-title">Welcome to <span>SDE CORE</span></h1>
+      <div class="currency-control">
 
-      <p class="page-description">
+        <label for="display-currency">Currency</label>
 
-        Manage your account, view your wallets, transfer funds between accounts,
+        <select id="display-currency" aria-label="Preferred display currency">
 
-        and access SDE CORE services from one place.
+          <option value="USD">USD</option>
 
-      </p>
+          <option value="EUR">EUR</option>
 
-      <p class="status-line" role="status" aria-live="polite">
+          <option value="GBP">GBP</option>
 
-        <span class="status-dot" id="status-dot" aria-hidden="true"></span>
+          <option value="INR">INR</option>
 
-        <span id="dashboard-status">Loading your account...</span>
+          <option value="CNY">CNY</option>
 
-      </p>
+          <option value="AED">AED</option>
 
-    </section>
+          <option value="SAR">SAR</option>
 
+          <option value="TRY">TRY</option>
 
+          <option value="JPY">JPY</option>
 
-    <section class="wallet-section" aria-labelledby="wallet-heading">
+          <option value="CAD">CAD</option>
 
-      <h2 class="card-heading" id="wallet-heading">My Wallets</h2>
+          <option value="AUD">AUD</option>
 
-      <p class="card-description">View your available wallet balances.</p>
+          <option value="CHF">CHF</option>
 
+          <option value="SGD">SGD</option>
 
+        </select>
 
-      <div class="wallet-grid">
+      </div>
 
-        <article class="wallet-card">
 
-          <div class="wallet-top">
 
-            <h3 class="wallet-title">Delivery Wallet</h3>
+      <button class="secondary-button" id="refresh-button" type="button">Refresh</button>
 
-            <span class="wallet-icon" aria-hidden="true">↗</span>
 
-          </div>
 
-          <p class="wallet-label">Available balance</p>
+      <button class="logout-button" id="logout-button" type="button">Logout</button>
 
-          <p class="wallet-balance">
 
-            <span id="delivery-balance">—</span>
 
-            <span class="wallet-currency" id="delivery-currency-label">USDT</span>
+    </nav>
 
-          </p>
 
-          <p class="wallet-description">Your Delivery Wallet balance.</p>
 
-          <p class="wallet-status" id="delivery-wallet-status" role="status"></p>
+  </header>
 
-        </article>
 
 
 
-        <article class="wallet-card">
 
-          <div class="wallet-top">
 
-            <h3 class="wallet-title">Funding Wallet</h3>
 
-            <span class="wallet-icon" aria-hidden="true">◇</span>
+  <main class="dashboard-main">
 
-          </div>
 
-          <p class="wallet-label">Available balance</p>
 
-          <p class="wallet-balance">
+    <section class="welcome-card" aria-labelledby="dashboard-title">
 
-            <span id="funding-balance">—</span>
 
-            <span class="wallet-currency" id="funding-currency-label">USDT</span>
 
-          </p>
+      <p class="eyebrow">Member area</p>
 
-          <p class="wallet-description">Your Funding Wallet balance.</p>
 
-          <p class="wallet-status" id="funding-wallet-status" role="status"></p>
 
-        </article>
+      <h1 class="page-heading" id="dashboard-title">Welcome to <span>SDE CORE</span></h1>
 
-      </div>
 
 
+      <p class="page-description">
 
-      <p class="wallet-message" id="wallet-message" role="status" aria-live="polite"></p>
 
-      <p class="wallet-status" id="exchange-rate-status" role="status" aria-live="polite">Display currency rates are loading…</p>
 
-    </section>
+        Manage your account, view your wallets, transfer funds between accounts,
 
 
 
-    <section class="dashboard-card" style="margin-top:22px" aria-labelledby="transfer-heading">
+        and access SDE CORE services from one place.
 
-      <h2 class="card-heading" id="transfer-heading">Transfer Between Accounts</h2>
 
-      <p class="card-description">
 
-        Move USDT between your Delivery and Funding wallets. Transfers are processed
+      </p>
 
-        securely by Supabase.
 
-      </p>
 
+      <p class="status-line" role="status" aria-live="polite">
 
 
-      <form id="transfer-form">
 
-        <div class="form-field">
+        <span class="status-dot" id="status-dot" aria-hidden="true"></span>
 
-          <label for="transfer-direction">Transfer direction</label>
 
-          <select id="transfer-direction" required>
 
-            <option value="delivery-funding">Delivery Wallet → Funding Wallet</option>
+        <span id="dashboard-status">Loading your account...</span>
 
-            <option value="funding-delivery">Funding Wallet → Delivery Wallet</option>
 
-          </select>
 
-        </div>
+      </p>
 
 
 
-        <div class="transfer-summary" aria-live="polite">
+    </section>
 
-          <div class="transfer-wallet">
 
-            <strong id="transfer-from-name">Delivery Wallet</strong>
 
-            <span id="transfer-from-balance">Available: — USDT</span>
 
-          </div>
 
-          <span class="transfer-arrow" aria-hidden="true">→</span>
 
-          <div class="transfer-wallet">
 
-            <strong id="transfer-to-name">Funding Wallet</strong>
+    <section class="wallet-section" aria-labelledby="wallet-heading">
 
-            <span id="transfer-to-balance">Destination wallet</span>
 
-          </div>
 
-        </div>
+      <h2 class="card-heading" id="wallet-heading">My Wallets</h2>
 
 
 
-        <div class="form-field">
+      <p class="card-description">View your available wallet balances.</p>
 
-          <label for="transfer-amount">Amount (USDT)</label>
 
-          <input
 
-            id="transfer-amount"
 
-            name="amount"
 
-            type="number"
 
-            min="0.00000001"
 
-            step="0.00000001"
+      <div class="wallet-grid">
 
-            inputmode="decimal"
 
-            placeholder="Enter transfer amount"
 
-            required
+        <article class="wallet-card">
 
-          >
 
-          <p class="hint">Enter an amount greater than zero and no greater than your available balance.</p>
 
-        </div>
+          <div class="wallet-top">
 
 
 
-        <div class="transfer-actions">
+            <h3 class="wallet-title">Delivery Wallet</h3>
 
-          <button class="primary-button" id="transfer-submit" type="submit">
 
-            Transfer to Funding Wallet
 
-          </button>
+            <span class="wallet-icon" aria-hidden="true">↗</span>
 
-          <button class="secondary-button" id="max-transfer" type="button">Use maximum</button>
 
-        </div>
 
+          </div>
 
 
-        <p class="form-message" id="transfer-message" role="status" aria-live="polite"></p>
 
-      </form>
+          <p class="wallet-label">Available balance</p>
 
-    </section>
 
 
+          <p class="wallet-balance">
 
-    <div class="dashboard-grid">
 
-      <section class="dashboard-card" aria-labelledby="account-heading">
 
-        <h2 class="card-heading" id="account-heading">My Account</h2>
+            <span id="delivery-balance">—</span>
 
-        <p class="card-description">Your personal account details.</p>
 
-        <div class="account-avatar" id="account-avatar" aria-hidden="true">S</div>
 
+            <span class="wallet-currency" id="delivery-currency-label">USDT</span>
 
 
-        <dl class="account-details">
 
-          <div class="account-row">
+          </p>
 
-            <dt>Member ID</dt>
 
-            <dd><span class="member-id" id="account-member-id">Loading...</span></dd>
 
-          </div>
+          <p class="wallet-description">Your Delivery Wallet balance.</p>
 
-          <div class="account-row">
 
-            <dt>Full name</dt>
 
-            <dd id="account-name">Loading...</dd>
+          <p class="wallet-status" id="delivery-wallet-status" role="status"></p>
 
-          </div>
 
-          <div class="account-row">
 
-            <dt>Email address</dt>
+        </article>
 
-            <dd id="account-email">Loading...</dd>
 
-          </div>
 
-          <div class="account-row">
 
-            <dt>Account status</dt>
 
-            <dd><span class="account-badge" id="account-badge">Checking</span></dd>
 
-          </div>
 
-          <div class="account-row">
+        <article class="wallet-card">
 
-            <dt>Email status</dt>
 
-            <dd><span class="verification-badge" id="email-verification">Checking...</span></dd>
 
-          </div>
+          <div class="wallet-top">
 
-        </dl>
 
-      </section>
 
+            <h3 class="wallet-title">Funding Wallet</h3>
 
 
-      <section class="dashboard-card" aria-labelledby="quick-links-heading">
 
-        <h2 class="card-heading" id="quick-links-heading">Quick Access</h2>
+            <span class="wallet-icon" aria-hidden="true">◇</span>
 
-        <p class="card-description">Explore SDE CORE.</p>
 
 
+          </div>
 
-        <nav class="quick-links" aria-label="Quick access">
 
-          <a class="quick-link deposit-link" href="quick-recharge.html">
-            <span><strong>Deposit</strong><small>Open the existing USDT deposit page and payment addresses.</small></span>
-            <span class="arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="quick-link withdraw-link" href="withdraw.html">
-            <span><strong>Withdraw</strong><small>Choose a crypto wallet or bank account withdrawal method.</small></span>
-            <span class="arrow" aria-hidden="true">→</span>
-          </a>
 
-          <a class="quick-link" href="quick-recharge.html">
+          <p class="wallet-label">Available balance</p>
 
-            <span><strong>Quick Recharge</strong><small>Deposit USDT into your Delivery Wallet.</small></span>
 
-            <span class="arrow" aria-hidden="true">→</span>
 
-          </a>
+          <p class="wallet-balance">
 
-          <a class="quick-link" href="../index.html">
 
-            <span><strong>SDE CORE Homepage</strong><small>Visit the main website.</small></span>
 
-            <span class="arrow" aria-hidden="true">→</span>
+            <span id="funding-balance">—</span>
 
-          </a>
 
-          <a class="quick-link" href="../index.html#plans">
 
-            <span><strong>Explore Mining Plans</strong><small>View available plans.</small></span>
+            <span class="wallet-currency" id="funding-currency-label">USDT</span>
 
-            <span class="arrow" aria-hidden="true">→</span>
 
-          </a>
 
-          <a class="quick-link" href="../index.html#markets">
+          </p>
 
-            <span><strong>Explore Markets</strong><small>View market information.</small></span>
 
-            <span class="arrow" aria-hidden="true">→</span>
 
-          </a>
+          <p class="wallet-description">Your Funding Wallet balance.</p>
 
-        </nav>
 
-      </section>
 
-    </div>
+          <p class="wallet-status" id="funding-wallet-status" role="status"></p>
 
 
 
-    <section class="dashboard-card transactions-card" aria-labelledby="transactions-heading">
+        </article>
 
+
+
+      </div>
+
+
+
+
+
+
+
+      <p class="wallet-message" id="wallet-message" role="status" aria-live="polite"></p>
+
+
+
+      <p class="wallet-status" id="exchange-rate-status" role="status" aria-live="polite">Display currency rates are loading…</p>
+
+
+
+    </section>
+
+
+
+
+
+
+
+    <section class="dashboard-card" style="margin-top:22px" aria-labelledby="transfer-heading">
+
+
+
+      <h2 class="card-heading" id="transfer-heading">Transfer Between Accounts</h2>
+
+
+
+      <p class="card-description">
+
+
+
+        Move USDT between your Delivery and Funding wallets. Transfers are processed
+
+
+
+        securely by Supabase.
+
+
+
+      </p>
+
+
+
+
+
+
+
+      <form id="transfer-form">
+
+
+
+        <div class="form-field">
+
+
+
+          <label for="transfer-direction">Transfer direction</label>
+
+
+
+          <select id="transfer-direction" required>
+
+
+
+            <option value="delivery-funding">Delivery Wallet → Funding Wallet</option>
+
+
+
+            <option value="funding-delivery">Funding Wallet → Delivery Wallet</option>
+
+
+
+          </select>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="transfer-summary" aria-live="polite">
+
+
+
+          <div class="transfer-wallet">
+
+
+
+            <strong id="transfer-from-name">Delivery Wallet</strong>
+
+
+
+            <span id="transfer-from-balance">Available: — USDT</span>
+
+
+
+          </div>
+
+
+
+          <span class="transfer-arrow" aria-hidden="true">→</span>
+
+
+
+          <div class="transfer-wallet">
+
+
+
+            <strong id="transfer-to-name">Funding Wallet</strong>
+
+
+
+            <span id="transfer-to-balance">Destination wallet</span>
+
+
+
+          </div>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="form-field">
+
+
+
+          <label for="transfer-amount">Amount (USDT)</label>
+
+
+
+          <input
+
+
+
+            id="transfer-amount"
+
+
+
+            name="amount"
+
+
+
+            type="number"
+
+
+
+            min="0.00000001"
+
+
+
+            step="0.00000001"
+
+
+
+            inputmode="decimal"
+
+
+
+            placeholder="Enter transfer amount"
+
+
+
+            required
+
+
+
+          >
+
+
+
+          <p class="hint">Enter an amount greater than zero and no greater than your available balance.</p>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="transfer-actions">
+
+
+
+          <button class="primary-button" id="transfer-submit" type="submit">
+
+
+
+            Transfer to Funding Wallet
+
+
+
+          </button>
+
+
+
+          <button class="secondary-button" id="max-transfer" type="button">Use maximum</button>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <p class="form-message" id="transfer-message" role="status" aria-live="polite"></p>
+
+
+
+      </form>
+
+
+
+    </section>
+
+
+
+
+
+
+
+    <div class="dashboard-grid">
+
+
+
+      <section class="dashboard-card" aria-labelledby="account-heading">
+
+
+
+        <h2 class="card-heading" id="account-heading">My Account</h2>
+
+
+
+        <p class="card-description">Your personal account details.</p>
+
+
+
+        <div class="account-avatar" id="account-avatar" aria-hidden="true">S</div>
+
+
+
+
+
+
+
+        <dl class="account-details">
+
+
+
+          <div class="account-row">
+
+
+
+            <dt>Member ID</dt>
+
+
+
+            <dd><span class="member-id" id="account-member-id">Loading...</span></dd>
+
+
+
+          </div>
+
+
+
+          <div class="account-row">
+
+
+
+            <dt>Full name</dt>
+
+
+
+            <dd id="account-name">Loading...</dd>
+
+
+
+          </div>
+
+
+
+          <div class="account-row">
+
+
+
+            <dt>Email address</dt>
+
+
+
+            <dd id="account-email">Loading...</dd>
+
+
+
+          </div>
+
+
+
+          <div class="account-row">
+
+
+
+            <dt>Account status</dt>
+
+
+
+            <dd><span class="account-badge" id="account-badge">Checking</span></dd>
+
+
+
+          </div>
+
+
+
+          <div class="account-row">
+
+
+
+            <dt>Email status</dt>
+
+
+
+            <dd><span class="verification-badge" id="email-verification">Checking...</span></dd>
+
+
+
+          </div>
+
+
+
+        </dl>
+
+
+
+      </section>
+
+
+
+
+
+
+
+      <section class="dashboard-card" aria-labelledby="quick-links-heading">
+
+
+
+        <h2 class="card-heading" id="quick-links-heading">Quick Access</h2>
+
+
+
+        <p class="card-description">Explore SDE CORE.</p>
+
+
+
+
+
+
+
+        <nav class="quick-links" aria-label="Quick access">
+
+
+
+          <a class="quick-link deposit-link" href="quick-recharge.html">
+
+            <span><strong>Deposit</strong><small>Open the existing USDT deposit page and payment addresses.</small></span>
+
+            <span class="arrow" aria-hidden="true">→</span>
+
+          </a>
+
+          <a class="quick-link withdraw-link" href="withdraw.html">
+
+            <span><strong>Withdraw</strong><small>Choose a crypto wallet or bank account withdrawal method.</small></span>
+
+            <span class="arrow" aria-hidden="true">→</span>
+
+          </a>
+
+
+
+          <a class="quick-link" href="quick-recharge.html">
+
+
+
+            <span><strong>Quick Recharge</strong><small>Deposit USDT into your Delivery Wallet.</small></span>
+
+
+
+            <span class="arrow" aria-hidden="true">→</span>
+
+
+
+          </a>
+
+
+
+          <a class="quick-link" href="../index.html">
+
+
+
+            <span><strong>SDE CORE Homepage</strong><small>Visit the main website.</small></span>
+
+
+
+            <span class="arrow" aria-hidden="true">→</span>
+
+
+
+          </a>
+
+
+
+          <a class="quick-link" href="../index.html#plans">
+
+
+
+            <span><strong>Explore Mining Plans</strong><small>View available plans.</small></span>
+
+
+
+            <span class="arrow" aria-hidden="true">→</span>
+
+
+
+          </a>
+
+
+
+          <a class="quick-link" href="../index.html#markets">
+
+
+
+            <span><strong>Explore Markets</strong><small>View market information.</small></span>
+
+
+
+            <span class="arrow" aria-hidden="true">→</span>
+
+
+
+          </a>
+
+
+
+        </nav>
+
+
+
+      </section>
+
+
+
+    </div>
+
+
+
+
+
+
+
+        <section class="dashboard-card" id="customer-support-card" aria-labelledby="customer-support-heading" hidden>
       <div class="transactions-header">
-
         <div>
-
-          <h2 class="card-heading" id="transactions-heading">Recent Transactions</h2>
-
-          <p class="card-description">Your latest wallet activity.</p>
-
+          <h2 class="card-heading" id="customer-support-heading">Customer Support</h2>
+          <p class="card-description" id="customer-support-subtitle">Contact the SDE Core support team.</p>
         </div>
-
-        <button class="secondary-button" id="refresh-transactions" type="button">Refresh</button>
-
+        <button class="secondary-button" id="support-refresh" type="button">Refresh</button>
       </div>
-
-      <div class="transaction-list" id="transaction-list" aria-live="polite">
-
-        <p class="empty-state">Loading transactions...</p>
-
+      <div id="support-ticket-area">
+        <form id="support-new-ticket-form" class="support-form">
+          <label for="support-subject">Subject</label>
+          <input id="support-subject" maxlength="160" required placeholder="How can we help?">
+          <label for="support-first-message">Message</label>
+          <textarea id="support-first-message" rows="3" maxlength="5000" required placeholder="Describe your issue..."></textarea>
+          <button class="primary-button" id="support-create-ticket" type="submit">Start a conversation</button>
+        </form>
+        <p id="support-status" class="form-message" role="status" aria-live="polite"></p>
+        <div class="support-layout">
+          <div class="support-ticket-list" id="support-ticket-list"><p class="empty-state">Loading support conversations...</p></div>
+          <div class="support-chat" id="support-chat"><p class="empty-state">Select a conversation or start a new one.</p></div>
+        </div>
       </div>
-
-      <p class="form-message" id="transaction-message" role="status" aria-live="polite"></p>
-
     </section>
 
-  </main>
+<section class="dashboard-card transactions-card" aria-labelledby="transactions-heading">
 
 
 
-  <footer class="dashboard-footer">
-
-    &copy; <span id="current-year"></span> SDE CORE. All rights reserved.
-
-  </footer>
+      <div class="transactions-header">
 
 
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script src="../js/supabase.js"></script>
+        <div>
 
 
 
-  <script>
-
-    const $ = id => document.getElementById(id);
+          <h2 class="card-heading" id="transactions-heading">Recent Transactions</h2>
 
 
 
-    const statusMessage = $("dashboard-status");
-
-    const statusDot = $("status-dot");
-
-    const accountName = $("account-name");
-
-    const accountEmail = $("account-email");
-
-    const accountAvatar = $("account-avatar");
-
-    const accountMemberId = $("account-member-id");
-
-    const accountBadge = $("account-badge");
-
-    const emailVerification = $("email-verification");
-
-    const logoutButton = $("logout-button");
-
-    const refreshButton = $("refresh-button");
+          <p class="card-description">Your latest wallet activity.</p>
 
 
 
-    const deliveryBalance = $("delivery-balance");
-
-    const fundingBalance = $("funding-balance");
-
-    const deliveryWalletStatus = $("delivery-wallet-status");
-
-    const fundingWalletStatus = $("funding-wallet-status");
-
-    const walletMessage = $("wallet-message");
+        </div>
 
 
 
-    const transferForm = $("transfer-form");
-
-    const transferDirection = $("transfer-direction");
-
-    const transferAmount = $("transfer-amount");
-
-    const transferSubmit = $("transfer-submit");
-
-    const maxTransferButton = $("max-transfer");
-
-    const transferMessage = $("transfer-message");
+        <button class="secondary-button" id="refresh-transactions" type="button">Refresh</button>
 
 
 
-    const transactionList = $("transaction-list");
-
-    const transactionMessage = $("transaction-message");
+      </div>
 
 
 
-    let activeUserId = null;
-
-    let walletBalances = { delivery: null, funding: null };
-
-    // Wallets are stored in USDT. For display only, USDT is treated as USD
-    // at a 1:1 reference rate, then converted using the selected FX rate.
-    let exchangeRates = { USD: 1 };
-    let exchangeRateDate = null;
-    let exchangeRatesLoadedAt = 0;
-    let exchangeRateLoading = false;
-
-    let transferInProgress = false;
+      <div class="transaction-list" id="transaction-list" aria-live="polite">
 
 
 
-    $("current-year").textContent = String(new Date().getFullYear());
+        <p class="empty-state">Loading transactions...</p>
 
 
 
-    function setStatus(message, isError = false) {
+      </div>
 
-      statusMessage.textContent = message;
 
-      statusDot.classList.toggle("is-error", isError);
 
+      <p class="form-message" id="transaction-message" role="status" aria-live="polite"></p>
+
+
+
+    </section>
+
+
+
+  </main>
+
+
+
+
+
+
+
+  <footer class="dashboard-footer">
+
+
+
+    &copy; <span id="current-year"></span> SDE CORE. All rights reserved.
+
+
+
+  </footer>
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+
+  <script src="../js/supabase.js"></script>
+
+
+
+
+
+
+
+  <script>
+
+
+
+    const $ = id => document.getElementById(id);
+
+
+
+
+
+
+
+    const statusMessage = $("dashboard-status");
+
+
+
+    const statusDot = $("status-dot");
+
+
+
+    const accountName = $("account-name");
+
+
+
+    const accountEmail = $("account-email");
+
+
+
+    const accountAvatar = $("account-avatar");
+
+
+
+    const accountMemberId = $("account-member-id");
+
+
+
+    const accountBadge = $("account-badge");
+
+
+
+    const emailVerification = $("email-verification");
+
+
+
+    const logoutButton = $("logout-button");
+
+
+
+    const refreshButton = $("refresh-button");
+
+
+
+
+
+
+
+    const deliveryBalance = $("delivery-balance");
+
+
+
+    const fundingBalance = $("funding-balance");
+
+
+
+    const deliveryWalletStatus = $("delivery-wallet-status");
+
+
+
+    const fundingWalletStatus = $("funding-wallet-status");
+
+
+
+    const walletMessage = $("wallet-message");
+
+
+
+
+
+
+
+    const transferForm = $("transfer-form");
+
+
+
+    const transferDirection = $("transfer-direction");
+
+
+
+    const transferAmount = $("transfer-amount");
+
+
+
+    const transferSubmit = $("transfer-submit");
+
+
+
+    const maxTransferButton = $("max-transfer");
+
+
+
+    const transferMessage = $("transfer-message");
+
+
+
+
+
+
+
+    const transactionList = $("transaction-list");
+
+
+
+    const transactionMessage = $("transaction-message");
+
+
+
+
+
+
+
+    let activeUserId = null;
+
+
+
+    let walletBalances = { delivery: null, funding: null };
+
+
+
+    // Wallets are stored in USDT. For display only, USDT is treated as USD
+
+    // at a 1:1 reference rate, then converted using the selected FX rate.
+
+    let exchangeRates = { USD: 1 };
+
+    let exchangeRateDate = null;
+
+    let exchangeRatesLoadedAt = 0;
+
+    let exchangeRateLoading = false;
+
+
+
+    let transferInProgress = false;
+
+
+
+
+
+
+
+    $("current-year").textContent = String(new Date().getFullYear());
+
+
+
+
+
+
+
+    function setStatus(message, isError = false) {
+
+
+
+      statusMessage.textContent = message;
+
+
+
+      statusDot.classList.toggle("is-error", isError);
+
+
+
+    }
+
+
+
+
+
+
+
+    function setWalletMessage(message = "", isError = false) {
+
+
+
+      walletMessage.textContent = message;
+
+
+
+      walletMessage.style.color = isError ? "#ffaaaa" : "";
+
+
+
+    }
+
+
+
+
+
+
+
+    function setTransferMessage(message = "", isSuccess = false) {
+
+
+
+      transferMessage.textContent = message;
+
+
+
+      transferMessage.classList.toggle("success", isSuccess);
+
+
+
+    }
+
+
+
+
+
+
+
+    function formatMemberId(value) {
+
+
+
+      if (value === null || value === undefined || value === "") {
+
+
+
+        return "Unavailable";
+
+
+
+      }
+
+
+
+
+
+
+
+      const id = String(value);
+
+
+
+      return /^\d+$/.test(id) ? "ID:" + id.padStart(5, "0") : "Unavailable";
+
+
+
+    }
+
+
+
+
+
+
+
+    function formatBalance(value) {
+
+
+
+      const amount = Number(value);
+
+
+
+
+
+
+
+      if (!Number.isFinite(amount) || amount < 0) return null;
+
+
+
+
+
+
+
+      return amount.toLocaleString("en-US", {
+
+
+
+        minimumFractionDigits: 2,
+
+
+
+        maximumFractionDigits: 8
+
+
+
+      });
+
+
+
+    }
+
+
+
+    const exchangeRateStatus = $("exchange-rate-status");
+
+    const deliveryCurrencyLabel = $("delivery-currency-label");
+
+    const fundingCurrencyLabel = $("funding-currency-label");
+
+
+
+    function selectedDisplayCurrency() {
+
+      return displayCurrency && displayCurrency.value ? displayCurrency.value : "USD";
+
+    }
+
+
+
+    function formatWalletDisplayBalance(value) {
+
+      const amount = Number(value);
+
+      const currency = selectedDisplayCurrency();
+
+      const rate = Number(exchangeRates[currency]);
+
+
+
+      if (!Number.isFinite(amount) || amount < 0 || !Number.isFinite(rate)) {
+
+        return "Rate unavailable";
+
+      }
+
+
+
+      const convertedAmount = amount * rate;
+
+
+
+      try {
+
+        return new Intl.NumberFormat("en-US", {
+
+          style: "currency",
+
+          currency,
+
+          minimumFractionDigits: 2,
+
+          maximumFractionDigits: 2
+
+        }).format(convertedAmount);
+
+      } catch (error) {
+
+        return convertedAmount.toLocaleString("en-US", {
+
+          minimumFractionDigits: 2,
+
+          maximumFractionDigits: 2
+
+        }) + " " + currency;
+
+      }
+
+    }
+
+
+
+    function renderWalletDisplayBalances() {
+
+      const currency = selectedDisplayCurrency();
+
+
+
+      if (deliveryCurrencyLabel) deliveryCurrencyLabel.textContent = currency;
+
+      if (fundingCurrencyLabel) fundingCurrencyLabel.textContent = currency;
+
+
+
+      deliveryBalance.textContent = walletBalances.delivery === null
+
+        ? "—"
+
+        : formatWalletDisplayBalance(walletBalances.delivery);
+
+
+
+      fundingBalance.textContent = walletBalances.funding === null
+
+        ? "—"
+
+        : formatWalletDisplayBalance(walletBalances.funding);
+
+    }
+
+
+
+    async function loadExchangeRates(force = false) {
+
+      const currency = selectedDisplayCurrency();
+
+
+
+      if (currency === "USD") {
+
+        exchangeRates.USD = 1;
+
+        renderWalletDisplayBalances();
+
+        if (exchangeRateStatus) {
+
+          exchangeRateStatus.textContent = "Display rate: 1 USD = 1 USD. Wallet balances remain stored in USDT.";
+
+        }
+
+        return true;
+
+      }
+
+
+
+      const cacheIsFresh = Date.now() - exchangeRatesLoadedAt < 15 * 60 * 1000;
+
+      if (!force && cacheIsFresh && Number.isFinite(Number(exchangeRates[currency]))) {
+
+        const cachedRate = Number(exchangeRates[currency]);
+
+        if (exchangeRateStatus) {
+
+          exchangeRateStatus.textContent =
+
+            "Reference rate: 1 USD ≈ " + cachedRate.toLocaleString("en-US", {
+
+              minimumFractionDigits: 2,
+
+              maximumFractionDigits: 4
+
+            }) + " " + currency +
+
+            (exchangeRateDate ? " · Last updated: " + String(exchangeRateDate) : "") +
+
+            ". Wallet balances are stored in USDT; this is an estimated display conversion only.";
+
+        }
+
+        renderWalletDisplayBalances();
+
+        return true;
+
+      }
+
+
+
+      if (exchangeRateLoading) return false;
+
+      exchangeRateLoading = true;
+
+      if (exchangeRateStatus) exchangeRateStatus.textContent = "Updating " + currency + " exchange rate…";
+
+
+
+      try {
+
+        const response = await fetch("https://open.er-api.com/v6/latest/USD", {
+
+          method: "GET",
+
+          cache: "no-store"
+
+        });
+
+        if (!response.ok) throw new Error("Exchange-rate service returned HTTP " + response.status);
+
+
+
+        const data = await response.json();
+
+        if (data.result !== "success" || !data.rates || !Number.isFinite(Number(data.rates[currency]))) {
+
+          throw new Error("The selected currency rate was not included in the exchange-rate response.");
+
+        }
+
+
+
+        exchangeRates = { ...exchangeRates, ...data.rates, USD: 1 };
+
+        exchangeRateDate = data.time_last_update_utc || data.time_last_update_unix || data.time_last_update;
+
+        exchangeRatesLoadedAt = Date.now();
+
+
+
+        const rate = Number(exchangeRates[currency]);
+
+        if (exchangeRateStatus) {
+
+          exchangeRateStatus.textContent =
+
+            "Reference rate: 1 USD ≈ " + rate.toLocaleString("en-US", {
+
+              minimumFractionDigits: 2,
+
+              maximumFractionDigits: 4
+
+            }) + " " + currency +
+
+            (exchangeRateDate ? " · Last updated: " + String(exchangeRateDate) : "") +
+
+            ". Wallet balances are stored in USDT; this is an estimated display conversion only.";
+
+        }
+
+
+
+        renderWalletDisplayBalances();
+
+        return true;
+
+      } catch (error) {
+
+        console.error("Exchange-rate loading error:", error);
+
+        delete exchangeRates[currency];
+
+        if (exchangeRateStatus) {
+
+          exchangeRateStatus.textContent =
+
+            "Unable to load the " + currency + " exchange rate. Wallet values are not converted; please try again.";
+
+        }
+
+        renderWalletDisplayBalances();
+
+        return false;
+
+      } finally {
+
+        exchangeRateLoading = false;
+
+      }
+
+    }
+
+
+
+
+
+
+
+    function setEmailVerification(user) {
+
+
+
+      const verified = Boolean(user.email_confirmed_at);
+
+
+
+      emailVerification.textContent = verified ? "Verified" : "Not verified";
+
+
+
+      emailVerification.classList.remove("verified", "unverified");
+
+
+
+      emailVerification.classList.add(verified ? "verified" : "unverified");
+
+
+
+    }
+
+
+
+
+
+
+
+    function selectedWallets() {
+
+
+
+      return transferDirection.value === "delivery-funding"
+
+
+
+        ? { from: "delivery", to: "funding" }
+
+
+
+        : { from: "funding", to: "delivery" };
+
+
+
+    }
+
+
+
+
+
+
+
+    function walletLabel(type) {
+
+
+
+      return type === "delivery" ? "Delivery Wallet" : "Funding Wallet";
+
+
+
+    }
+
+
+
+
+
+
+
+    function updateTransferSummary() {
+
+
+
+      const { from, to } = selectedWallets();
+
+
+
+      const available = walletBalances[from];
+
+
+
+
+
+
+
+      $("transfer-from-name").textContent = walletLabel(from);
+
+
+
+      $("transfer-to-name").textContent = walletLabel(to);
+
+
+
+      $("transfer-from-balance").textContent =
+
+
+
+        "Available: " + (formatBalance(available) ?? "—") + " USDT";
+
+
+
+      $("transfer-to-balance").textContent =
+
+
+
+        "Current: " + (formatBalance(walletBalances[to]) ?? "—") + " USDT";
+
+
+
+
+
+
+
+      transferSubmit.textContent = "Transfer to " + walletLabel(to);
+
+
+
+
+
+
+
+      const max = Number(available);
+
+
+
+      transferAmount.max = Number.isFinite(max) && max >= 0 ? String(max) : "";
+
+
+
+    }
+
+
+
+
+
+
+
+    async function loadWallets(userId) {
+
+
+
+      deliveryBalance.textContent = "—";
+
+
+
+      fundingBalance.textContent = "—";
+
+
+
+      deliveryWalletStatus.textContent = "";
+
+
+
+      fundingWalletStatus.textContent = "";
+
+
+
+      walletBalances = { delivery: null, funding: null };
+
+
+
+      setWalletMessage();
+
+
+
+
+
+
+
+      try {
+
+
+
+        const { data: wallets, error } = await sgecoreSupabase
+
+
+
+          .from("wallets")
+
+
+
+          .select("wallet_type, currency, balance")
+
+
+
+          .eq("user_id", userId)
+
+
+
+          .eq("currency", "USDT")
+
+
+
+          .in("wallet_type", ["delivery", "funding"]);
+
+
+
+
+
+
+
+        if (error) throw error;
+
+
+
+
+
+
+
+        for (const wallet of wallets || []) {
+
+
+
+          const value = Number(wallet.balance);
+
+
+
+          if (!Number.isFinite(value) || value < 0) continue;
+
+
+
+
+
+
+
+          if (wallet.wallet_type === "delivery") walletBalances.delivery = value;
+
+
+
+          if (wallet.wallet_type === "funding") walletBalances.funding = value;
+
+
+
+        }
+
+
+
+
+
+
+
+        if (walletBalances.delivery !== null) {
+
+
+
+          renderWalletDisplayBalances();
+
+
+
+        } else {
+
+
+
+          deliveryWalletStatus.textContent = "Wallet not found.";
+
+
+
+        }
+
+
+
+
+
+
+
+        if (walletBalances.funding !== null) {
+
+
+
+          renderWalletDisplayBalances();
+
+
+
+        } else {
+
+
+
+          fundingWalletStatus.textContent = "Wallet not found.";
+
+
+
+        }
+
+
+
+
+
+
+
+        renderWalletDisplayBalances();
+
+
+
+        if (walletBalances.delivery === null || walletBalances.funding === null) {
+
+
+
+          setWalletMessage("One or more wallets could not be loaded. Please contact support if this continues.", true);
+
+
+
+        }
+
+
+
+
+
+
+
+        updateTransferSummary();
+
+
+
+      } catch (error) {
+
+
+
+        console.error("Wallet loading error:", error);
+
+
+
+        walletBalances = { delivery: null, funding: null };
+
+
+
+        renderWalletDisplayBalances();
+
+
+
+        updateTransferSummary();
+
+
+
+        setWalletMessage("Unable to load wallet balances. Please refresh and try again.", true);
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+
+
+    function transactionTitle(type) {
+
+
+
+      const labels = {
+
+
+
+        deposit: "Deposit",
+
+
+
+        withdrawal: "Withdrawal",
+
+
+
+        transfer_in: "Transfer received",
+
+
+
+        transfer_out: "Transfer sent",
+
+
+
+        trade: "Trade",
+
+
+
+        investment: "Investment",
+
+
+
+        investment_return: "Investment return",
+
+
+
+        adjustment: "Balance adjustment"
+
+
+
+      };
+
+
+
+      return labels[type] || String(type || "Transaction").replaceAll("_", " ");
+
+
+
+    }
+
+
+
+
+
+
+
+    function formatDate(value) {
+
+
+
+      if (!value) return "Date unavailable";
+
+
+
+      const date = new Date(value);
+
+
+
+      if (Number.isNaN(date.getTime())) return "Date unavailable";
+
+
+
+      return date.toLocaleString();
+
+
+
+    }
+
+
+
+
+
+
+
+    function addTransactionRow(transaction) {
+
+
+
+      const row = document.createElement("div");
+
+
+
+      row.className = "transaction-row";
+
+
+
+
+
+
+
+      const details = document.createElement("div");
+
+
+
+      const title = document.createElement("div");
+
+
+
+      title.className = "transaction-title";
+
+
+
+      title.textContent = transactionTitle(transaction.transaction_type);
+
+
+
+
+
+
+
+      const meta = document.createElement("div");
+
+
+
+      meta.className = "transaction-meta";
+
+
+
+      meta.textContent =
+
+
+
+        formatDate(transaction.created_at) +
+
+
+
+        (transaction.description ? " · " + transaction.description : "");
+
+
+
+
+
+
+
+      details.append(title, meta);
+
+
+
+
+
+
+
+      const amountBox = document.createElement("div");
+
+
+
+      const amount = document.createElement("div");
+
+
+
+      const isIncoming = ["deposit", "transfer_in", "investment_return"].includes(
+
+
+
+        transaction.transaction_type
+
+
+
+      );
+
+
+
+
+
+
+
+      amount.className = "transaction-amount " + (isIncoming ? "in" : "out");
+
+
+
+      const formatted = formatBalance(transaction.amount);
+
+
+
+      amount.textContent =
+
+
+
+        (isIncoming ? "+" : "−") +
+
+
+
+        (formatted ?? String(transaction.amount)) +
+
+
+
+        " " + (transaction.currency || "USDT");
+
+
+
+
+
+
+
+      const status = document.createElement("span");
+
+
+
+      status.className = "transaction-status";
+
+
+
+      status.textContent = String(transaction.status || "unknown").toUpperCase();
+
+
+
+
+
+
+
+      amountBox.append(amount, status);
+
+
+
+      row.append(details, amountBox);
+
+
+
+      transactionList.appendChild(row);
+
+
+
+    }
+
+
+
+
+
+
+
+    async function loadTransactions(userId) {
+
+
+
+      transactionList.replaceChildren();
+
+
+
+      transactionMessage.textContent = "";
+
+
+
+
+
+
+
+      const loading = document.createElement("p");
+
+
+
+      loading.className = "empty-state";
+
+
+
+      loading.textContent = "Loading transactions...";
+
+
+
+      transactionList.appendChild(loading);
+
+
+
+
+
+
+
+      try {
+
+
+
+        const { data, error } = await sgecoreSupabase
+
+
+
+          .from("wallet_transactions")
+
+
+
+          .select("transaction_type, amount, currency, status, reference_id, description, created_at")
+
+
+
+          .eq("user_id", userId)
+
+
+
+          .order("created_at", { ascending: false })
+
+
+
+          .limit(10);
+
+
+
+
+
+
+
+        if (error) throw error;
+
+
+
+
+
+
+
+        transactionList.replaceChildren();
+
+
+
+
+
+
+
+        if (!data || data.length === 0) {
+
+
+
+          const empty = document.createElement("p");
+
+
+
+          empty.className = "empty-state";
+
+
+
+          empty.textContent = "No wallet transactions have been recorded yet.";
+
+
+
+          transactionList.appendChild(empty);
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        data.forEach(addTransactionRow);
+
+
+
+      } catch (error) {
+
+
+
+        console.error("Transaction loading error:", error);
+
+
+
+        transactionList.replaceChildren();
+
+
+
+
+
+
+
+        const empty = document.createElement("p");
+
+
+
+        empty.className = "empty-state";
+
+
+
+        empty.textContent = "Unable to load transaction history. Please refresh and try again.";
+
+
+
+        transactionList.appendChild(empty);
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+
+
+    async function refreshAccountData() {
+
+
+
+      if (!activeUserId) return;
+
+
+
+      refreshButton.disabled = true;
+
+
+
+      refreshButton.textContent = "Refreshing...";
+
+
+
+
+
+
+
+      try {
+
+
+
+        await Promise.all([
+
+
+
+          loadWallets(activeUserId),
+
+
+
+          loadTransactions(activeUserId),
+
+
+
+          loadExchangeRates(true)
+
+
+
+        ]);
+
+
+
+        setStatus("Account information refreshed.");
+
+
+
+      } finally {
+
+
+
+        refreshButton.disabled = false;
+
+
+
+        refreshButton.textContent = "Refresh";
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+
+
+    async function loadDashboard() {
+
+
+
+      if (typeof sgecoreSupabase === "undefined" || !sgecoreSupabase.auth) {
+
+
+
+        setStatus("Supabase did not load. Check js/supabase.js and refresh.", true);
+
+
+
+        accountMemberId.textContent = "Unavailable";
+
+
+
+        accountName.textContent = "Unavailable";
+
+
+
+        accountEmail.textContent = "Unavailable";
+
+
+
+        accountBadge.textContent = "Unavailable";
+
+
+
+        emailVerification.textContent = "Unavailable";
+
+
+
+        return;
+
+
+
+      }
+
+
+
+
+
+
+
+      try {
+
+
+
+        const { data, error } = await sgecoreSupabase.auth.getUser();
+
+
+
+
+
+
+
+        if (error || !data.user) {
+
+
+
+          window.location.replace("login.html");
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        const user = data.user;
+
+
+
+        activeUserId = user.id;
+
+
+
+
+
+
+
+        let fullName =
+
+
+
+          user.user_metadata?.full_name ||
+
+
+
+          user.user_metadata?.name ||
+
+
+
+          "";
+
+
+
+
+
+
+
+        let memberId = null;
+
+
+
+
+
+
+
+        try {
+
+
+
+          const { data: profile, error: profileError } = await sgecoreSupabase
+
+
+
+            .from("profiles")
+
+
+
+            .select("member_id, full_name, email")
+
+
+
+            .eq("id", user.id)
+
+
+
+            .maybeSingle();
+
+
+
+
+
+
+
+          if (profileError) {
+
+
+
+            console.error("Profile loading error:", profileError);
+
+
+
+          } else if (profile) {
+
+
+
+            memberId = profile.member_id;
+
+
+
+            if (profile.full_name) fullName = profile.full_name;
+
+
+
+          }
+
+
+
+        } catch (error) {
+
+
+
+          console.error("Profile loading error:", error);
+
+
+
+        }
+
+
+
+
+
+
+
+        if (!fullName.trim()) fullName = "SDE CORE Member";
+
+
+
+
+
+
+
+        accountMemberId.textContent = formatMemberId(memberId);
+
+
+
+        accountName.textContent = fullName;
+
+
+
+        accountEmail.textContent = user.email || "Not available";
+
+
+
+        accountAvatar.textContent = fullName.trim().charAt(0).toUpperCase() || "S";
+
+
+
+        accountBadge.textContent = "Active";
+
+
+
+        setEmailVerification(user);
+
+
+
+        setStatus("Welcome back, " + fullName + ".");
+
+
+
+
+
+
+
+        await Promise.all([
+
+
+
+          loadWallets(user.id),
+
+
+
+          loadTransactions(user.id)
+
+
+
+        ]);
+        await loadCustomerSupport();
+
+
+
+      } catch (error) {
+
+
+
+        console.error("Dashboard error:", error);
+
+
+
+        setStatus("Unable to load your account. Please refresh and try again.", true);
+
+
+
+        accountMemberId.textContent = "Unavailable";
+
+
+
+        accountBadge.textContent = "Unavailable";
+
+
+
+        emailVerification.textContent = "Unavailable";
+
+
+
+        setWalletMessage("Unable to load your account information.", true);
+
+
+
+      }
+
+
+
+    }
+
+
+
+
+
+
+
+    transferDirection.addEventListener("change", function () {
+
+
+
+      updateTransferSummary();
+
+
+
+      setTransferMessage();
+
+
+
+    });
+
+
+
+
+
+
+
+    maxTransferButton.addEventListener("click", function () {
+
+
+
+      const { from } = selectedWallets();
+
+
+
+      const available = walletBalances[from];
+
+
+
+
+
+
+
+      if (available === null || !Number.isFinite(available) || available <= 0) {
+
+
+
+        setTransferMessage("No available balance to transfer.", false);
+
+
+
+        return;
+
+
+
+      }
+
+
+
+
+
+
+
+      transferAmount.value = available.toFixed(8).replace(/(\.\d*?[1-9])0+$|\.\d+0+$/, "$1");
+
+
+
+      setTransferMessage();
+
+
+
+    });
+
+
+
+
+
+
+
+    transferForm.addEventListener("submit", async function (event) {
+
+
+
+      event.preventDefault();
+
+
+
+
+
+
+
+      if (transferInProgress) return;
+
+
+
+
+
+
+
+      if (!activeUserId) {
+
+
+
+        setTransferMessage("Your session is unavailable. Please sign in again.");
+
+
+
+        return;
+
+
+
+      }
+
+
+
+
+
+
+
+      const { from, to } = selectedWallets();
+
+
+
+      const amount = Number(transferAmount.value);
+
+
+
+      const available = walletBalances[from];
+
+
+
+
+
+
+
+      if (!Number.isFinite(amount) || amount <= 0) {
+
+
+
+        setTransferMessage("Enter a valid amount greater than zero.");
+
+
+
+        return;
+
+
+
+      }
+
+
+
+
+
+
+
+      if (available === null || !Number.isFinite(available)) {
+
+
+
+        setTransferMessage("Your available balance has not loaded. Refresh and try again.");
+
+
+
+        return;
+
+
+
+      }
+
+
+
+
+
+
+
+      if (amount > available) {
+
+
+
+        setTransferMessage("Insufficient available balance. Refresh your wallets and try again.");
+
+
+
+        return;
+
+
+
+      }
+
+
+
+
+
+
+
+      if (Number(amount.toFixed(8)) !== amount) {
+
+
+
+        setTransferMessage("Enter an amount with no more than 8 decimal places.");
+
+
+
+        return;
+
+
+
+      }
+
+
+
+
+
+
+
+      const confirmed = window.confirm(
+
+
+
+        "Transfer " + amount + " USDT from " +
+
+
+
+        walletLabel(from) + " to " + walletLabel(to) + "?"
+
+
+
+      );
+
+
+
+
+
+
+
+      if (!confirmed) return;
+
+
+
+
+
+
+
+      transferInProgress = true;
+
+
+
+      transferSubmit.disabled = true;
+
+
+
+      maxTransferButton.disabled = true;
+
+
+
+      transferDirection.disabled = true;
+
+
+
+      transferAmount.disabled = true;
+
+
+
+      transferSubmit.textContent = "Processing transfer...";
+
+
+
+      setTransferMessage("Processing your transfer. Please do not submit again.");
+
+
+
+
+
+
+
+      try {
+
+
+
+        const { data, error } = await sgecoreSupabase.rpc(
+
+
+
+          "transfer_sge_funds",
+
+
+
+          {
+
+
+
+            p_from: from,
+
+
+
+            p_to: to,
+
+
+
+            p_amount: amount
+
+
+
+          }
+
+
+
+        );
+
+
+
+
+
+
+
+        if (error) {
+
+
+
+          console.error("Wallet transfer error:", error);
+
+
+
+          setTransferMessage(
+
+
+
+            error.message || "Transfer failed. Refresh your balances before trying again."
+
+
+
+          );
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        if (!data) {
+
+
+
+          setTransferMessage(
+
+
+
+            "The server returned no transfer reference. Refresh balances and history before retrying."
+
+
+
+          );
+
+
+
+          return;
+
+
+
+        }
+
+
+
+
+
+
+
+        transferAmount.value = "";
+
+
+
+        setTransferMessage(
+
+
+
+          "Transfer completed successfully. Reference: " + String(data),
+
+
+
+          true
+
+
+
+        );
+
+
+
+
+
+
+
+        await Promise.all([
+
+
+
+          loadWallets(activeUserId),
+
+
+
+          loadTransactions(activeUserId)
+
+
+
+        ]);
+
+
+
+
+
+
+
+        setStatus("Wallet transfer completed.");
+
+
+
+      } catch (error) {
+
+
+
+        console.error("Unexpected transfer error:", error);
+
+
+
+        setTransferMessage(
+
+
+
+          "We could not confirm the transfer result. Refresh balances and history before attempting another transfer."
+
+
+
+        );
+
+
+
+      } finally {
+
+
+
+        transferInProgress = false;
+
+
+
+        transferSubmit.disabled = false;
+
+
+
+        maxTransferButton.disabled = false;
+
+
+
+        transferDirection.disabled = false;
+
+
+
+        transferAmount.disabled = false;
+
+
+
+        updateTransferSummary();
+
+
+
+      }
+
+
+
+    });
+
+
+
+
+
+
+
+    refreshButton.addEventListener("click", refreshAccountData);
+
+
+
+    $("refresh-transactions").addEventListener("click", async function () {
+
+
+
+      if (!activeUserId) return;
+
+
+
+
+
+
+
+      const button = this;
+
+
+
+      button.disabled = true;
+
+
+
+      button.textContent = "Refreshing...";
+
+
+
+
+
+
+
+      try {
+
+
+
+        await loadTransactions(activeUserId);
+
+
+
+      } finally {
+
+
+
+        button.disabled = false;
+
+
+
+        button.textContent = "Refresh";
+
+
+
+      }
+
+
+
+    });
+
+
+
+
+
+
+
+    logoutButton.addEventListener("click", async function () {
+
+
+
+      if (typeof sgecoreSupabase === "undefined" || !sgecoreSupabase.auth) {
+
+
+
+        setStatus("Unable to log out. Please try again.", true);
+
+
+
+        return;
+
+
+
+      }
+
+
+
+
+
+
+
+      logoutButton.disabled = true;
+
+
+
+      logoutButton.textContent = "Logging out...";
+
+
+
+
+
+
+
+      try {
+
+
+
+        const { error } = await sgecoreSupabase.auth.signOut();
+
+
+
+
+
+
+
+        if (error) throw error;
+
+
+
+        window.location.replace("login.html");
+
+
+
+      } catch (error) {
+
+
+
+        console.error("Logout error:", error);
+
+
+
+        setStatus("Unable to log out. Please try again.", true);
+
+
+
+        logoutButton.disabled = false;
+
+
+
+        logoutButton.textContent = "Logout";
+
+
+
+      }
+
+
+
+    });
+
+
+
+
+
+
+
+    // Save the selected display currency and convert both wallet cards for display.
+
+    const displayCurrency = $("display-currency");
+
+    if (displayCurrency) {
+
+      const supportedCurrencies = ["USD", "EUR", "GBP", "INR", "CNY", "AED", "SAR", "TRY", "JPY", "CAD", "AUD", "CHF", "SGD"];
+
+      const savedCurrency = localStorage.getItem("sge_display_currency");
+
+      if (supportedCurrencies.includes(savedCurrency)) {
+
+        displayCurrency.value = savedCurrency;
+
+      }
+
+      displayCurrency.addEventListener("change", async function () {
+
+        localStorage.setItem("sge_display_currency", displayCurrency.value);
+
+        await loadExchangeRates(true);
+
+      });
+
+    }
+
+
+
+        // Customer support: the section is available only when an admin enables it.
+    let customerSupportChannel = null;
+    let activeSupportTicketId = null;
+
+    function supportStatus(text, isError = false) {
+      const node = $("support-status");
+      if (!node) return;
+      node.textContent = text || "";
+      node.className = "form-message" + (isError ? " error" : "");
     }
 
-
-
-    function setWalletMessage(message = "", isError = false) {
-
-      walletMessage.textContent = message;
-
-      walletMessage.style.color = isError ? "#ffaaaa" : "";
-
-    }
-
-
-
-    function setTransferMessage(message = "", isSuccess = false) {
-
-      transferMessage.textContent = message;
-
-      transferMessage.classList.toggle("success", isSuccess);
-
-    }
-
-
-
-    function formatMemberId(value) {
-
-      if (value === null || value === undefined || value === "") {
-
-        return "Unavailable";
-
-      }
-
-
-
-      const id = String(value);
-
-      return /^\d+$/.test(id) ? "ID:" + id.padStart(5, "0") : "Unavailable";
-
-    }
-
-
-
-    function formatBalance(value) {
-
-      const amount = Number(value);
-
-
-
-      if (!Number.isFinite(amount) || amount < 0) return null;
-
-
-
-      return amount.toLocaleString("en-US", {
-
-        minimumFractionDigits: 2,
-
-        maximumFractionDigits: 8
-
-      });
-
-    }
-
-    const exchangeRateStatus = $("exchange-rate-status");
-    const deliveryCurrencyLabel = $("delivery-currency-label");
-    const fundingCurrencyLabel = $("funding-currency-label");
-
-    function selectedDisplayCurrency() {
-      return displayCurrency && displayCurrency.value ? displayCurrency.value : "USD";
-    }
-
-    function formatWalletDisplayBalance(value) {
-      const amount = Number(value);
-      const currency = selectedDisplayCurrency();
-      const rate = Number(exchangeRates[currency]);
-
-      if (!Number.isFinite(amount) || amount < 0 || !Number.isFinite(rate)) {
-        return "Rate unavailable";
-      }
-
-      const convertedAmount = amount * rate;
-
+    async function loadCustomerSupport() {
+      const panel = $("customer-support-card");
+      if (!panel || !activeUserId) return;
       try {
-        return new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency,
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }).format(convertedAmount);
+        const { data: settings, error } = await sgecoreSupabase
+          .from("support_customer_settings")
+          .select("support_enabled, display_heading")
+          .eq("user_id", activeUserId)
+          .maybeSingle();
+        if (error) throw error;
+        if (!settings || settings.support_enabled !== true) {
+          panel.hidden = true;
+          if (customerSupportChannel) {
+            await sgecoreSupabase.removeChannel(customerSupportChannel);
+            customerSupportChannel = null;
+          }
+          return;
+        }
+        panel.hidden = false;
+        $("customer-support-heading").textContent = settings.display_heading?.trim() || "Customer Support";
+        await refreshCustomerTickets();
+        if (customerSupportChannel) await sgecoreSupabase.removeChannel(customerSupportChannel);
+        customerSupportChannel = sgecoreSupabase.channel("customer-support-" + activeUserId)
+          .on("postgres_changes", { event: "*", schema: "public", table: "support_tickets", filter: "user_id=eq." + activeUserId }, () => refreshCustomerTickets())
+          .on("postgres_changes", { event: "*", schema: "public", table: "support_customer_settings", filter: "user_id=eq." + activeUserId }, () => loadCustomerSupport())
+          .on("postgres_changes", { event: "INSERT", schema: "public", table: "support_messages" }, () => {
+            if (activeSupportTicketId) refreshCustomerTickets().catch(e => supportStatus(e.message, true));
+          })
+          .subscribe();
       } catch (error) {
-        return convertedAmount.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }) + " " + currency;
+        panel.hidden = false;
+        supportStatus("Support could not be loaded: " + error.message, true);
       }
     }
 
-    function renderWalletDisplayBalances() {
-      const currency = selectedDisplayCurrency();
-
-      if (deliveryCurrencyLabel) deliveryCurrencyLabel.textContent = currency;
-      if (fundingCurrencyLabel) fundingCurrencyLabel.textContent = currency;
-
-      deliveryBalance.textContent = walletBalances.delivery === null
-        ? "—"
-        : formatWalletDisplayBalance(walletBalances.delivery);
-
-      fundingBalance.textContent = walletBalances.funding === null
-        ? "—"
-        : formatWalletDisplayBalance(walletBalances.funding);
+    async function refreshCustomerTickets() {
+      if (!activeUserId || $("customer-support-card")?.hidden) return;
+      const list = $("support-ticket-list");
+      if (!list) return;
+      const { data: tickets, error } = await sgecoreSupabase.from("support_tickets")
+        .select("id,subject,status,created_at,last_message_at")
+        .eq("user_id", activeUserId).order("last_message_at", { ascending: false }).limit(100);
+      if (error) throw error;
+      list.replaceChildren();
+      if (!tickets?.length) {
+        const empty = document.createElement("p"); empty.className = "empty-state";
+        empty.textContent = "No support conversations yet."; list.append(empty);
+      }
+      for (const ticket of tickets || []) {
+        const b = document.createElement("button"); b.type = "button";
+        b.className = "support-ticket" + (ticket.id === activeSupportTicketId ? " active" : "");
+        const title = document.createElement("strong"); title.textContent = ticket.subject;
+        const meta = document.createElement("small"); meta.textContent = "\n" + (ticket.status || "open") + " · " + new Date(ticket.last_message_at || ticket.created_at).toLocaleString();
+        b.append(title, meta); b.addEventListener("click", () => openCustomerTicket(ticket)); list.append(b);
+      }
+      if (activeSupportTicketId && tickets?.some(t => t.id === activeSupportTicketId)) {
+        const current = tickets.find(t => t.id === activeSupportTicketId);
+        await openCustomerTicket(current, false);
+      } else if (!activeSupportTicketId && tickets?.length) {
+        await openCustomerTicket(tickets[0], false);
+      }
     }
 
-    async function loadExchangeRates(force = false) {
-      const currency = selectedDisplayCurrency();
-
-      if (currency === "USD") {
-        exchangeRates.USD = 1;
-        renderWalletDisplayBalances();
-        if (exchangeRateStatus) {
-          exchangeRateStatus.textContent = "Display rate: 1 USD = 1 USD. Wallet balances remain stored in USDT.";
-        }
-        return true;
+    async function openCustomerTicket(ticket, updateList = true) {
+      activeSupportTicketId = ticket.id;
+      if (updateList) await refreshCustomerTickets();
+      const chat = $("support-chat");
+      if (!chat) return;
+      chat.replaceChildren();
+      const title = document.createElement("h3"); title.textContent = ticket.subject + " · " + ticket.status;
+      chat.append(title);
+      const { data: messages, error } = await sgecoreSupabase.from("support_messages")
+        .select("id,sender_role,message,created_at").eq("ticket_id", ticket.id).order("created_at", { ascending: true }).limit(500);
+      if (error) throw error;
+      for (const item of messages || []) {
+        const bubble = document.createElement("div"); bubble.className = "support-message" + (item.sender_role === "admin" ? " admin" : "");
+        const meta = document.createElement("small"); meta.textContent = (item.sender_role === "admin" ? "SDE Core Support" : "You") + " · " + new Date(item.created_at).toLocaleString();
+        const body = document.createElement("p"); body.textContent = item.message;
+        bubble.append(meta, body); chat.append(bubble);
       }
-
-      const cacheIsFresh = Date.now() - exchangeRatesLoadedAt < 15 * 60 * 1000;
-      if (!force && cacheIsFresh && Number.isFinite(Number(exchangeRates[currency]))) {
-        const cachedRate = Number(exchangeRates[currency]);
-        if (exchangeRateStatus) {
-          exchangeRateStatus.textContent =
-            "Reference rate: 1 USD ≈ " + cachedRate.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 4
-            }) + " " + currency +
-            (exchangeRateDate ? " · Last updated: " + String(exchangeRateDate) : "") +
-            ". Wallet balances are stored in USDT; this is an estimated display conversion only.";
-        }
-        renderWalletDisplayBalances();
-        return true;
-      }
-
-      if (exchangeRateLoading) return false;
-      exchangeRateLoading = true;
-      if (exchangeRateStatus) exchangeRateStatus.textContent = "Updating " + currency + " exchange rate…";
-
-      try {
-        const response = await fetch("https://open.er-api.com/v6/latest/USD", {
-          method: "GET",
-          cache: "no-store"
+      if (ticket.status !== "closed") {
+        const form = document.createElement("form");
+        const input = document.createElement("textarea"); input.rows = 3; input.maxLength = 5000; input.required = true; input.placeholder = "Write your message...";
+        const send = document.createElement("button"); send.type = "submit"; send.className = "primary-button"; send.textContent = "Send message";
+        form.append(input, send);
+        form.addEventListener("submit", async event => {
+          event.preventDefault(); send.disabled = true;
+          try {
+            const { error: sendError } = await sgecoreSupabase.from("support_messages").insert({ ticket_id: ticket.id, sender_id: activeUserId, sender_role: "customer", message: input.value.trim() });
+            if (sendError) throw sendError;
+            input.value = ""; await openCustomerTicket(ticket, false); await refreshCustomerTickets();
+          } catch (e) { supportStatus(e.message, true); }
+          finally { send.disabled = false; }
         });
-        if (!response.ok) throw new Error("Exchange-rate service returned HTTP " + response.status);
-
-        const data = await response.json();
-        if (data.result !== "success" || !data.rates || !Number.isFinite(Number(data.rates[currency]))) {
-          throw new Error("The selected currency rate was not included in the exchange-rate response.");
-        }
-
-        exchangeRates = { ...exchangeRates, ...data.rates, USD: 1 };
-        exchangeRateDate = data.time_last_update_utc || data.time_last_update_unix || data.time_last_update;
-        exchangeRatesLoadedAt = Date.now();
-
-        const rate = Number(exchangeRates[currency]);
-        if (exchangeRateStatus) {
-          exchangeRateStatus.textContent =
-            "Reference rate: 1 USD ≈ " + rate.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 4
-            }) + " " + currency +
-            (exchangeRateDate ? " · Last updated: " + String(exchangeRateDate) : "") +
-            ". Wallet balances are stored in USDT; this is an estimated display conversion only.";
-        }
-
-        renderWalletDisplayBalances();
-        return true;
-      } catch (error) {
-        console.error("Exchange-rate loading error:", error);
-        delete exchangeRates[currency];
-        if (exchangeRateStatus) {
-          exchangeRateStatus.textContent =
-            "Unable to load the " + currency + " exchange rate. Wallet values are not converted; please try again.";
-        }
-        renderWalletDisplayBalances();
-        return false;
-      } finally {
-        exchangeRateLoading = false;
+        chat.append(form);
+      } else {
+        const note = document.createElement("p"); note.className = "empty-state"; note.textContent = "This conversation is closed."; chat.append(note);
       }
     }
 
-
-
-    function setEmailVerification(user) {
-
-      const verified = Boolean(user.email_confirmed_at);
-
-      emailVerification.textContent = verified ? "Verified" : "Not verified";
-
-      emailVerification.classList.remove("verified", "unverified");
-
-      emailVerification.classList.add(verified ? "verified" : "unverified");
-
-    }
-
-
-
-    function selectedWallets() {
-
-      return transferDirection.value === "delivery-funding"
-
-        ? { from: "delivery", to: "funding" }
-
-        : { from: "funding", to: "delivery" };
-
-    }
-
-
-
-    function walletLabel(type) {
-
-      return type === "delivery" ? "Delivery Wallet" : "Funding Wallet";
-
-    }
-
-
-
-    function updateTransferSummary() {
-
-      const { from, to } = selectedWallets();
-
-      const available = walletBalances[from];
-
-
-
-      $("transfer-from-name").textContent = walletLabel(from);
-
-      $("transfer-to-name").textContent = walletLabel(to);
-
-      $("transfer-from-balance").textContent =
-
-        "Available: " + (formatBalance(available) ?? "—") + " USDT";
-
-      $("transfer-to-balance").textContent =
-
-        "Current: " + (formatBalance(walletBalances[to]) ?? "—") + " USDT";
-
-
-
-      transferSubmit.textContent = "Transfer to " + walletLabel(to);
-
-
-
-      const max = Number(available);
-
-      transferAmount.max = Number.isFinite(max) && max >= 0 ? String(max) : "";
-
-    }
-
-
-
-    async function loadWallets(userId) {
-
-      deliveryBalance.textContent = "—";
-
-      fundingBalance.textContent = "—";
-
-      deliveryWalletStatus.textContent = "";
-
-      fundingWalletStatus.textContent = "";
-
-      walletBalances = { delivery: null, funding: null };
-
-      setWalletMessage();
-
-
-
-      try {
-
-        const { data: wallets, error } = await sgecoreSupabase
-
-          .from("wallets")
-
-          .select("wallet_type, currency, balance")
-
-          .eq("user_id", userId)
-
-          .eq("currency", "USDT")
-
-          .in("wallet_type", ["delivery", "funding"]);
-
-
-
-        if (error) throw error;
-
-
-
-        for (const wallet of wallets || []) {
-
-          const value = Number(wallet.balance);
-
-          if (!Number.isFinite(value) || value < 0) continue;
-
-
-
-          if (wallet.wallet_type === "delivery") walletBalances.delivery = value;
-
-          if (wallet.wallet_type === "funding") walletBalances.funding = value;
-
-        }
-
-
-
-        if (walletBalances.delivery !== null) {
-
-          renderWalletDisplayBalances();
-
-        } else {
-
-          deliveryWalletStatus.textContent = "Wallet not found.";
-
-        }
-
-
-
-        if (walletBalances.funding !== null) {
-
-          renderWalletDisplayBalances();
-
-        } else {
-
-          fundingWalletStatus.textContent = "Wallet not found.";
-
-        }
-
-
-
-        renderWalletDisplayBalances();
-
-        if (walletBalances.delivery === null || walletBalances.funding === null) {
-
-          setWalletMessage("One or more wallets could not be loaded. Please contact support if this continues.", true);
-
-        }
-
-
-
-        updateTransferSummary();
-
-      } catch (error) {
-
-        console.error("Wallet loading error:", error);
-
-        walletBalances = { delivery: null, funding: null };
-
-        renderWalletDisplayBalances();
-
-        updateTransferSummary();
-
-        setWalletMessage("Unable to load wallet balances. Please refresh and try again.", true);
-
-      }
-
-    }
-
-
-
-    function transactionTitle(type) {
-
-      const labels = {
-
-        deposit: "Deposit",
-
-        withdrawal: "Withdrawal",
-
-        transfer_in: "Transfer received",
-
-        transfer_out: "Transfer sent",
-
-        trade: "Trade",
-
-        investment: "Investment",
-
-        investment_return: "Investment return",
-
-        adjustment: "Balance adjustment"
-
-      };
-
-      return labels[type] || String(type || "Transaction").replaceAll("_", " ");
-
-    }
-
-
-
-    function formatDate(value) {
-
-      if (!value) return "Date unavailable";
-
-      const date = new Date(value);
-
-      if (Number.isNaN(date.getTime())) return "Date unavailable";
-
-      return date.toLocaleString();
-
-    }
-
-
-
-    function addTransactionRow(transaction) {
-
-      const row = document.createElement("div");
-
-      row.className = "transaction-row";
-
-
-
-      const details = document.createElement("div");
-
-      const title = document.createElement("div");
-
-      title.className = "transaction-title";
-
-      title.textContent = transactionTitle(transaction.transaction_type);
-
-
-
-      const meta = document.createElement("div");
-
-      meta.className = "transaction-meta";
-
-      meta.textContent =
-
-        formatDate(transaction.created_at) +
-
-        (transaction.description ? " · " + transaction.description : "");
-
-
-
-      details.append(title, meta);
-
-
-
-      const amountBox = document.createElement("div");
-
-      const amount = document.createElement("div");
-
-      const isIncoming = ["deposit", "transfer_in", "investment_return"].includes(
-
-        transaction.transaction_type
-
-      );
-
-
-
-      amount.className = "transaction-amount " + (isIncoming ? "in" : "out");
-
-      const formatted = formatBalance(transaction.amount);
-
-      amount.textContent =
-
-        (isIncoming ? "+" : "−") +
-
-        (formatted ?? String(transaction.amount)) +
-
-        " " + (transaction.currency || "USDT");
-
-
-
-      const status = document.createElement("span");
-
-      status.className = "transaction-status";
-
-      status.textContent = String(transaction.status || "unknown").toUpperCase();
-
-
-
-      amountBox.append(amount, status);
-
-      row.append(details, amountBox);
-
-      transactionList.appendChild(row);
-
-    }
-
-
-
-    async function loadTransactions(userId) {
-
-      transactionList.replaceChildren();
-
-      transactionMessage.textContent = "";
-
-
-
-      const loading = document.createElement("p");
-
-      loading.className = "empty-state";
-
-      loading.textContent = "Loading transactions...";
-
-      transactionList.appendChild(loading);
-
-
-
-      try {
-
-        const { data, error } = await sgecoreSupabase
-
-          .from("wallet_transactions")
-
-          .select("transaction_type, amount, currency, status, reference_id, description, created_at")
-
-          .eq("user_id", userId)
-
-          .order("created_at", { ascending: false })
-
-          .limit(10);
-
-
-
-        if (error) throw error;
-
-
-
-        transactionList.replaceChildren();
-
-
-
-        if (!data || data.length === 0) {
-
-          const empty = document.createElement("p");
-
-          empty.className = "empty-state";
-
-          empty.textContent = "No wallet transactions have been recorded yet.";
-
-          transactionList.appendChild(empty);
-
-          return;
-
-        }
-
-
-
-        data.forEach(addTransactionRow);
-
-      } catch (error) {
-
-        console.error("Transaction loading error:", error);
-
-        transactionList.replaceChildren();
-
-
-
-        const empty = document.createElement("p");
-
-        empty.className = "empty-state";
-
-        empty.textContent = "Unable to load transaction history. Please refresh and try again.";
-
-        transactionList.appendChild(empty);
-
-      }
-
-    }
-
-
-
-    async function refreshAccountData() {
-
-      if (!activeUserId) return;
-
-      refreshButton.disabled = true;
-
-      refreshButton.textContent = "Refreshing...";
-
-
-
-      try {
-
-        await Promise.all([
-
-          loadWallets(activeUserId),
-
-          loadTransactions(activeUserId),
-
-          loadExchangeRates(true)
-
-        ]);
-
-        setStatus("Account information refreshed.");
-
-      } finally {
-
-        refreshButton.disabled = false;
-
-        refreshButton.textContent = "Refresh";
-
-      }
-
-    }
-
-
-
-    async function loadDashboard() {
-
-      if (typeof sgecoreSupabase === "undefined" || !sgecoreSupabase.auth) {
-
-        setStatus("Supabase did not load. Check js/supabase.js and refresh.", true);
-
-        accountMemberId.textContent = "Unavailable";
-
-        accountName.textContent = "Unavailable";
-
-        accountEmail.textContent = "Unavailable";
-
-        accountBadge.textContent = "Unavailable";
-
-        emailVerification.textContent = "Unavailable";
-
-        return;
-
-      }
-
-
-
-      try {
-
-        const { data, error } = await sgecoreSupabase.auth.getUser();
-
-
-
-        if (error || !data.user) {
-
-          window.location.replace("login.html");
-
-          return;
-
-        }
-
-
-
-        const user = data.user;
-
-        activeUserId = user.id;
-
-
-
-        let fullName =
-
-          user.user_metadata?.full_name ||
-
-          user.user_metadata?.name ||
-
-          "";
-
-
-
-        let memberId = null;
-
-
-
-        try {
-
-          const { data: profile, error: profileError } = await sgecoreSupabase
-
-            .from("profiles")
-
-            .select("member_id, full_name, email")
-
-            .eq("id", user.id)
-
-            .maybeSingle();
-
-
-
-          if (profileError) {
-
-            console.error("Profile loading error:", profileError);
-
-          } else if (profile) {
-
-            memberId = profile.member_id;
-
-            if (profile.full_name) fullName = profile.full_name;
-
-          }
-
-        } catch (error) {
-
-          console.error("Profile loading error:", error);
-
-        }
-
-
-
-        if (!fullName.trim()) fullName = "SDE CORE Member";
-
-
-
-        accountMemberId.textContent = formatMemberId(memberId);
-
-        accountName.textContent = fullName;
-
-        accountEmail.textContent = user.email || "Not available";
-
-        accountAvatar.textContent = fullName.trim().charAt(0).toUpperCase() || "S";
-
-        accountBadge.textContent = "Active";
-
-        setEmailVerification(user);
-
-        setStatus("Welcome back, " + fullName + ".");
-
-
-
-        await Promise.all([
-
-          loadWallets(user.id),
-
-          loadTransactions(user.id)
-
-        ]);
-
-      } catch (error) {
-
-        console.error("Dashboard error:", error);
-
-        setStatus("Unable to load your account. Please refresh and try again.", true);
-
-        accountMemberId.textContent = "Unavailable";
-
-        accountBadge.textContent = "Unavailable";
-
-        emailVerification.textContent = "Unavailable";
-
-        setWalletMessage("Unable to load your account information.", true);
-
-      }
-
-    }
-
-
-
-    transferDirection.addEventListener("change", function () {
-
-      updateTransferSummary();
-
-      setTransferMessage();
-
-    });
-
-
-
-    maxTransferButton.addEventListener("click", function () {
-
-      const { from } = selectedWallets();
-
-      const available = walletBalances[from];
-
-
-
-      if (available === null || !Number.isFinite(available) || available <= 0) {
-
-        setTransferMessage("No available balance to transfer.", false);
-
-        return;
-
-      }
-
-
-
-      transferAmount.value = available.toFixed(8).replace(/(\.\d*?[1-9])0+$|\.0+$/, "$1");
-
-      setTransferMessage();
-
-    });
-
-
-
-    transferForm.addEventListener("submit", async function (event) {
-
+    $("support-new-ticket-form")?.addEventListener("submit", async event => {
       event.preventDefault();
-
-
-
-      if (transferInProgress) return;
-
-
-
-      if (!activeUserId) {
-
-        setTransferMessage("Your session is unavailable. Please sign in again.");
-
-        return;
-
-      }
-
-
-
-      const { from, to } = selectedWallets();
-
-      const amount = Number(transferAmount.value);
-
-      const available = walletBalances[from];
-
-
-
-      if (!Number.isFinite(amount) || amount <= 0) {
-
-        setTransferMessage("Enter a valid amount greater than zero.");
-
-        return;
-
-      }
-
-
-
-      if (available === null || !Number.isFinite(available)) {
-
-        setTransferMessage("Your available balance has not loaded. Refresh and try again.");
-
-        return;
-
-      }
-
-
-
-      if (amount > available) {
-
-        setTransferMessage("Insufficient available balance. Refresh your wallets and try again.");
-
-        return;
-
-      }
-
-
-
-      if (Number(amount.toFixed(8)) !== amount) {
-
-        setTransferMessage("Enter an amount with no more than 8 decimal places.");
-
-        return;
-
-      }
-
-
-
-      const confirmed = window.confirm(
-
-        "Transfer " + amount + " USDT from " +
-
-        walletLabel(from) + " to " + walletLabel(to) + "?"
-
-      );
-
-
-
-      if (!confirmed) return;
-
-
-
-      transferInProgress = true;
-
-      transferSubmit.disabled = true;
-
-      maxTransferButton.disabled = true;
-
-      transferDirection.disabled = true;
-
-      transferAmount.disabled = true;
-
-      transferSubmit.textContent = "Processing transfer...";
-
-      setTransferMessage("Processing your transfer. Please do not submit again.");
-
-
-
-      try {
-
-        const { data, error } = await sgecoreSupabase.rpc(
-
-          "transfer_sge_funds",
-
-          {
-
-            p_from: from,
-
-            p_to: to,
-
-            p_amount: amount
-
-          }
-
-        );
-
-
-
-        if (error) {
-
-          console.error("Wallet transfer error:", error);
-
-          setTransferMessage(
-
-            error.message || "Transfer failed. Refresh your balances before trying again."
-
-          );
-
-          return;
-
-        }
-
-
-
-        if (!data) {
-
-          setTransferMessage(
-
-            "The server returned no transfer reference. Refresh balances and history before retrying."
-
-          );
-
-          return;
-
-        }
-
-
-
-        transferAmount.value = "";
-
-        setTransferMessage(
-
-          "Transfer completed successfully. Reference: " + String(data),
-
-          true
-
-        );
-
-
-
-        await Promise.all([
-
-          loadWallets(activeUserId),
-
-          loadTransactions(activeUserId)
-
-        ]);
-
-
-
-        setStatus("Wallet transfer completed.");
-
-      } catch (error) {
-
-        console.error("Unexpected transfer error:", error);
-
-        setTransferMessage(
-
-          "We could not confirm the transfer result. Refresh balances and history before attempting another transfer."
-
-        );
-
-      } finally {
-
-        transferInProgress = false;
-
-        transferSubmit.disabled = false;
-
-        maxTransferButton.disabled = false;
-
-        transferDirection.disabled = false;
-
-        transferAmount.disabled = false;
-
-        updateTransferSummary();
-
-      }
-
-    });
-
-
-
-    refreshButton.addEventListener("click", refreshAccountData);
-
-    $("refresh-transactions").addEventListener("click", async function () {
-
       if (!activeUserId) return;
-
-
-
-      const button = this;
-
-      button.disabled = true;
-
-      button.textContent = "Refreshing...";
-
-
-
+      const subject = $("support-subject").value.trim();
+      const firstMessage = $("support-first-message").value.trim();
+      if (!subject || !firstMessage) return;
+      const submit = $("support-create-ticket"); submit.disabled = true; supportStatus("Creating conversation...");
       try {
-
-        await loadTransactions(activeUserId);
-
-      } finally {
-
-        button.disabled = false;
-
-        button.textContent = "Refresh";
-
-      }
-
-    });
-
-
-
-    logoutButton.addEventListener("click", async function () {
-
-      if (typeof sgecoreSupabase === "undefined" || !sgecoreSupabase.auth) {
-
-        setStatus("Unable to log out. Please try again.", true);
-
-        return;
-
-      }
-
-
-
-      logoutButton.disabled = true;
-
-      logoutButton.textContent = "Logging out...";
-
-
-
-      try {
-
-        const { error } = await sgecoreSupabase.auth.signOut();
-
-
-
+        const { data: ticket, error } = await sgecoreSupabase.from("support_tickets")
+          .insert({ user_id: activeUserId, subject, status: "open" })
+          .select("id,subject,status,created_at,last_message_at").single();
         if (error) throw error;
-
-        window.location.replace("login.html");
-
-      } catch (error) {
-
-        console.error("Logout error:", error);
-
-        setStatus("Unable to log out. Please try again.", true);
-
-        logoutButton.disabled = false;
-
-        logoutButton.textContent = "Logout";
-
-      }
-
+        const { error: messageError } = await sgecoreSupabase.from("support_messages")
+          .insert({ ticket_id: ticket.id, sender_id: activeUserId, sender_role: "customer", message: firstMessage });
+        if (messageError) throw messageError;
+        $("support-subject").value = ""; $("support-first-message").value = "";
+        activeSupportTicketId = ticket.id; supportStatus("Your support conversation has been created.");
+        await refreshCustomerTickets(); await openCustomerTicket(ticket, false);
+      } catch (error) { supportStatus("Unable to create conversation: " + error.message, true); }
+      finally { submit.disabled = false; }
     });
+    $("support-refresh")?.addEventListener("click", () => refreshCustomerTickets().catch(e => supportStatus(e.message, true)));
+
+
+loadDashboard();
+
+    loadExchangeRates();
 
 
 
-    // Save the selected display currency and convert both wallet cards for display.
-    const displayCurrency = $("display-currency");
-    if (displayCurrency) {
-      const supportedCurrencies = ["USD", "EUR", "GBP", "INR", "CNY", "AED", "SAR", "TRY", "JPY", "CAD", "AUD", "CHF", "SGD"];
-      const savedCurrency = localStorage.getItem("sge_display_currency");
-      if (supportedCurrencies.includes(savedCurrency)) {
-        displayCurrency.value = savedCurrency;
-      }
-      displayCurrency.addEventListener("change", async function () {
-        localStorage.setItem("sge_display_currency", displayCurrency.value);
-        await loadExchangeRates(true);
-      });
-    }
+  </script>
 
-    loadDashboard();
-    loadExchangeRates();
 
-  </script>
 
 </body>
+
+
 
 </html>

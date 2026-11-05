@@ -1293,88 +1293,161 @@
         ));
       }
 
+      let supportRealtimeChannel = null;
+
       async function renderSupport() {
-        const tickets = await query("support_tickets", "id,user_id,subject,status,assigned_to,created_at,updated_at", {
-          order: "created_at", limit: 500
-        });
+        const [tickets, profiles, settings] = await Promise.all([
+          query("support_tickets", "id,user_id,subject,status,assigned_to,assigned_admin,created_at,updated_at,last_message_at", { order: "last_message_at", limit: 500 }),
+          query("profiles", "id,member_id,full_name,email", { order: "created_at", limit: 500 }),
+          query("support_customer_settings", "user_id,support_enabled,display_heading,updated_at", { limit: 1000 })
+        ]);
+        const profileById = new Map(profiles.map(p => [p.id, p]));
+        const settingsById = new Map(settings.map(s => [s.user_id, s]));
+
+        const settingsCard = el("div", undefined, "card");
+        settingsCard.append(el("h2", "Customer support access"));
+        settingsCard.append(el("p", "Enable or disable support separately for each customer. The custom heading changes only the support title, not the customer's account name or Member ID.", "muted"));
+        const search = el("input"); search.type = "search"; search.placeholder = "Search by Member ID, name, email or user ID";
+        const customerSelect = el("select"); customerSelect.style.width = "100%";
+        const enabled = el("input"); enabled.type = "checkbox";
+        const headingInput = el("input"); headingInput.type = "text"; headingInput.maxLength = 100; headingInput.placeholder = "Customer Support"; headingInput.style.width = "100%";
+        const status = el("div", "", "message");
+        const save = button("Save customer support settings", async () => {
+          const userId = customerSelect.value;
+          if (!userId) { status.textContent = "Select a customer first."; status.className = "message error"; return; }
+          save.disabled = true; status.textContent = "Saving..."; status.className = "message";
+          try {
+            const { error } = await sgecoreSupabase.from("support_customer_settings").upsert({
+              user_id: userId,
+              support_enabled: enabled.checked,
+              display_heading: headingInput.value.trim() || null,
+              updated_at: new Date().toISOString()
+            }, { onConflict: "user_id" });
+            if (error) throw error;
+            status.textContent = "Support settings saved for this customer."; status.className = "message success";
+          } catch (e) { status.textContent = e.message; status.className = "message error"; }
+          finally { save.disabled = false; }
+        }, "primary");
+
+        function populateCustomerOptions(term = "") {
+          const previous = customerSelect.value;
+          customerSelect.replaceChildren();
+          const placeholder = el("option", "Select a customer..."); placeholder.value = ""; customerSelect.append(placeholder);
+          const q = term.trim().toLowerCase();
+          profiles.filter(p => !q || [p.member_id,p.full_name,p.email,p.id].some(v => String(v || "").toLowerCase().includes(q)))
+            .forEach(p => {
+              const label = [p.member_id || shortId(p.id), p.full_name || p.email || "Customer", p.email].filter(Boolean).join(" · ");
+              const opt = el("option", label); opt.value = p.id; customerSelect.append(opt);
+            });
+          if (profiles.some(p => p.id === previous)) customerSelect.value = previous;
+          if (!customerSelect.value && customerSelect.options.length > 1) customerSelect.selectedIndex = 1;
+          loadSelectedCustomerSettings();
+        }
+        function loadSelectedCustomerSettings() {
+          const row = settingsById.get(customerSelect.value);
+          enabled.checked = row?.support_enabled === true;
+          headingInput.value = row?.display_heading || "";
+        }
+        search.addEventListener("input", () => populateCustomerOptions(search.value));
+        customerSelect.addEventListener("change", loadSelectedCustomerSettings);
+        settingsCard.append(search, el("label", "Customer"), customerSelect, el("label", "Enable support for this customer"), enabled, el("label", "Custom support heading (optional)"), headingInput, save, status);
+        content.append(settingsCard);
+        populateCustomerOptions();
 
         const toolbar = el("div", undefined, "toolbar");
         const filter = el("select");
         [["all", "All tickets"], ["open", "Open"], ["pending", "Pending"], ["closed", "Closed"], ["resolved", "Resolved"]]
-          .forEach(([v, label]) => {
-            const opt = el("option", label);
-            opt.value = v;
-            filter.append(opt);
-          });
+          .forEach(([v, label]) => { const opt = el("option", label); opt.value = v; filter.append(opt); });
         filter.value = state.ticketFilter;
-        filter.addEventListener("change", () => {
-          state.ticketFilter = filter.value;
-          loadPage("support");
-        });
-        toolbar.append(filter);
-        content.append(toolbar);
-
-        const filtered = state.ticketFilter === "all"
-          ? tickets
-          : tickets.filter((t) => String(t.status || "").toLowerCase() === state.ticketFilter);
-
+        filter.addEventListener("change", () => { state.ticketFilter = filter.value; loadPage("support"); });
+        toolbar.append(filter); content.append(toolbar);
+        const filtered = state.ticketFilter === "all" ? tickets : tickets.filter(t => String(t.status || "").toLowerCase() === state.ticketFilter);
         content.append(table(
-          ["Created", "Customer", "Subject", "Status", "Assigned to", "Updated", "Actions"],
+          ["Last activity", "Member ID", "Customer", "Subject", "Status", "Actions"],
           filtered,
-          (t) => tr([
-            date(t.created_at), shortId(t.user_id), t.subject, badge(t.status),
-            shortId(t.assigned_to), date(t.updated_at),
-            button("Open ticket", () => showTicket(t), "primary")
-          ])
+          t => {
+            const p = profileById.get(t.user_id) || {};
+            return tr([date(t.last_message_at || t.updated_at), p.member_id || shortId(t.user_id), p.full_name || p.email || "Customer", t.subject, badge(t.status), button("Open conversation", () => showTicket(t, profileById.get(t.user_id)), "primary")]);
+          }
         ));
+        if (supportRealtimeChannel) await sgecoreSupabase.removeChannel(supportRealtimeChannel);
+        supportRealtimeChannel = sgecoreSupabase.channel("admin-support-inbox")
+          .on("postgres_changes", { event: "*", schema: "public", table: "support_tickets" }, () => {
+            if (state.page === "support") loadPage("support");
+          })
+          .on("postgres_changes", { event: "INSERT", schema: "public", table: "support_messages" }, () => {
+            if (state.page === "support") loadPage("support");
+          })
+          .subscribe();
       }
 
-      async function showTicket(ticket) {
+      async function showTicket(ticket, profile = null, subscribe = true) {
         try {
-          const messages = await query("support_messages",
-            "id,ticket_id,sender_id,message,attachment_path,created_at",
-            { eq: ["ticket_id", ticket.id], order: "created_at", limit: 500 }
-          );
-
+          if (!profile) {
+            const rows = await query("profiles", "id,member_id,full_name,email", { eq: ["id", ticket.user_id], limit: 1 });
+            profile = rows[0] || {};
+          }
+          const messages = await query("support_messages", "id,ticket_id,sender_id,sender_role,message,attachment_path,created_at", { eq: ["ticket_id", ticket.id], order: "created_at", limit: 500 });
           clear(content);
           const box = el("div", undefined, "card");
           const head = el("div", undefined, "page-head");
           const heading = el("div");
           heading.append(el("h2", ticket.subject || "Support ticket"));
+          heading.append(el("div", "Customer Member ID: " + (profile.member_id || "Not assigned") + " · " + (profile.full_name || profile.email || shortId(ticket.user_id)), "muted"));
           heading.append(el("div", "Ticket " + ticket.id, "muted small"));
-          head.append(heading, button("Back to support", () => loadPage("support")));
-          box.append(head);
+          head.append(heading, button("Back to support", () => loadPage("support"))); box.append(head);
+          [["Customer name", profile.full_name || "—"], ["Email", profile.email || "—"], ["Member ID", profile.member_id || "—"], ["User ID", ticket.user_id], ["Status", ticket.status], ["Created", date(ticket.created_at)], ["Last activity", date(ticket.last_message_at || ticket.updated_at)]]
+            .forEach(([k,v]) => box.append(fieldLabel(k,v)));
+          const statusRow = el("div", undefined, "toolbar");
+          const statusSelect = el("select");
+          ["open","pending","closed","resolved"].forEach(v => { const o=el("option",v); o.value=v; statusSelect.append(o); });
+          statusSelect.value = ticket.status || "open";
+          statusRow.append(el("label", "Ticket status"), statusSelect, button("Update status", async () => {
+            const { error } = await sgecoreSupabase.from("support_tickets").update({ status: statusSelect.value }).eq("id", ticket.id);
+            if (error) { message("globalMessage", error.message, "error"); return; }
+            ticket.status = statusSelect.value; message("globalMessage", "Ticket status updated.", "success");
+            await showTicket(ticket, profile, false);
+          }, "primary"));
+          box.append(statusRow); content.append(box);
 
-          [
-            ["Customer", ticket.user_id], ["Status", ticket.status],
-            ["Assigned to", ticket.assigned_to],
-            ["Created", date(ticket.created_at)], ["Updated", date(ticket.updated_at)]
-          ].forEach(([k, v]) => box.append(fieldLabel(k, v)));
-          content.append(box);
-
-          const msgBox = el("div", undefined, "card");
-          msgBox.append(el("h2", "Conversation"));
-          if (!messages.length) {
-            msgBox.append(el("div", "No messages found.", "empty"));
-          } else {
-            messages.forEach((m) => {
-              const item = el("div", undefined, "card");
-              item.append(el("div", "From: " + shortId(m.sender_id) + " · " + date(m.created_at), "muted small"));
-              const body = el("p", m.message || "");
-              body.style.whiteSpace = "pre-wrap";
-              item.append(body);
-
-              if (m.attachment_path) {
-                item.append(el("div", "Attachment path: " + m.attachment_path, "muted small"));
+          const msgBox = el("div", undefined, "card"); msgBox.append(el("h2", "Conversation"));
+          if (!messages.length) msgBox.append(el("div", "No messages found.", "empty"));
+          messages.forEach(m => {
+            const item = el("div", undefined, "card");
+            const sender = m.sender_role === "admin" ? "SDE Core Support" : (profile.full_name || "Customer");
+            item.append(el("div", sender + " · " + date(m.created_at), "muted small"));
+            const body = el("p", m.message || ""); body.style.whiteSpace = "pre-wrap"; item.append(body);
+            if (m.attachment_path) item.append(el("div", "Attachment: " + m.attachment_path, "muted small"));
+            msgBox.append(item);
+          });
+          const replyForm = el("form", undefined, "support-reply-form");
+          const reply = el("textarea"); reply.rows = 4; reply.maxLength = 5000; reply.required = true; reply.placeholder = "Write a reply to the customer..."; reply.style.width = "100%";
+          const send = el("button", "Send reply", "primary"); send.type = "submit";
+          replyForm.append(reply, send);
+          replyForm.addEventListener("submit", async event => {
+            event.preventDefault(); const text = reply.value.trim(); if (!text) return;
+            send.disabled = true;
+            try {
+              const { error } = await sgecoreSupabase.from("support_messages").insert({ ticket_id: ticket.id, sender_id: state.user.id, sender_role: "admin", message: text });
+              if (error) throw error;
+              if (ticket.status === "closed" || ticket.status === "resolved") {
+                const update = await sgecoreSupabase.from("support_tickets").update({ status: "open" }).eq("id", ticket.id);
+                if (update.error) throw update.error;
+                ticket.status = "open";
               }
-              msgBox.append(item);
-            });
+              await showTicket(ticket, profile, false);
+            } catch (e) { message("globalMessage", e.message, "error"); }
+            finally { send.disabled = false; }
+          });
+          msgBox.append(replyForm); content.append(msgBox);
+
+          if (subscribe) {
+            if (supportRealtimeChannel) await sgecoreSupabase.removeChannel(supportRealtimeChannel);
+            supportRealtimeChannel = sgecoreSupabase.channel("admin-support-ticket-" + ticket.id)
+              .on("postgres_changes", { event: "INSERT", schema: "public", table: "support_messages", filter: "ticket_id=eq." + ticket.id }, () => showTicket(ticket, profile, false))
+              .subscribe();
           }
-          content.append(msgBox);
-          content.append(el("div", "Replying to tickets is not enabled yet. We'll add it through a secure, authorized database operation.", "notice"));
-        } catch (e) {
-          message("globalMessage", e.message, "error");
-        }
+        } catch (e) { message("globalMessage", e.message, "error"); }
       }
 
       async function renderAddresses() {
