@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+  <title>Customer Support | SDE CORE</title>
+  <link rel="stylesheet" href="../css/support-chat.css">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #edf2fa;
+      background: radial-gradient(ellipse at 50% 0%, rgba(217,180,93,.13), transparent 48%), #07111f;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .support-topbar {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 5%;
+      border-bottom: 1px solid rgba(217,180,93,.18);
+      background: #091626;
+    }
+
+    .support-logo {
+      color: #f0d58c;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+    }
+
+    .support-back {
+      color: #e6c879;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .support-main {
+      width: min(760px, calc(100% - 30px));
+      margin: 35px auto;
+    }
+
+    .support-intro {
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .support-icon {
+      width: 64px;
+      height: 64px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #07111f;
+      background: linear-gradient(135deg, #f4d98d, #c99b3b);
+      border-radius: 20px;
+      box-shadow: 0 8px 28px rgba(217,180,93,.2);
+    }
+
+    .support-intro h1 {
+      margin: 15px 0 7px;
+      color: #f0d58c;
+      font-size: clamp(25px, 5vw, 34px);
+    }
+
+    .support-intro p {
+      margin: 0;
+      color: #aab8ca;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    #sge-support-widget {
+      position: static !important;
+      display: block;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    #sge-support-widget[hidden] { display: none !important; }
+    #sge-support-toggle { display: none !important; }
+
+    #sge-support-panel {
+      position: static !important;
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      height: min(650px, 72vh) !important;
+      min-height: 440px !important;
+      max-height: 720px !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(217,180,93,.3) !important;
+      border-radius: 20px !important;
+      background: #0d1a2b !important;
+      box-shadow: 0 20px 65px rgba(0,0,0,.35) !important;
+    }
+
+    .sge-chat-header {
+      flex-shrink: 0;
+      padding: 18px 20px !important;
+      background: linear-gradient(110deg, #142943, #102035) !important;
+      border-bottom: 1px solid rgba(217,180,93,.2) !important;
+    }
+
+    .sge-chat-heading {
+      color: #f0d58c !important;
+      font-size: 16px !important;
+      font-weight: 800 !important;
+    }
+
+    .sge-chat-subheading {
+      color: #aebbd0 !important;
+      font-size: 12px !important;
+    }
+
+    #sge-chat-close { display: none !important; }
+
+    #sge-chat-messages {
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      overflow-y: auto !important;
+      padding: 22px !important;
+      background: #0a1727 !important;
+    }
+
+    .sge-chat-welcome {
+      max-width: 85%;
+      margin: 12px auto;
+      padding: 16px 18px;
+      color: #d8e0ed;
+      background: #14263b;
+      border: 1px solid rgba(217,180,93,.16);
+      border-radius: 15px;
+      font-size: 14px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .sge-chat-message { margin: 12px 0 !important; }
+
+    .sge-chat-bubble {
+      padding: 12px 15px !important;
+      border-radius: 15px !important;
+      font-size: 14px !important;
+      line-height: 1.6 !important;
+    }
+
+    .sge-chat-message.mine .sge-chat-bubble {
+      color: #101827 !important;
+      background: linear-gradient(135deg, #f4d98d, #d1aa55) !important;
+    }
+
+    .sge-chat-message.theirs .sge-chat-bubble {
+      color: #e6edf7 !important;
+      background: #192c43 !important;
+      border: 1px solid rgba(255,255,255,.06) !important;
+    }
+
+    #sge-chat-status {
+      flex-shrink: 0;
+      padding: 6px 16px;
+      color: #e5c878;
+      background: #0d1a2b;
+      font-size: 12px;
+    }
+
+    #sge-chat-closed {
+      display: none;
+      flex-shrink: 0;
+      padding: 10px;
+      color: #f0d58c;
+      text-align: center;
+    }
+
+    #sge-chat-closed.visible { display: block; }
+
+    .sge-chat-composer {
+      flex-shrink: 0;
+      display: flex !important;
+      align-items: flex-end !important;
+      gap: 10px !important;
+      padding: 15px !important;
+      background: #101f32 !important;
+      border-top: 1px solid rgba(217,180,93,.18) !important;
+    }
+
+    #sge-chat-input {
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      min-height: 46px !important;
+      max-height: 110px !important;
+      padding: 13px 14px !important;
+      color: #f1f5fb !important;
+      background: #091626 !important;
+      border: 1px solid #34475e !important;
+      border-radius: 12px !important;
+      outline: none !important;
+      resize: vertical;
+      font: inherit !important;
+    }
+
+    #sge-chat-input:focus {
+      border-color: #d9b45d !important;
+      box-shadow: 0 0 0 3px rgba(217,180,93,.1) !important;
+    }
+
+    #sge-chat-send {
+      display: inline-flex !important;
+      flex: 0 0 auto !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-width: 82px !important;
+      min-height: 46px !important;
+      padding: 10px 18px !important;
+      color: #07111f !important;
+      background: linear-gradient(135deg, #f4d98d, #c99b3b) !important;
+      border: 1px solid #f3d78e !important;
+      border-radius: 12px !important;
+      font-size: 14px !important;
+      font-weight: 800 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      cursor: pointer !important;
+    }
+
+    #sge-chat-send:disabled {
+      opacity: .55 !important;
+      cursor: not-allowed !important;
+    }
+
+    #sge-chat-status.error { color: #ff9b9b; }
+
+    @media (max-width: 600px) {
+      .support-topbar { min-height: 60px; padding: 12px 16px; }
+      .support-logo { font-size: 17px; }
+      .support-main { width: calc(100% - 20px); margin: 24px auto; }
+      .support-intro { margin-bottom: 18px; }
+      #sge-support-panel {
+        height: 68vh !important;
+        min-height: 420px !important;
+        border-radius: 15px !important;
+      }
+      .sge-chat-header { padding: 15px !important; }
+      #sge-chat-messages { padding: 14px !important; }
+      .sge-chat-composer { padding: 10px !important; gap: 8px !important; }
+      #sge-chat-input { font-size: 14px !important; }
+      #sge-chat-send { min-width: 70px !important; padding: 9px 12px !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="support-topbar">
+    <a class="support-logo" href="../index.html">SDE CORE</a>
+    <a class="support-back" href="../index.html">← Back to Home</a>
+  </header>
+
+  <main class="support-main">
+    <div class="support-intro">
+      <div class="support-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none"
+          stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 13v-2a9 9 0 0 1 18 0v2"/>
+          <path d="M3 13h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Z"/>
+          <path d="M21 13h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-5Z"/>
+          <path d="M16 20c-1 1-2.3 1.5-4 1.5"/>
+        </svg>
+      </div>
+      <h1>Customer Support</h1>
+      <p>We're here to help. Send your message and our support team will respond here.</p>
+    </div>
+
+    <div id="sge-support-widget">
+      <button id="sge-support-toggle" type="button" aria-expanded="true" hidden>Open chat</button>
+
+      <section id="sge-support-panel" aria-label="Customer support conversation">
+        <div class="sge-chat-header">
+          <div class="sge-chat-brand">
+            <div class="sge-chat-avatar">S</div>
+            <div>
+              <div class="sge-chat-heading" id="sge-chat-heading">Customer Support</div>
+              <div class="sge-chat-subheading">SDE Core support team</div>
+            </div>
+          </div>
+          <button id="sge-chat-close" type="button" aria-label="Close chat">×</button>
+        </div>
+
+        <div id="sge-chat-messages" aria-live="polite"></div>
+        <div id="sge-chat-closed">This conversation is closed.</div>
+        <div id="sge-chat-status" role="status" aria-live="polite"></div>
+
+        <div class="sge-chat-composer">
+          <textarea id="sge-chat-input" rows="2" maxlength="4000"
+            placeholder="Type your message..." aria-label="Your message"></textarea>
+          <button id="sge-chat-send" type="button">Send</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/support-chat.js"></script>
+</body>
+</html>

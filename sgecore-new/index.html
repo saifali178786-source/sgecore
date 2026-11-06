@@ -185,28 +185,146 @@
       .snapshot-table th,.snapshot-table td{padding:13px 14px}
     }
   </style>
+<style>
+/* SDE CORE - FINAL HOMEPAGE HEADER */
+@media (min-width: 900px) {
+  header.site-header > .main-nav {
+    justify-content: flex-start !important;
+    gap: clamp(11px, 1.45vw, 20px) !important;
+  }
+  header.site-header > .main-nav > a {
+    font-size: 13px !important;
+  }
+  header.site-header > .main-nav > .header-actions {
+    margin-left: auto !important;
+  }
+  header.site-header #sge-account-menu {
+    margin-left: auto !important;
+  }
+  header.site-header .sge-account-trigger,
+  header.site-header .login-btn,
+  header.site-header .register-btn {
+    min-height: 40px !important;
+    padding: 0 17px !important;
+    border: 1px solid rgba(217,180,93,.75) !important;
+    border-radius: 7px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+  }
+}
+</style>
+<style>
+
+/* SDE CORE - HEADER ALIGNMENT AND AUTH VISIBILITY FIX */
+@media (min-width: 900px) {
+  header.site-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: 70px !important;
+    height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  header.site-header > .brand {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  header.site-header > .main-nav {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: clamp(12px, 1.5vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  header.site-header > .main-nav > a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Keep Login/Register at the far right when signed out */
+  header.site-header .main-nav > .header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+  }
+
+  /* Keep My Account at its existing far-right position */
+  header.site-header #sge-account-menu {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .register-btn,
+  header.site-header .sge-account-trigger {
+    min-height: 40px !important;
+    padding: 0 16px !important;
+    border: 1px solid rgba(217,180,93,.75) !important;
+    border-radius: 7px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .sge-account-trigger {
+    color: #f0d58c !important;
+    background: #0d1a2b !important;
+  }
+
+  header.site-header .register-btn {
+    color: #07111f !important;
+    background: #d9b45d !important;
+    border-color: #d9b45d !important;
+  }
+}
+
+/* IMPORTANT: never let button styling override authentication visibility */
+header.site-header [hidden],
+header.site-header .header-actions [hidden] {
+  display: none !important;
+}
+
+</style>
+<link rel="stylesheet" href="css/support-chat.css">
 </head>
 
 <body>
-  <div class="topbar">
-    <div class="topbar-inner">
-      <span><span class="status-dot"></span> PRECIOUS METALS & DIGITAL ASSET MARKETS</span>
-      <span class="topbar-note">Market information · Investment insights · Account tools</span>
-    </div>
-  </div>
+</div>
 
   <div class="market-ticker" aria-label="Market prices ticker">
     <div class="ticker-track">
       <span class="ticker-label">MARKET WATCH</span>
-      <span>GOLD <strong id="ticker-XAU">Loading…</strong> <small>USD/g</small></span>
-      <span>SILVER <strong id="ticker-XAG">Loading…</strong> <small>USD/oz</small></span>
-      <span>BTC <strong id="ticker-BTCUSDT">Loading…</strong> <em id="ticker-change-BTCUSDT">—</em></span>
-      <span>ETH <strong id="ticker-ETHUSDT">Loading…</strong> <em id="ticker-change-ETHUSDT">—</em></span>
-      <span>BNB <strong id="ticker-BNBUSDT">Loading…</strong> <em id="ticker-change-BNBUSDT">—</em></span>
-      <span>SOL <strong id="ticker-SOLUSDT">Loading…</strong> <em id="ticker-change-SOLUSDT">—</em></span>
-      <span>XRP <strong id="ticker-XRPUSDT">Loading…</strong> <em id="ticker-change-XRPUSDT">—</em></span>
-      <span>DOGE <strong id="ticker-DOGEUSDT">Loading…</strong> <em id="ticker-change-DOGEUSDT">—</em></span>
-      <span class="ticker-refresh">Auto refresh · 30 sec</span>
+      <span>GOLD <strong id="ticker-XAU">Loadingâ€¦</strong> <small>USD/g</small></span>
+      <span>SILVER <strong id="ticker-XAG">Loadingâ€¦</strong> <small>USD/oz</small></span>
+      <span>BTC <strong id="ticker-BTCUSDT">Loadingâ€¦</strong> <em id="ticker-change-BTCUSDT">â€”</em></span>
+      <span>ETH <strong id="ticker-ETHUSDT">Loadingâ€¦</strong> <em id="ticker-change-ETHUSDT">â€”</em></span>
+      <span>BNB <strong id="ticker-BNBUSDT">Loadingâ€¦</strong> <em id="ticker-change-BNBUSDT">â€”</em></span>
+      <span>SOL <strong id="ticker-SOLUSDT">Loadingâ€¦</strong> <em id="ticker-change-SOLUSDT">â€”</em></span>
+      <span>XRP <strong id="ticker-XRPUSDT">Loadingâ€¦</strong> <em id="ticker-change-XRPUSDT">â€”</em></span>
+      <span>DOGE <strong id="ticker-DOGEUSDT">Loadingâ€¦</strong> <em id="ticker-change-DOGEUSDT">â€”</em></span>
+      <span class="ticker-refresh">Auto refresh Â· 30 sec</span>
     </div>
   </div>
 
@@ -224,37 +342,18 @@
   </button>
 
   <nav class="main-nav" aria-label="Main navigation">
-    <a class="active" href="index.html">Home</a>
+    <a href="index.html" class="active" aria-current="page">Home</a>
     <a href="pages/markets.html">Markets</a>
-    <a href="pages/markets.html">Market Data</a>
+    <a href="pages/market-data.html">Market Data</a>
     <a href="pages/mining-plans.html">Mining Plans</a>
     <a href="pages/my-assets.html">Assets</a>
     <a href="pages/about.html">About Us</a>
     <a href="pages/contact.html">Contact</a>
-  </nav>
-
-  <div class="header-actions" id="sgeAccountNav" aria-label="Account navigation">
-    <a class="login-btn" href="pages/login.html" id="sgeLoginLink">Login</a>
-    <a class="register-btn" href="pages/register.html" id="sgeRegisterLink">Register <span>↗</span></a>
-
-    <div class="sge-account-menu" id="sgeAccountMenu" hidden>
-      <button class="sge-account-trigger" id="sgeAccountTrigger" type="button" aria-expanded="false" aria-haspopup="true">
-        <span class="sge-account-avatar" aria-hidden="true">●</span>
-        <span class="sge-account-label">
-          <strong>Account</strong>
-          <small id="sgeAccountUid">UID: —</small>
-        </span>
-        <span class="sge-account-chevron" aria-hidden="true">⌄</span>
-      </button>
-
-      <div class="sge-account-dropdown" id="sgeAccountDropdown" hidden>
-        <a href="pages/dashboard.html">Dashboard</a>
-        <a href="pages/my-assets.html">My Assets</a>
-        <a href="pages/account-settings.html">Account Settings</a>
-        <button type="button" id="sgeLogoutButton">Log Out</button>
-      </div>
+    <div class="header-actions">
+      <a class="login-btn nav-login" href="pages/login.html">Login</a>
+      <a class="register-btn nav-register" href="pages/register.html">Register <span>â†—</span></a>
     </div>
-  </div>
+  </nav>
 </header>
 
   <main>
@@ -271,32 +370,32 @@
             in one convenient place.
           </p>
           <div class="hero-actions">
-            <a class="button button-gold" href="#markets">Explore Markets <span>→</span></a>
+            <a class="button button-gold" href="#markets">Explore Markets <span>â†’</span></a>
             <a class="button button-glass" href="#investments">View Mining Plans</a>
-            <a class="button button-glass" href="pages/quick-recharge.html">Quick Recharge <span>→</span></a>
+            <a class="button button-glass" href="pages/quick-recharge.html">Quick Recharge <span>â†’</span></a>
           </div>
           <div class="hero-points">
-            <span><i>✓</i> Precious-metals market information</span>
-            <span><i>✓</i> Digital asset market overview</span>
+            <span><i>âœ“</i> Precious-metals market information</span>
+            <span><i>âœ“</i> Digital asset market overview</span>
           </div>
         </div>
 
         <aside class="hero-gold-card" aria-label="Live gold price">
           <span class="gold-card-eyebrow">GOLD SPOT PRICE</span>
           <span class="gold-card-symbol">XAU / USD</span>
-          <strong id="heroGoldPrice">—</strong>
+          <strong id="heroGoldPrice">â€”</strong>
           <span class="gold-card-unit">USD per troy ounce</span>
           <div class="gold-card-divider"></div>
           <span class="gold-card-eyebrow">PRICE PER GRAM</span>
-          <strong class="gold-gram-price" id="heroGoldGram">—</strong>
-          <span class="gold-card-unit">USD / gram · based on 31.1034768 g per troy oz</span>
-          <span class="gold-card-updated" id="heroGoldUpdated">Waiting for market data…</span>
+          <strong class="gold-gram-price" id="heroGoldGram">â€”</strong>
+          <span class="gold-card-unit">USD / gram Â· based on 31.1034768 g per troy oz</span>
+          <span class="gold-card-updated" id="heroGoldUpdated">Waiting for market dataâ€¦</span>
         </aside>
       </div>
 
       <div class="hero-bottom">
         <span>SDE CORE <span class="hero-bottom-dot">/</span> MARKET INFORMATION</span>
-        <a href="#markets">SCROLL TO EXPLORE <span>↓</span></a>
+        <a href="#markets">SCROLL TO EXPLORE <span>â†“</span></a>
       </div>
     </section>
 
@@ -312,7 +411,7 @@
           </p>
         </div>
         <div class="market-status" id="liveMarketStatus" aria-live="polite">
-          <span class="status-dot status-dot-muted"></span> Connecting to market feeds…
+          <span class="status-dot status-dot-muted"></span> Connecting to market feedsâ€¦
         </div>
       </div>
 
@@ -320,9 +419,9 @@
         <div class="snapshot-toolbar">
           <div>
             <strong>Selected markets</strong>
-            <span>Crypto quotes in USD · Gold spot in USD</span>
+            <span>Crypto quotes in USD Â· Gold spot in USD</span>
           </div>
-          <span id="snapshotUpdated">Updating market data…</span>
+          <span id="snapshotUpdated">Updating market dataâ€¦</span>
         </div>
 
         <div class="snapshot-scroll">
@@ -332,43 +431,43 @@
             </thead>
             <tbody>
               <tr data-market-row="BTC">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">₿</b><span><strong>Bitcoin</strong><small>BTC</small></span></span></td>
-                <td id="table-price-BTCUSDT">—</td><td id="table-change-BTCUSDT">—</td><td id="cap-BTC">—</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin">â‚¿</b><span><strong>Bitcoin</strong><small>BTC</small></span></span></td>
+                <td id="table-price-BTCUSDT">â€”</td><td id="table-change-BTCUSDT">â€”</td><td id="cap-BTC">â€”</td>
                 <td><svg class="sparkline" id="spark-BTC" viewBox="0 0 120 34" role="img" aria-label="Bitcoin seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="ETH">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">◆</b><span><strong>Ethereum</strong><small>ETH</small></span></span></td>
-                <td id="table-price-ETHUSDT">—</td><td id="table-change-ETHUSDT">—</td><td id="cap-ETH">—</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin">â—†</b><span><strong>Ethereum</strong><small>ETH</small></span></span></td>
+                <td id="table-price-ETHUSDT">â€”</td><td id="table-change-ETHUSDT">â€”</td><td id="cap-ETH">â€”</td>
                 <td><svg class="sparkline" id="spark-ETH" viewBox="0 0 120 34" role="img" aria-label="Ethereum seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="BNB">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">◆</b><span><strong>BNB</strong><small>BNB</small></span></span></td>
-                <td id="table-price-BNBUSDT">—</td><td id="table-change-BNBUSDT">—</td><td id="cap-BNB">—</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin">â—†</b><span><strong>BNB</strong><small>BNB</small></span></span></td>
+                <td id="table-price-BNBUSDT">â€”</td><td id="table-change-BNBUSDT">â€”</td><td id="cap-BNB">â€”</td>
                 <td><svg class="sparkline" id="spark-BNB" viewBox="0 0 120 34" role="img" aria-label="BNB seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="SOL">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">◎</b><span><strong>Solana</strong><small>SOL</small></span></span></td>
-                <td id="table-price-SOLUSDT">—</td><td id="table-change-SOLUSDT">—</td><td id="cap-SOL">—</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin">â—Ž</b><span><strong>Solana</strong><small>SOL</small></span></span></td>
+                <td id="table-price-SOLUSDT">â€”</td><td id="table-change-SOLUSDT">â€”</td><td id="cap-SOL">â€”</td>
                 <td><svg class="sparkline" id="spark-SOL" viewBox="0 0 120 34" role="img" aria-label="Solana seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="XRP">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">✕</b><span><strong>XRP</strong><small>XRP</small></span></span></td>
-                <td id="table-price-XRPUSDT">—</td><td id="table-change-XRPUSDT">—</td><td id="cap-XRP">—</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin">âœ•</b><span><strong>XRP</strong><small>XRP</small></span></span></td>
+                <td id="table-price-XRPUSDT">â€”</td><td id="table-change-XRPUSDT">â€”</td><td id="cap-XRP">â€”</td>
                 <td><svg class="sparkline" id="spark-XRP" viewBox="0 0 120 34" role="img" aria-label="XRP seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="DOGE">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">Ð</b><span><strong>Dogecoin</strong><small>DOGE</small></span></span></td>
-                <td id="table-price-DOGEUSDT">—</td><td id="table-change-DOGEUSDT">—</td><td id="cap-DOGE">—</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin">Ã</b><span><strong>Dogecoin</strong><small>DOGE</small></span></span></td>
+                <td id="table-price-DOGEUSDT">â€”</td><td id="table-change-DOGEUSDT">â€”</td><td id="cap-DOGE">â€”</td>
                 <td><svg class="sparkline" id="spark-DOGE" viewBox="0 0 120 34" role="img" aria-label="Dogecoin seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="ADA">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">●</b><span><strong>Cardano</strong><small>ADA</small></span></span></td>
-                <td id="table-price-ADAUSDT">—</td><td id="table-change-ADAUSDT">—</td><td id="cap-ADA">—</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin">â—</b><span><strong>Cardano</strong><small>ADA</small></span></span></td>
+                <td id="table-price-ADAUSDT">â€”</td><td id="table-change-ADAUSDT">â€”</td><td id="cap-ADA">â€”</td>
                 <td><svg class="sparkline" id="spark-ADA" viewBox="0 0 120 34" role="img" aria-label="Cardano seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr>
                 <td><span class="snapshot-asset"><b class="snapshot-coin gold-coin">Au</b><span><strong>Gold</strong><small>XAU</small></span></span></td>
-                <td id="table-price-XAU">—</td><td id="table-change-XAU">—</td><td class="muted-cell">Not supplied</td><td class="muted-cell">History unavailable</td>
+                <td id="table-price-XAU">â€”</td><td id="table-change-XAU">â€”</td><td class="muted-cell">Not supplied</td><td class="muted-cell">History unavailable</td>
               </tr>
             </tbody>
           </table>
@@ -383,7 +482,7 @@
       </div>
 
       <div class="market-disclaimer" id="marketDataDisclaimer">
-        <span>ⓘ</span> Market information is for general reference only, may be
+        <span>â“˜</span> Market information is for general reference only, may be
         delayed or unavailable, and is not investment advice. Market
         capitalization is not provided for spot gold in this table.
       </div>
@@ -404,25 +503,25 @@
       <div class="why-grid">
         <article class="why-card">
           <span class="why-number">01</span>
-          <div class="why-icon">◈</div>
+          <div class="why-icon">â—ˆ</div>
           <h3>Gold market information</h3>
           <p>Follow spot gold prices and explore precious-metals information in one place.</p>
         </article>
         <article class="why-card">
           <span class="why-number">02</span>
-          <div class="why-icon">⌁</div>
+          <div class="why-icon">âŒ</div>
           <h3>Digital asset overview</h3>
           <p>Monitor selected cryptocurrency markets with price and 24-hour movement data.</p>
         </article>
         <article class="why-card">
           <span class="why-number">03</span>
-          <div class="why-icon">▤</div>
+          <div class="why-icon">â–¤</div>
           <h3>Mining plan information</h3>
           <p>Review listed mining plans, their stated periods and investment limits before making a decision.</p>
         </article>
         <article class="why-card">
           <span class="why-number">04</span>
-          <div class="why-icon">◉</div>
+          <div class="why-icon">â—‰</div>
           <h3>Account tools</h3>
           <p>Access your member account, dashboard and separate Assets page through the website.</p>
         </article>
@@ -448,23 +547,23 @@
           <div class="service-icon" aria-hidden="true">Au</div>
           <h3>Gold Market Information</h3>
           <p>Explore spot-market information and follow developments in gold pricing.</p>
-          <a href="#markets" class="card-link">View market overview <span>→</span></a>
+          <a href="#markets" class="card-link">View market overview <span>â†’</span></a>
         </article>
 
         <article class="service-card">
           <div class="service-number">02 / MINING</div>
-          <div class="service-icon" aria-hidden="true">⚒</div>
+          <div class="service-icon" aria-hidden="true">âš’</div>
           <h3>Mining Plan Listings</h3>
           <p>Review the listed mining names, plan periods, stated rates and investment limits.</p>
-          <a href="#investments" class="card-link">Explore mining plans <span>→</span></a>
+          <a href="#investments" class="card-link">Explore mining plans <span>â†’</span></a>
         </article>
 
         <article class="service-card">
           <div class="service-number">03 / EDUCATION</div>
-          <div class="service-icon" aria-hidden="true">◉</div>
+          <div class="service-icon" aria-hidden="true">â—‰</div>
           <h3>Investment Education</h3>
           <p>Learn about market risks and the importance of research before making financial decisions.</p>
-          <a href="#about" class="card-link">Learn about SDE Core <span>→</span></a>
+          <a href="#about" class="card-link">Learn about SDE Core <span>â†’</span></a>
         </article>
       </div>
     </section>
@@ -509,7 +608,7 @@
           research and understand the risks before making financial decisions.
         </p>
 
-        <a class="button button-gold" href="#contact">Connect With Us <span>→</span></a>
+        <a class="button button-gold" href="#contact">Connect With Us <span>â†’</span></a>
       </div>
 
       <div class="about-panel">
@@ -552,7 +651,7 @@
             information, use the official contact details when they are added here.
           </p>
         </div>
-        <a class="button button-gold" href="#about">Explore SDE Core <span>→</span></a>
+        <a class="button button-gold" href="#about">Explore SDE Core <span>â†’</span></a>
       </div>
     </section>
   </main>
@@ -576,8 +675,8 @@
   </div>
 
   <div class="footer-bottom">
-    <span>© 2026 SDE Core. All rights reserved.</span>
-    <span>Market information · Updates periodically</span>
+    <span>Â© 2026 SDE Core. All rights reserved.</span>
+    <span>Market information Â· Updates periodically</span>
   </div>
 </footer>
 
@@ -674,7 +773,7 @@
     if (logoutButton) {
       logoutButton.addEventListener("click", async function () {
         logoutButton.disabled = true;
-        logoutButton.textContent = "Logging out…";
+        logoutButton.textContent = "Logging outâ€¦";
 
         try {
           const result = await client.auth.signOut();
@@ -722,7 +821,7 @@
         id:"muruntau-1", number:"03", name:"Muruntau Gold Mine",
         location:"Navoi, Uzbekistan", rate:"0.5%", period:"5 days",
         minimum:1000, maximum:9999,
-        description:"A major open-pit gold mine in Uzbekistan’s Navoi region, operated by Navoi Mining and Metallurgical Company.",
+        description:"A major open-pit gold mine in Uzbekistanâ€™s Navoi region, operated by Navoi Mining and Metallurgical Company.",
         image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Muruntau Gold Mine",
         page:"muruntau-gold-mine.html"
@@ -731,7 +830,7 @@
         id:"muruntau-2", number:"04", name:"Muruntau Gold Mines",
         location:"Navoi, Uzbekistan", rate:"0.6%", period:"5 days",
         minimum:10000, maximum:19999,
-        description:"A major open-pit gold mine in Uzbekistan’s Navoi region, operated by Navoi Mining and Metallurgical Company.",
+        description:"A major open-pit gold mine in Uzbekistanâ€™s Navoi region, operated by Navoi Mining and Metallurgical Company.",
         image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Muruntau Gold Mines",
         page:"muruntau-gold-mine.html"
@@ -758,7 +857,7 @@
         id:"olimpiada-1", number:"07", name:"Olimpiada Gold Mines",
         location:"Siberia, Russia", rate:"1.2%", period:"30 days",
         minimum:100000, maximum:199999,
-        description:"A large gold operation in Russia’s Krasnoyarsk region, operated by Polyus and using open-pit mining.",
+        description:"A large gold operation in Russiaâ€™s Krasnoyarsk region, operated by Polyus and using open-pit mining.",
         image:"https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Olimpiada Gold Mines",
         page:"olimpiada-mine.html"
@@ -767,7 +866,7 @@
         id:"olimpiada-2", number:"08", name:"Olimpiada Gold Mines",
         location:"Siberia, Russia", rate:"1.4%", period:"30 days",
         minimum:200000, maximum:299999,
-        description:"A large gold operation in Russia’s Krasnoyarsk region, operated by Polyus and using open-pit mining.",
+        description:"A large gold operation in Russiaâ€™s Krasnoyarsk region, operated by Polyus and using open-pit mining.",
         image:"https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Olimpiada Gold Mines",
         page:"olimpiada-mine.html"
@@ -776,7 +875,7 @@
         id:"pueblo-1", number:"09", name:"Pueblo Viejo Gold Mines",
         location:"Dominican Republic", rate:"1.6%", period:"90 days",
         minimum:200000, maximum:999999,
-        description:"A gold mine in the Dominican Republic operated through a Barrick–Newmont joint venture.",
+        description:"A gold mine in the Dominican Republic operated through a Barrickâ€“Newmont joint venture.",
         image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Pueblo Viejo Gold Mines",
         page:"pueblo-viejo-mine.html"
@@ -785,7 +884,7 @@
         id:"pueblo-2", number:"10", name:"Pueblo Viejo Gold Mines",
         location:"Dominican Republic", rate:"1.8%", period:"90 days",
         minimum:500000, maximum:999999,
-        description:"A gold mine in the Dominican Republic operated through a Barrick–Newmont joint venture.",
+        description:"A gold mine in the Dominican Republic operated through a Barrickâ€“Newmont joint venture.",
         image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Pueblo Viejo Gold Mines",
         page:"pueblo-viejo-mine.html"
@@ -794,7 +893,7 @@
         id:"climax-1", number:"11", name:"Climax Molybdenum Mine",
         location:"Colorado, USA", rate:"2%", period:"90 days",
         minimum:1000000, maximum:10000000,
-        description:"A Colorado open-pit molybdenum operation—not a gold mine—operated by Freeport-McMoRan.",
+        description:"A Colorado open-pit molybdenum operationâ€”not a gold mineâ€”operated by Freeport-McMoRan.",
         image:"https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Climax Molybdenum Mine",
         page:"climax-mine.html"
@@ -803,7 +902,7 @@
         id:"climax-2", number:"12", name:"Climax Molybdenum Mine",
         location:"Colorado, USA", rate:"2.2%", period:"90 days",
         minimum:3000000, maximum:30000000,
-        description:"A Colorado open-pit molybdenum operation—not a gold mine—operated by Freeport-McMoRan.",
+        description:"A Colorado open-pit molybdenum operationâ€”not a gold mineâ€”operated by Freeport-McMoRan.",
         image:"https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Climax Molybdenum Mine",
         page:"climax-mine.html"
@@ -875,7 +974,7 @@
               >Subscribe</a>
 
               <a class="view-more" href="pages/mining-info/${plan.page}">
-                View More <span aria-hidden="true">→</span>
+                View More <span aria-hidden="true">â†’</span>
               </a>
             </div>
           </div>
@@ -960,7 +1059,7 @@
     function formatPrice(value, maxDigits) {
       const n = Number(value);
 
-      if (!Number.isFinite(n)) return "—";
+      if (!Number.isFinite(n)) return "â€”";
 
       const digits = n >= 1000 ? 2 : (n >= 1 ? 4 : 6);
 
@@ -1045,10 +1144,10 @@
           const perGram = gold / 31.1034768;
 
           setText("xauPrice", formatPrice(gold, 2) + " USD / oz");
-          setText("xauUpdated", "Spot price · " + stamp);
+          setText("xauUpdated", "Spot price Â· " + stamp);
           setText("heroGoldPrice", "$" + formatPrice(gold, 2));
           setText("heroGoldGram", "$" + formatPrice(perGram, 2));
-          setText("heroGoldUpdated", "Feed timestamp · " + stamp);
+          setText("heroGoldUpdated", "Feed timestamp Â· " + stamp);
           setText("ticker-XAU", "$" + formatPrice(perGram, 2));
           setText("table-price-XAU", "$" + formatPrice(gold, 2));
         } else {
@@ -1063,7 +1162,7 @@
 
           setText(
             "xagUpdated",
-            "Spot price · " +
+            "Spot price Â· " +
             new Date(data.updated_at || data.price_as_of || Date.now())
               .toLocaleTimeString([], {
                 hour:"2-digit",
@@ -1090,7 +1189,7 @@
           const pkr = Number(fx && fx.rates && fx.rates.PKR);
 
           if (Number.isFinite(pkr) && pkr > 0) {
-            setText("ticker-USDPKR", "₨" + formatPrice(pkr, 2));
+            setText("ticker-USDPKR", "â‚¨" + formatPrice(pkr, 2));
           } else {
             setText("ticker-USDPKR", "Unavailable");
           }
@@ -1187,7 +1286,7 @@
         if (changeNode && Number.isFinite(change)) {
           changeNode.textContent =
             (change > 0 ? "+" : "") +
-            change.toFixed(2) + "% · 24h";
+            change.toFixed(2) + "% Â· 24h";
 
           changeNode.className =
             "crypto-change " +
@@ -1204,7 +1303,7 @@
           minute:"2-digit",
           second:"2-digit"
         }) +
-        " · refreshes every 30s"
+        " Â· refreshes every 30s"
       );
     }
 
@@ -1236,7 +1335,7 @@
                   notation:"compact",
                   maximumFractionDigits:2
                 }).format(cap)
-              : "—"
+              : "â€”"
           );
 
           const spark = document.getElementById("spark-" + ticker);
@@ -1273,7 +1372,7 @@
 
         setText(
           "snapshotUpdated",
-          "Market details updated · " +
+          "Market details updated Â· " +
           new Date().toLocaleTimeString([], {
             hour:"2-digit",
             minute:"2-digit"
@@ -1331,7 +1430,7 @@
           }
 
           const prefix =
-            key === "USDJPY" ? "¥" :
+            key === "USDJPY" ? "Â¥" :
             (key.startsWith("EUR") || key.startsWith("GBP") ? "" : "$");
 
           setText(
@@ -1375,14 +1474,14 @@
           if (document.getElementById("price-" + symbol)) {
             setText(
               "change-" + symbol,
-              "Live quote unavailable · retrying"
+              "Live quote unavailable Â· retrying"
             );
           }
         });
 
         setText(
           "cryptoUpdated",
-          "Exchange feed unavailable · retrying automatically"
+          "Exchange feed unavailable Â· retrying automatically"
         );
       }
 
@@ -1391,7 +1490,7 @@
           ? "Live prices connected"
           : (metalsOk || cryptoOk
               ? "Some live feeds unavailable"
-              : "Live feeds unavailable · retrying"),
+              : "Live feeds unavailable Â· retrying"),
         metalsOk && cryptoOk
           ? "live"
           : (metalsOk || cryptoOk ? "" : "error")
@@ -1404,5 +1503,39 @@
     window.setInterval(loadMarketDetails, 300000);
   })();
   </script>
+<div id="sge-support-widget" hidden>
+  <a id="sge-support-toggle" href="pages/customer-support.html" aria-expanded="false">
+  <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M3 13v-2a9 9 0 0 1 18 0v2"/>
+    <path d="M3 13h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Z"/>
+    <path d="M21 13h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-5Z"/>
+  </svg>
+  <span>Customer Support</span>
+</a>
+
+  <section id="sge-support-panel" hidden aria-label="Customer support chat">
+    <div class="sge-chat-header">
+      <div class="sge-chat-brand">
+        <div class="sge-chat-avatar">S</div>
+        <div>
+          <div class="sge-chat-heading" id="sge-chat-heading">Customer Support</div>
+          <div class="sge-chat-subheading">SDE Core support team</div>
+        </div>
+      </div>
+      <button id="sge-chat-close" type="button" aria-label="Close chat">×</button>
+    </div>
+
+    <div id="sge-chat-messages" aria-live="polite"></div>
+    <div id="sge-chat-closed">This conversation is closed.</div>
+    <div id="sge-chat-status" role="status" aria-live="polite"></div>
+
+    <div class="sge-chat-composer">
+      <textarea id="sge-chat-input" rows="2" maxlength="4000"
+        placeholder="Type your message..." aria-label="Your message"></textarea>
+      <button id="sge-chat-send" type="button">Send</button>
+    </div>
+  </section>
+</div>
+<script src="js/support-chat.js"></script>
 </body>
 </html>

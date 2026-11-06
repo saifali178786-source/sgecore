@@ -1,9 +1,10 @@
-﻿```html
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
   <title>Contact Us | SDE Core</title>
   <meta name="description" content="Contact SDE Core for platform assistance, account enquiries and business support.">
 
@@ -12,505 +13,405 @@
   <style>
     :root {
       --contact-bg: #07111f;
-      --contact-card: #101d2d;
-      --contact-gold: #d9b45d;
-      --contact-gold-light: #f0d58c;
-      --contact-text: #f5f5f5;
-      --contact-muted: #aab5c3;
-      --contact-border: rgba(217,180,93,.2);
+      --contact-panel: #101e30;
+      --contact-panel-light: #14253a;
+      --contact-gold: #e8b84d;
+      --contact-gold-light: #f3d58a;
+      --contact-text: #f5f7fb;
+      --contact-muted: #a7b5c8;
+      --contact-border: rgba(190,204,224,.14);
     }
 
-    body {
-      background: var(--contact-bg);
-      color: var(--contact-text);
-    }
-
-    /* HEADER: keep logo, menu and buttons in ONE LINE */
-    .site-header {
-      width: 100%;
-      min-height: 76px;
-      height: auto;
-      padding: 0 4%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: nowrap;
-      gap: 18px;
-      position: relative;
-      z-index: 1000;
-    }
-
-    .site-header .brand {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-      margin: 0;
-    }
-
-    .site-header .main-nav {
-      flex: 1 1 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: nowrap;
-      gap: 22px;
-      margin: 0;
-      padding: 0;
-      white-space: nowrap;
-    }
-
-    .site-header .header-actions {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      flex-wrap: nowrap;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      white-space: nowrap;
-    }
-
-    .site-header .menu-toggle {
-      display: none;
-    }
-
-    .site-header .brand-copy,
-    .site-header .brand-mark {
-      margin: 0;
-    }
-
-    @media (max-width: 1050px) {
-      .site-header {
-        gap: 12px;
-        padding: 0 2%;
-      }
-
-      .site-header .main-nav {
-        gap: 12px;
-      }
-
-      .site-header .main-nav a {
-        font-size: 13px;
-      }
-
-      .site-header .header-actions {
-        gap: 7px;
-      }
-    }
-
-    @media (max-width: 850px) {
-      .site-header {
-        min-height: 76px;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-
-      .site-header .menu-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .site-header .main-nav {
-        display: none;
-        width: 100%;
-        flex: 0 0 100%;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-        padding: 18px 0;
-        white-space: normal;
-      }
-
-      .site-header .main-nav.active {
-        display: flex;
-      }
-
-      .site-header .header-actions {
-        margin-left: auto;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .site-header {
-        padding: 0 15px;
-      }
-
-      .site-header .header-actions {
-        gap: 6px;
-      }
-    }
-
-    /* GENERAL */
     .contact-page {
+      background:
+        radial-gradient(ellipse at 12% 5%,rgba(232,184,77,.07),transparent 35%),
+        radial-gradient(ellipse at 90% 45%,rgba(39,76,115,.12),transparent 38%),
+        var(--contact-bg);
+      color: var(--contact-text);
       overflow: hidden;
     }
 
+    .contact-page * {
+      box-sizing: border-box;
+    }
+
     .contact-container {
-      width: min(1150px, 90%);
+      width: min(1160px,calc(100% - 40px));
       margin: auto;
+    }
+
+    .contact-page h1,
+    .contact-page h2,
+    .contact-page h3 {
+      color: var(--contact-text);
+      letter-spacing: -.025em;
+    }
+
+    .contact-page p {
+      color: var(--contact-muted);
+      line-height: 1.85;
     }
 
     .contact-label {
       display: inline-block;
-      color: var(--contact-gold);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 3px;
+      margin-bottom: 17px;
+      color: var(--contact-gold-light);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .16em;
       text-transform: uppercase;
-      margin-bottom: 18px;
     }
 
-    .contact-heading {
-      font-size: clamp(32px, 5vw, 52px);
-      line-height: 1.15;
-      margin: 0 0 20px;
-      color: #fff;
+    .contact-label::before {
+      display: inline-block;
+      width: 22px;
+      height: 1px;
+      margin: 0 10px 3px 0;
+      background: var(--contact-gold);
+      content: "";
     }
 
-    .contact-heading span {
-      color: var(--contact-gold);
-    }
+    /* Hero */
 
-    .contact-description {
-      color: var(--contact-muted);
-      font-size: 16px;
-      line-height: 1.8;
-      max-width: 680px;
-    }
-
-    /* HERO */
-    .contact-hero {
-      padding: 105px 20px 95px;
-      text-align: center;
-      background:
-        radial-gradient(ellipse at 50% 0%, rgba(217,180,93,.15), transparent 60%),
-        linear-gradient(180deg, #0b1929, #07111f);
+    .contact-page .contact-hero {
+      position: relative;
+      padding: 110px 0 95px;
       border-bottom: 1px solid var(--contact-border);
+      background:
+        radial-gradient(ellipse at 80% 20%,rgba(232,184,77,.14),transparent 36%),
+        linear-gradient(135deg,#102238,#07111f 75%);
     }
 
     .contact-hero h1 {
-      font-size: clamp(42px, 7vw, 72px);
-      line-height: 1.08;
-      margin: 0 auto 24px;
       max-width: 850px;
-      color: #fff;
+      margin: 0 0 20px;
+      font-size: clamp(42px,6vw,72px);
+      line-height: 1.07;
+      font-weight: 800;
     }
 
-    .contact-hero h1 span {
+    .contact-hero h1 span,
+    .contact-page h2 span {
       color: var(--contact-gold);
     }
 
     .contact-hero p {
-      max-width: 680px;
-      margin: 0 auto 32px;
-      color: var(--contact-muted);
-      font-size: 17px;
-      line-height: 1.8;
+      max-width: 690px;
+      margin: 0 0 30px;
+      font-size: 16px;
     }
 
-    .contact-button {
+    .contact-button,
+    .contact-submit {
       display: inline-flex;
-      align-items: center;
       justify-content: center;
-      padding: 14px 28px;
-      border-radius: 5px;
-      background: var(--contact-gold);
-      color: #101722;
-      font-weight: 700;
-      text-decoration: none;
-      transition: .25s;
+      align-items: center;
+      min-height: 49px;
+      padding: 0 25px;
       border: 1px solid var(--contact-gold);
+      border-radius: 7px;
+      background: linear-gradient(135deg,#f0ce79,#d9a83d);
+      color: #101827;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      transition: .2s ease;
     }
 
-    .contact-button:hover {
-      background: var(--contact-gold-light);
+    .contact-button:hover,
+    .contact-submit:hover {
       transform: translateY(-2px);
+      filter: brightness(1.07);
     }
 
-    /* CONTACT DETAILS */
-    .contact-info-section {
-      padding: 85px 0;
-    }
+    /* Section headings */
 
     .contact-section-heading {
+      max-width: 760px;
+      margin: 0 auto 40px;
       text-align: center;
-      margin-bottom: 45px;
     }
 
-    .contact-section-heading .contact-description {
-      margin: auto;
+    .contact-heading {
+      margin: 0 0 14px;
+      font-size: clamp(28px,4vw,42px);
+      line-height: 1.2;
+    }
+
+    .contact-description {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    /* Contact cards */
+
+    .contact-info-section,
+    .contact-offices-section,
+    .contact-faq-section {
+      padding: 85px 0;
     }
 
     .contact-info-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 20px;
     }
 
     .contact-info-card {
-      background: var(--contact-card);
-      border: 1px solid var(--contact-border);
-      border-radius: 12px;
       padding: 32px 25px;
+      border: 1px solid var(--contact-border);
+      border-radius: 14px;
+      background: linear-gradient(145deg,#14253a,#0c1828);
+      box-shadow: 0 18px 45px rgba(0,0,0,.16);
       text-align: center;
-      transition: .3s;
+      transition: .25s ease;
     }
 
     .contact-info-card:hover {
       transform: translateY(-5px);
-      border-color: var(--contact-gold);
+      border-color: rgba(232,184,77,.5);
     }
 
     .contact-icon {
-      width: 55px;
-      height: 55px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
       margin: 0 auto 20px;
-      border-radius: 50%;
-      background: rgba(217,180,93,.12);
-      color: var(--contact-gold);
-      font-size: 24px;
+      border: 1px solid rgba(232,184,77,.35);
+      border-radius: 14px;
+      background: rgba(232,184,77,.09);
+      color: var(--contact-gold-light);
+      font-size: 23px;
     }
 
     .contact-info-card h3 {
-      color: #fff;
       margin: 0 0 12px;
       font-size: 19px;
     }
 
     .contact-info-card p {
-      color: var(--contact-muted);
-      line-height: 1.7;
       margin: 0;
-      font-size: 14px;
+      font-size: 13px;
     }
 
-    .contact-info-card a {
-      color: var(--contact-gold);
+    .contact-page a:not(.contact-button) {
+      color: var(--contact-gold-light);
       text-decoration: none;
-      overflow-wrap: anywhere;
     }
 
-    /* FORM */
+    .contact-page a:not(.contact-button):hover {
+      color: #fff;
+    }
+
+    /* Contact form */
+
     .contact-form-section {
-      padding: 85px 0;
-      background: #0a1726;
-      border-top: 1px solid var(--contact-border);
-      border-bottom: 1px solid var(--contact-border);
+      padding: 90px 0;
+      border-block: 1px solid var(--contact-border);
+      background: linear-gradient(135deg,rgba(18,35,56,.85),rgba(7,17,31,.97));
     }
 
     .contact-form-layout {
       display: grid;
       grid-template-columns: .85fr 1.15fr;
-      gap: 55px;
+      gap: 65px;
       align-items: start;
     }
 
     .contact-form-copy {
-      padding-top: 20px;
+      padding: 20px 0;
     }
 
     .contact-form-copy h2 {
-      font-size: clamp(30px, 4vw, 43px);
+      margin: 0 0 18px;
+      font-size: clamp(30px,4vw,43px);
       line-height: 1.2;
-      margin: 0 0 20px;
-    }
-
-    .contact-form-copy h2 span {
-      color: var(--contact-gold);
     }
 
     .contact-form-copy p {
-      color: var(--contact-muted);
-      line-height: 1.8;
+      font-size: 14px;
     }
 
     .contact-form-copy ul {
-      padding-left: 20px;
-      color: var(--contact-muted);
-      line-height: 2.2;
-      margin-top: 25px;
+      display: grid;
+      gap: 15px;
+      margin: 27px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .contact-form-copy li {
+      position: relative;
+      padding-left: 27px;
+      color: #d6deea;
+      font-size: 13px;
+    }
+
+    .contact-form-copy li::before {
+      position: absolute;
+      left: 0;
+      color: var(--contact-gold);
+      content: "✓";
+      font-weight: 900;
     }
 
     .contact-form-box {
       padding: 35px;
-      border-radius: 12px;
-      background: var(--contact-card);
       border: 1px solid var(--contact-border);
+      border-radius: 15px;
+      background: linear-gradient(145deg,#14253a,#0c1828);
+      box-shadow: 0 20px 50px rgba(0,0,0,.2);
     }
 
     .contact-form-box h3 {
-      font-size: 23px;
       margin: 0 0 25px;
+      font-size: 23px;
     }
 
     .contact-form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 20px;
     }
 
     .contact-field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      min-width: 0;
     }
 
     .contact-field.full {
-      grid-column: 1 / -1;
+      grid-column: 1/-1;
     }
 
     .contact-field label {
-      color: #dce3eb;
-      font-size: 13px;
-      font-weight: 600;
+      display: block;
+      margin-bottom: 9px;
+      color: #dce4ef;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .contact-field input,
     .contact-field select,
     .contact-field textarea {
+      display: block;
       width: 100%;
-      padding: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 5px;
-      background: #091524;
-      color: #fff;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid rgba(190,204,224,.2);
+      border-radius: 7px;
       outline: none;
+      background: #091625;
+      color: #f4f6fa;
       font: inherit;
-      box-sizing: border-box;
+      font-size: 13px;
+    }
+
+    .contact-field textarea {
+      min-height: 145px;
+      resize: vertical;
     }
 
     .contact-field input:focus,
     .contact-field select:focus,
     .contact-field textarea:focus {
       border-color: var(--contact-gold);
+      box-shadow: 0 0 0 3px rgba(232,184,77,.1);
     }
 
-    .contact-field textarea {
-      min-height: 135px;
-      resize: vertical;
-    }
-
-    .contact-field select option {
-      background: #091524;
+    .contact-field input::placeholder,
+    .contact-field textarea::placeholder {
+      color: #74869d;
     }
 
     .contact-submit {
-      width: 100%;
-      margin-top: 20px;
-      padding: 15px;
-      border: 0;
-      border-radius: 5px;
-      background: var(--contact-gold);
-      color: #101722;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      transition: .25s;
-    }
-
-    .contact-submit:hover {
-      background: var(--contact-gold-light);
+      margin-top: 23px;
     }
 
     .contact-form-note {
-      color: var(--contact-muted);
-      font-size: 12px;
-      line-height: 1.6;
-      margin-top: 14px;
+      margin: 14px 0 0;
+      font-size: 11px;
+      line-height: 1.7;
     }
 
-    /* OFFICES */
-    .contact-offices-section {
-      padding: 90px 0;
-    }
+    /* Offices */
 
     .contact-office-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 25px;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 22px;
     }
 
     .contact-office-card {
-      background: var(--contact-card);
-      border: 1px solid var(--contact-border);
-      border-radius: 12px;
       overflow: hidden;
+      border: 1px solid var(--contact-border);
+      border-radius: 14px;
+      background: linear-gradient(145deg,#14253a,#0c1828);
+      box-shadow: 0 15px 40px rgba(0,0,0,.15);
     }
 
     .contact-office-top {
-      padding: 30px;
-      background: linear-gradient(135deg, rgba(217,180,93,.14), transparent);
+      padding: 27px 30px;
       border-bottom: 1px solid var(--contact-border);
+      background: rgba(232,184,77,.045);
     }
 
     .contact-office-top small {
-      color: var(--contact-gold);
-      letter-spacing: 2px;
+      color: var(--contact-gold-light);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .12em;
       text-transform: uppercase;
-      font-weight: 700;
     }
 
     .contact-office-top h3 {
       margin: 10px 0 0;
-      font-size: 27px;
+      font-size: 26px;
     }
 
     .contact-office-details {
-      padding: 25px 30px 30px;
+      padding: 20px 30px 27px;
     }
 
     .contact-office-details p {
-      color: var(--contact-muted);
-      line-height: 1.8;
-      margin: 8px 0;
+      margin: 10px 0;
+      font-size: 12px;
       overflow-wrap: anywhere;
     }
 
     .contact-office-details strong {
-      color: #fff;
+      color: #e9edf4;
     }
 
-    .contact-office-details a {
-      color: var(--contact-gold);
-      text-decoration: none;
-    }
+    /* Business hours */
 
-    /* BUSINESS HOURS */
     .contact-hours-section {
-      padding: 70px 0;
-      background: #0a1726;
-      border-top: 1px solid var(--contact-border);
-      border-bottom: 1px solid var(--contact-border);
+      padding: 10px 0 85px;
     }
 
     .contact-hours-card {
-      max-width: 750px;
+      max-width: 760px;
       margin: auto;
       padding: 35px;
-      background: var(--contact-card);
       border: 1px solid var(--contact-border);
-      border-radius: 12px;
+      border-radius: 15px;
+      background: linear-gradient(145deg,#14253a,#0c1828);
     }
 
     .contact-hours-card h2 {
-      text-align: center;
-      margin: 0 0 25px;
-      font-size: 29px;
+      margin: 0 0 20px;
+      font-size: 25px;
     }
 
     .contact-hours-row {
       display: flex;
       justify-content: space-between;
       gap: 20px;
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--contact-border);
       color: var(--contact-muted);
+      font-size: 13px;
     }
 
     .contact-hours-row:last-child {
@@ -518,38 +419,40 @@
     }
 
     .contact-hours-row strong {
-      color: var(--contact-gold);
+      color: #f1f4f8;
       text-align: right;
     }
 
     /* FAQ */
-    .contact-faq-section {
-      padding: 90px 0;
-    }
 
     .contact-faq-list {
-      max-width: 850px;
+      display: grid;
+      gap: 13px;
+      max-width: 900px;
       margin: auto;
     }
 
     .contact-faq-item {
-      margin-bottom: 14px;
+      padding: 0 23px;
       border: 1px solid var(--contact-border);
-      border-radius: 8px;
-      background: var(--contact-card);
-      overflow: hidden;
+      border-radius: 10px;
+      background: #101e2e;
+      transition: border-color .2s ease;
+    }
+
+    .contact-faq-item:hover,
+    .contact-faq-item[open] {
+      border-color: rgba(232,184,77,.4);
     }
 
     .contact-faq-item summary {
-      padding: 20px 22px;
+      position: relative;
+      padding: 21px 30px 21px 0;
+      color: #f4f6fa;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
-      color: #fff;
-      font-weight: 600;
       list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
     }
 
     .contact-faq-item summary::-webkit-details-marker {
@@ -557,75 +460,96 @@
     }
 
     .contact-faq-item summary::after {
-      content: "+";
+      position: absolute;
+      right: 2px;
       color: var(--contact-gold);
-      font-size: 23px;
+      content: "+";
+      font-size: 21px;
     }
 
     .contact-faq-item[open] summary::after {
-      content: "âˆ’";
+      content: "−";
     }
 
     .contact-faq-item p {
-      padding: 0 22px 20px;
       margin: 0;
-      color: var(--contact-muted);
-      line-height: 1.8;
+      padding: 0 0 20px;
+      font-size: 13px;
     }
 
-    /* FINAL CTA */
+    /* Final CTA */
+
     .contact-final-cta {
-      padding: 80px 20px;
-      text-align: center;
+      padding: 85px 0;
+      border-top: 1px solid rgba(232,184,77,.2);
       background:
-        radial-gradient(ellipse at center, rgba(217,180,93,.15), transparent 70%),
-        #0a1726;
-      border-top: 1px solid var(--contact-border);
+        radial-gradient(ellipse at 50% 0,rgba(232,184,77,.13),transparent 55%),
+        #0c1a2a;
+      text-align: center;
     }
 
     .contact-final-cta h2 {
-      font-size: clamp(30px, 5vw, 45px);
-      margin: 0 0 18px;
+      margin: 0 0 15px;
+      font-size: clamp(30px,4vw,46px);
     }
 
     .contact-final-cta p {
       max-width: 650px;
-      margin: 0 auto 28px;
-      color: var(--contact-muted);
-      line-height: 1.8;
+      margin: 0 auto 26px;
+      font-size: 14px;
     }
 
-    /* FOOTER */
-    .site-footer {
-      margin-top: 0;
+    /* Contact page footer only */
+
+    body:has(.contact-page) .site-footer {
+      border-top: 1px solid rgba(232,184,77,.22);
+      background: #050d18;
     }
 
-    @media (max-width: 750px) {
-      .contact-info-grid {
-        grid-template-columns: 1fr;
-      }
+    body:has(.contact-page) .site-footer a {
+      color: #aebbd0;
+      text-decoration: none;
+    }
 
+    body:has(.contact-page) .site-footer a:hover {
+      color: var(--contact-gold-light);
+    }
+
+    /* Responsive */
+
+    @media(max-width:900px) {
       .contact-form-layout {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 35px;
       }
 
-      .contact-office-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .contact-hero {
-        padding: 75px 18px;
+      .contact-info-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (max-width: 520px) {
+    @media(max-width:640px) {
       .contact-container {
-        width: 92%;
+        width: calc(100% - 30px);
       }
 
-      .contact-form-box {
-        padding: 22px 17px;
+      .contact-page .contact-hero {
+        padding: 75px 0 65px;
+      }
+
+      .contact-info-section,
+      .contact-offices-section,
+      .contact-faq-section {
+        padding: 62px 0;
+      }
+
+      .contact-form-section {
+        padding: 65px 0;
+      }
+
+      .contact-info-grid,
+      .contact-office-grid {
+        grid-template-columns: 1fr;
       }
 
       .contact-form-grid {
@@ -636,12 +560,18 @@
         grid-column: auto;
       }
 
+      .contact-form-box,
       .contact-hours-card {
-        padding: 25px 18px;
+        padding: 23px;
       }
 
       .contact-hours-row {
-        font-size: 13px;
+        align-items: flex-start;
+        font-size: 12px;
+      }
+
+      .contact-final-cta {
+        padding: 65px 0;
       }
     }
   </style>
@@ -649,9 +579,25 @@
 
 <body>
 
-  <!-- HEADER -->
+  <!-- MARKET TICKER -->
+  <div class="market-ticker" aria-label="Market prices ticker">
+    <div class="ticker-track">
+      <span class="ticker-label">MARKET WATCH</span>
+      <span>GOLD <strong id="ticker-XAU">Loading...</strong> <small>USD/g</small></span>
+      <span>SILVER <strong id="ticker-XAG">Loading...</strong> <small>USD/oz</small></span>
+      <span>BTC <strong id="ticker-BTCUSDT">Loading...</strong> <em id="ticker-change-BTCUSDT">—</em></span>
+      <span>ETH <strong id="ticker-ETHUSDT">Loading...</strong> <em id="ticker-change-ETHUSDT">—</em></span>
+      <span>BNB <strong id="ticker-BNBUSDT">Loading...</strong> <em id="ticker-change-BNBUSDT">—</em></span>
+      <span>SOL <strong id="ticker-SOLUSDT">Loading...</strong> <em id="ticker-change-SOLUSDT">—</em></span>
+      <span>XRP <strong id="ticker-XRPUSDT">Loading...</strong> <em id="ticker-change-XRPUSDT">—</em></span>
+      <span>DOGE <strong id="ticker-DOGEUSDT">Loading...</strong> <em id="ticker-change-DOGEUSDT">—</em></span>
+      <span class="ticker-refresh">Auto refresh · 30 sec</span>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER: KEEPING EXISTING SITE HEADER STRUCTURE -->
   <header class="site-header">
-    <a class="brand" href="../index.html#home">
+    <a class="brand" href="../index.html" aria-label="SDE Core home">
       <span class="brand-mark">SDE</span>
       <span class="brand-copy">
         <strong>SDE CORE</strong>
@@ -659,25 +605,24 @@
       </span>
     </a>
 
-    <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
-      <span></span>
-      <span></span>
-      <span></span>
+    <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
     </button>
 
-    <nav class="main-nav">
-      <a href="../index.html#home">Home</a>
-      <a href="../index.html#markets">Markets</a>
-      <a href="../index.html#investments">Mining Plans</a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="markets.html">Markets</a>
+      <a href="market-data.html">Market Data</a>
+      <a href="mining-plans.html">Mining Plans</a>
       <a href="my-assets.html">Assets</a>
       <a href="about.html">About Us</a>
-      <a href="contact.html" class="active">Contact</a>
-    </nav>
+      <a href="contact.html" class="active" aria-current="page">Contact</a>
 
-    <div class="header-actions">
-      <a href="login.html" class="login-link">Login</a>
-      <a href="register.html" class="register-link">Register â†—</a>
-    </div>
+      <div class="header-actions">
+        <a class="login-btn nav-login" href="login.html">Login</a>
+        <a class="register-btn nav-register" href="register.html">Register ↗</a>
+      </div>
+    </nav>
   </header>
 
   <main class="contact-page">
@@ -691,7 +636,7 @@
           Have a question about SDE Core or need assistance with our platform?
           Our team is here to help you find the information you need.
         </p>
-        <a href="#contact-form" class="contact-button">Get in Touch â†’</a>
+        <a href="#contact-form" class="contact-button">Get in Touch →</a>
       </div>
     </section>
 
@@ -709,7 +654,7 @@
 
         <div class="contact-info-grid">
           <div class="contact-info-card">
-            <div class="contact-icon">âœ‰</div>
+            <div class="contact-icon">✉</div>
             <h3>Email Support</h3>
             <p>
               Send your questions and enquiries to:<br>
@@ -718,7 +663,7 @@
           </div>
 
           <div class="contact-info-card">
-            <div class="contact-icon">â˜Ž</div>
+            <div class="contact-icon">☎</div>
             <h3>United States</h3>
             <p>
               New York office<br>
@@ -727,7 +672,7 @@
           </div>
 
           <div class="contact-info-card">
-            <div class="contact-icon">ðŸŒ</div>
+            <div class="contact-icon">⌖</div>
             <h3>Singapore</h3>
             <p>
               Singapore office<br>
@@ -798,7 +743,7 @@
 
               </div>
 
-              <button type="submit" class="contact-submit">Send Message â†’</button>
+              <button type="submit" class="contact-submit">Send Message →</button>
 
               <p class="contact-form-note">
                 Submitting this form opens your email application with your
@@ -826,7 +771,7 @@
 
           <div class="contact-office-card">
             <div class="contact-office-top">
-              <small>United States Â· Main Office</small>
+              <small>United States · Main Office</small>
               <h3>New York</h3>
             </div>
             <div class="contact-office-details">
@@ -839,7 +784,7 @@
 
           <div class="contact-office-card">
             <div class="contact-office-top">
-              <small>Asia Pacific Â· Branch Office</small>
+              <small>Asia Pacific · Branch Office</small>
               <h3>Singapore</h3>
             </div>
             <div class="contact-office-details">
@@ -861,13 +806,13 @@
           <h2>Business Hours</h2>
 
           <div class="contact-hours-row">
-            <span>Monday â€“ Friday</span>
-            <strong>9:00 AM â€“ 6:00 PM</strong>
+            <span>Monday – Friday</span>
+            <strong>9:00 AM – 6:00 PM</strong>
           </div>
 
           <div class="contact-hours-row">
             <span>Saturday</span>
-            <strong>10:00 AM â€“ 2:00 PM</strong>
+            <strong>10:00 AM – 2:00 PM</strong>
           </div>
 
           <div class="contact-hours-row">
@@ -946,12 +891,12 @@
     <section class="contact-final-cta">
       <div class="contact-container">
         <span class="contact-label">We're Ready to Listen</span>
-        <h2>Let's Make Things <span style="color:var(--contact-gold)">Clear.</span></h2>
+        <h2>Let's Make Things <span>Clear.</span></h2>
         <p>
           Have another question or need assistance? Get in touch with our team
           and let us know how we can help.
         </p>
-        <a href="#contact-form" class="contact-button">Contact Our Team â†’</a>
+        <a href="#contact-form" class="contact-button">Contact Our Team →</a>
       </div>
     </section>
 
@@ -960,7 +905,7 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="footer-main">
-      <a class="brand footer-brand" href="../index.html#home">
+      <a class="brand footer-brand" href="../index.html">
         <span class="brand-mark">SDE</span>
         <span class="brand-copy">
           <strong>SDE CORE</strong>
@@ -969,7 +914,7 @@
       </a>
 
       <div class="footer-links">
-        <a href="../index.html#home">Home</a>
+        <a href="../index.html">Home</a>
         <a href="../index.html#markets">Markets</a>
         <a href="../index.html#investments">Mining Plans</a>
         <a href="my-assets.html">Assets</a>
@@ -979,28 +924,21 @@
     </div>
 
     <div class="footer-bottom">
-      <p>Â© <span id="currentYear"></span> SDE Core. All rights reserved.</p>
+      <p>© <span id="currentYear"></span> SDE Core. All rights reserved.</p>
       <p>Sovereign Digital Exchange</p>
     </div>
   </footer>
 
   <script>
-    // Mobile navigation
-    const menuToggle = document.querySelector(".menu-toggle");
-    const mainNav = document.querySelector(".main-nav");
+    // Footer year
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
 
-    if (menuToggle && mainNav) {
-      menuToggle.addEventListener("click", () => {
-        const isOpen = mainNav.classList.toggle("active");
-        menuToggle.setAttribute("aria-expanded", String(isOpen));
-      });
-    }
-
-    // Contact form: opens an email draft
+    // Contact form: open a prepared email draft
     const contactForm = document.getElementById("contactForm");
 
     if (contactForm) {
-      contactForm.addEventListener("submit", function (event) {
+      contactForm.addEventListener("submit", function(event) {
         event.preventDefault();
 
         const name = document.getElementById("contactName").value.trim();
@@ -1009,6 +947,7 @@
         const message = document.getElementById("contactMessage").value.trim();
 
         const emailSubject = encodeURIComponent("SDE Core - " + subject);
+
         const emailBody = encodeURIComponent(
           "Name: " + name +
           "\nEmail: " + email +
@@ -1021,17 +960,13 @@
           emailSubject + "&body=" + emailBody;
       });
     }
-
-    // Footer year
-    document.getElementById("currentYear").textContent =
-      new Date().getFullYear();
   </script>
 
   <script src="../js/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase.js"></script>
   <script src="../js/auth-ui.js"></script>
+  <script src="../js/market-ticker.js"></script>
 
 </body>
 </html>
-```
