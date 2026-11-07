@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -811,9 +811,11 @@ header.site-header .header-actions [hidden] {
     let activeAddresses = [];
     let selectedAddress = null;
 
-    document.getElementById("current-year").textContent =
-      String(new Date().getFullYear());
+    const currentYearElement = document.getElementById("current-year");
 
+if (currentYearElement) {
+  currentYearElement.textContent = String(new Date().getFullYear());
+}
     function showFeedback(element, message, type) {
       element.textContent = message;
       element.className = "feedback visible " + type;
