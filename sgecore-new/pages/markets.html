@@ -353,17 +353,22 @@
     }
 
     .asset-logo {
-      width: 29px;
+      width: auto;
+      min-width: 29px;
       height: 29px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      flex: 0 0 29px;
+      padding: 0 5px;
+      border-radius: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
       color: #07111f;
       font-size: 10px;
       font-weight: 800;
       background: #dcb55d;
-      overflow: hidden;
+      overflow: visible;
+      box-sizing: border-box;
+      white-space: nowrap;
     }
 
     .asset-logo img {
@@ -1544,7 +1549,7 @@ header.site-header .header-actions [hidden] {
 
   function formatPrice(value, maxDigits) {
     const number = Number(value);
-    if (!Number.isFinite(number)) return "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
+    if (!Number.isFinite(number)) return "—";
 
     let digits;
     if (number >= 1000) digits = 2;
@@ -1569,7 +1574,7 @@ header.site-header .header-actions [hidden] {
 
   function compactNumber(value) {
     const number = Number(value);
-    if (!Number.isFinite(number)) return "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
+    if (!Number.isFinite(number)) return "—";
 
     return new Intl.NumberFormat("en-US", {
       notation: "compact",
@@ -1634,7 +1639,7 @@ header.site-header .header-actions [hidden] {
 
     const number = Number(value);
     node.textContent =
-      (number > 0 ? "+" : "") + number.toFixed(2) + "% Ãƒâ€šÂ· 24h";
+      (number > 0 ? "+" : "") + number.toFixed(2) + "% · 24h";
 
     node.className =
       "overview-change " +
@@ -1717,7 +1722,7 @@ header.site-header .header-actions [hidden] {
 
   function formatVolume(value) {
     const number = Number(value);
-    if (!Number.isFinite(number) || number <= 0) return "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
+    if (!Number.isFinite(number) || number <= 0) return "—";
     return "$" + compactNumber(number);
   }
 
@@ -1792,21 +1797,21 @@ header.site-header .header-actions [hidden] {
           ? `<img src="${asset.logo}" alt="" loading="lazy" onerror="this.style.display='none'">`
           : `<span>${asset.initials}</span>`;
 
-        const changeText = Number.isFinite(asset.change)
+                const changeText = Number.isFinite(asset.change)
           ? (asset.change > 0 ? "+" : "") + asset.change.toFixed(2) + "%"
-          : "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
+          : "—";
 
         const priceText = Number.isFinite(asset.price)
           ? "$" + formatPrice(asset.price, asset.digits || 8)
-          : "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
+          : "—";
 
         const highText = Number.isFinite(asset.high)
           ? "$" + formatPrice(asset.high, asset.digits || 8)
-          : "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
+          : "—";
 
         const lowText = Number.isFinite(asset.low)
           ? "$" + formatPrice(asset.low, asset.digits || 8)
-          : "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
+          : "—";
 
         return `
           <tr>
@@ -1816,7 +1821,7 @@ header.site-header .header-actions [hidden] {
                 data-favorite="${asset.id}"
                 aria-label="${favorite ? "Remove from favorites" : "Add to favorites"}"
                 title="${favorite ? "Remove favorite" : "Add favorite"}"
-              >${favorite ? "ÃƒÂ¢Ã‹Å“â€¦" : "ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â "}</button>
+              >${favorite ? "★" : "☆"}</button>
             </td>
 
             <td>
@@ -1842,7 +1847,7 @@ header.site-header .header-actions [hidden] {
             <td>${highText}</td>
             <td>${lowText}</td>
             <td>${formatVolume(asset.volume)}</td>
-            <td>${asset.trend || "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"}</td>
+            <td>${asset.trend || "—"}</td>
             <td>
               <a class="trade-button"
                  href="my-assets.html?asset=${encodeURIComponent(asset.symbol)}">
@@ -1910,8 +1915,8 @@ header.site-header .header-actions [hidden] {
     });
   });
 
-  /* =========================================
-     CRYPTO PRICES ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â BINANCE
+    /* =========================================
+     CRYPTO PRICES — BINANCE
   ========================================= */
 
   async function loadCrypto() {
@@ -1950,7 +1955,7 @@ header.site-header .header-actions [hidden] {
         id: "crypto-" + symbol,
         name: cryptoNames[symbol] || symbol,
         symbol: symbol + "/USDT",
-        initials: symbol.slice(0, 3),
+        initials: symbol,
         color: cryptoColors[symbol] || "#dcb55d",
         category: "crypto",
         price,
@@ -1959,7 +1964,7 @@ header.site-header .header-actions [hidden] {
         low: Number(row.lowPrice),
         volume: Number(row.quoteVolume),
         digits: 8,
-        trend: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"
+        trend: "-",
       });
     });
 
@@ -2076,61 +2081,118 @@ header.site-header .header-actions [hidden] {
     renderMarketTable();
   }
 
+    
+ 
   /* =========================================
-     GOLD AND SILVER ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â EXISTING XAUS FEED
+     GOLD AND SILVER — XAUS LIVE FEED
   ========================================= */
 
   async function loadMetals() {
-    const data = await fetchJson(goldEndpoint, 12000);
+    try {
+      const [spotData, goldChart, silverChart] = await Promise.all([
+        fetchJson(goldEndpoint, 12000),
+        fetchJson(
+          "https://xaus.com/api/v1/chart?symbol=xau&range=1d&interval=5m",
+          15000
+        ),
+        fetchJson(
+          "https://xaus.com/api/v1/chart?symbol=silver&range=1d&interval=5m",
+          15000
+        )
+      ]);
 
-    const gold = Number(
-      data &&
-      (data.spot_usd_oz || (data.xau && data.xau.price))
-    );
+      function getMetalStats(chart) {
+        const points = chart && Array.isArray(chart.points)
+          ? chart.points
+          : [];
 
-    const silver = Number(data && data.silver_usd_oz);
+        const valid = points.filter(p =>
+          Number.isFinite(Number(p.o)) &&
+          Number.isFinite(Number(p.h)) &&
+          Number.isFinite(Number(p.l)) &&
+          Number.isFinite(Number(p.c))
+        );
 
-    if (Number.isFinite(gold) && gold > 0) {
-      addAsset({
-        id: "metal-XAU",
-        name: "Gold",
-        symbol: "XAU/USD",
-        initials: "AU",
-        color: "#dcb55d",
-        category: "metals",
-        price: gold,
-        change: NaN,
-        high: NaN,
-        low: NaN,
-        volume: NaN,
-        digits: 2,
-        trend: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"
-      });
+        if (valid.length < 2) return null;
+
+        const first = valid[0];
+        const latest = valid[valid.length - 1];
+
+        const firstClose = Number(first.o);
+        const lastClose = Number(latest.c);
+
+        if (firstClose <= 0) return null;
+
+        const high = Math.max(...valid.map(p => Number(p.h)));
+        const low = Math.min(...valid.map(p => Number(p.l)));
+
+        const volume = valid.reduce((total, p) => {
+          const v = Number(p.v);
+          return total + (Number.isFinite(v) && v > 0 ? v : 0);
+        }, 0);
+
+        return {
+          change: ((lastClose - firstClose) / firstClose) * 100,
+          high,
+          low,
+          volume
+        };
+      }
+
+      const gold = Number(spotData && spotData.spot_usd_oz);
+      const silver = Number(spotData && spotData.silver_usd_oz);
+
+      const goldStats = getMetalStats(goldChart);
+      const silverStats = getMetalStats(silverChart);
+
+      if (Number.isFinite(gold) && gold > 0) {
+        addAsset({
+          id: "metal-XAU",
+          name: "Gold",
+          symbol: "XAU/USD",
+          initials: "AU",
+          color: "#dcb55d",
+          category: "metals",
+          price: gold,
+          change: goldStats ? goldStats.change : NaN,
+          high: goldStats ? goldStats.high : NaN,
+          low: goldStats ? goldStats.low : NaN,
+          volume: goldStats ? goldStats.volume : NaN,
+          digits: 2,
+          trend: "—"
+        });
+      }
+
+      if (Number.isFinite(silver) && silver > 0) {
+        addAsset({
+          id: "metal-XAG",
+          name: "Silver",
+          symbol: "XAG/USD",
+          initials: "AG",
+          color: "#b9c3ce",
+          category: "metals",
+          price: silver,
+          change: silverStats ? silverStats.change : NaN,
+          high: silverStats ? silverStats.high : NaN,
+          low: silverStats ? silverStats.low : NaN,
+          volume: silverStats ? silverStats.volume : NaN,
+          digits: 4,
+          trend: "—"
+        });
+      }
+
+      renderMarketTable();
+
+    } catch (error) {
+      console.error("Gold/Silver live feed error:", error);
+      throw error;
     }
-
-    if (Number.isFinite(silver) && silver > 0) {
-      addAsset({
-        id: "metal-XAG",
-        name: "Silver",
-        symbol: "XAG/USD",
-        initials: "AG",
-        color: "#b9c3ce",
-        category: "metals",
-        price: silver,
-        change: NaN,
-        high: NaN,
-        low: NaN,
-        volume: NaN,
-        digits: 4,
-        trend: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"
-      });
-    }
-
-    renderMarketTable();
   }
 
-  /* =========================================
-     YAHOO FINANCE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â EXISTING OTHER MARKETS
+
+
+    /* =========================================
+     YAHOO FINANCE — EXISTING OTHER MARKETS
   ========================================= */
 
   async function loadOtherMarkets() {
@@ -2204,11 +2266,11 @@ header.site-header .header-actions [hidden] {
 
       const isMetal = item.category === "metals";
 
-      addAsset({
+            addAsset({
         id: "other-" + key,
         name: item.name,
         symbol: key,
-        initials: key.slice(0, 3),
+        initials: key,
         color: isMetal ? "#c4b7a0" : "#7c91aa",
         category: item.category,
         price,
@@ -2217,7 +2279,7 @@ header.site-header .header-actions [hidden] {
         low: Number.isFinite(Number(lastLow)) ? Number(lastLow) : NaN,
         volume: Number.isFinite(Number(lastVolume)) ? Number(lastVolume) : NaN,
         digits: item.digits,
-        trend: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"
+        trend: "—"
       });
     }));
 
@@ -2639,8 +2701,10 @@ header.site-header .header-actions [hidden] {
     renderMarketTable();
   }
 
-  document.getElementById("footerYear").textContent =
-    new Date().getFullYear();
+  const footerYear = document.getElementById("footerYear");
+  if (footerYear) {
+    footerYear.textContent = new Date().getFullYear();
+  }
 
   refreshMarkets();
 
