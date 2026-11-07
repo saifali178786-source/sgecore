@@ -175,7 +175,7 @@
         flex: 1 1 auto;
         align-items: center !important;
         justify-content: flex-start !important;
-        gap: clamp(11px,1.45vw,20px) !important;
+        gap: clamp(11px,1.5vw,21px) !important;
         width: auto !important;
         margin: 0 0 0 clamp(28px,4vw,62px) !important;
         padding: 0 !important;
@@ -186,7 +186,7 @@
         display: inline-flex;
         align-items: center;
         min-height: 42px;
-        font-size: 13px !important;
+        font-size: 14px !important;
         font-weight: 600;
         white-space: nowrap;
       }
@@ -211,7 +211,7 @@
         padding: 0 17px !important;
         border: 1px solid rgba(217,180,93,.75) !important;
         border-radius: 7px !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         font-weight: 700 !important;
         box-sizing: border-box !important;
       }
@@ -866,27 +866,11 @@
        FOOTER
     ========================================= */
 
-    .about-page .site-footer {
-      padding: 45px clamp(20px,4vw,60px) 22px;
-      border-top: 1px solid rgba(232,184,77,.2);
-      background: #030a14;
-      color: #aebbd0;
-    }
+    
 
-    .about-page .footer-brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      color: #fff;
-      text-decoration: none;
-    }
+    
 
-    .about-page .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      margin: 30px 0;
-    }
+    
 
     .about-page .footer-links a {
       color: #aebbd0;
@@ -894,20 +878,9 @@
       text-decoration: none;
     }
 
-    .about-page .footer-links a:hover {
-      color: var(--about-gold);
-    }
+    
 
-    .about-page .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(190,204,224,.1);
-      color: #718198;
-      font-size: 11px;
-    }
+    
 
     /* =========================================
        REVEAL ANIMATIONS
@@ -1030,13 +1003,9 @@
         padding: 70px 18px;
       }
 
-      .about-page .footer-links {
-        gap: 16px 22px;
-      }
+      
 
-      .about-page .footer-bottom {
-        flex-direction: column;
-      }
+      
 
       .about-page .ticker-track {
         gap: 22px;
@@ -1058,7 +1027,182 @@
         transition-duration: .01ms !important;
       }
     }
+    /* SDE CORE - UNIFIED ACTIVE NAVIGATION */
+header.site-header > .main-nav > a.active,
+header.site-header > .main-nav > a[aria-current="page"] {
+    font-weight: 600 !important;
+    color: #d9b45d !important;
+    opacity: 1 !important;
+}
   </style>
+
+<!-- SDE CORE - HOMEPAGE MATCHED HEADER -->
+<style>
+@media (min-width: 900px) {
+  header.site-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    height: 70px !important;
+    min-height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+    box-sizing: border-box !important;
+  }
+
+  header.site-header > .brand {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  header.site-header > .main-nav {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: clamp(11px, 1.45vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  header.site-header > .main-nav > a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header > .main-nav > .header-actions,
+  header.site-header > .header-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  header.site-header #sge-account-menu {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .register-btn,
+  header.site-header .sge-account-trigger {
+    min-height: 40px !important;
+    padding: 0 17px !important;
+    border: 1px solid rgba(217,180,93,.75) !important;
+    border-radius: 7px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .sge-account-trigger {
+    color: #f0d58c !important;
+    background: #0d1a2b !important;
+  }
+
+  header.site-header .register-btn {
+    color: #07111f !important;
+    background: #d9b45d !important;
+    border-color: #d9b45d !important;
+  }
+
+  .about-page header.site-header,
+  .about-page header.site-header > .main-nav,
+  .about-page header.site-header > .main-nav > a,
+  .about-page header.site-header #sge-account-menu,
+  .about-page header.site-header .sge-account-trigger,
+  .about-page header.site-header .login-btn,
+  .about-page header.site-header .register-btn {
+    box-sizing: border-box !important;
+  }
+
+  .about-page header.site-header {
+    height: 70px !important;
+    min-height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+  }
+
+  .about-page header.site-header > .main-nav {
+    justify-content: flex-start !important;
+    gap: clamp(11px, 1.45vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+  }
+
+  .about-page header.site-header > .main-nav > a {
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+  }
+
+  .about-page header.site-header .sge-account-trigger,
+  .about-page header.site-header .login-btn,
+  .about-page header.site-header .register-btn {
+    min-height: 40px !important;
+    padding: 0 17px !important;
+    font-size: 13px !important;
+  }
+}
+
+header.site-header [hidden],
+header.site-header .header-actions [hidden] {
+  display: none !important;
+}
+</style>
+<style id="sde-about-logo-bold">
+@media (min-width: 900px) {
+  html body header.site-header > .brand {
+    font-weight: 800 !important;
+  }
+  html body header.site-header > .brand a {
+    font-weight: 800 !important;
+  }
+}
+</style>
+<style id="sde-about-logo-weight-final">
+html body.about-page header.site-header > .brand .brand-copy strong,
+html body .about-page header.site-header > .brand .brand-copy strong {
+    font-weight: 800 !important;
+}
+</style>
+<style id="sde-about-gold-svg-icons">
+.feature-icon svg {
+    width: 29px;
+    height: 29px;
+    display: block;
+    fill: none;
+    stroke: #d9b45d;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.intro-point .check svg {
+    width: 17px;
+    height: 17px;
+    display: inline-block;
+    vertical-align: middle;
+    fill: none;
+    stroke: #d9b45d;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+</style>
 </head>
 
 <body class="about-page">
@@ -1070,13 +1214,13 @@
       <span class="ticker-label">MARKET WATCH</span>
       <span>GOLD <strong id="ticker-XAU">Loading...</strong> <small>USD/g</small></span>
       <span>SILVER <strong id="ticker-XAG">Loading...</strong> <small>USD/oz</small></span>
-      <span>BTC <strong id="ticker-BTCUSDT">Loading...</strong> <em id="ticker-change-BTCUSDT">—</em></span>
-      <span>ETH <strong id="ticker-ETHUSDT">Loading...</strong> <em id="ticker-change-ETHUSDT">—</em></span>
-      <span>BNB <strong id="ticker-BNBUSDT">Loading...</strong> <em id="ticker-change-BNBUSDT">—</em></span>
-      <span>SOL <strong id="ticker-SOLUSDT">Loading...</strong> <em id="ticker-change-SOLUSDT">—</em></span>
-      <span>XRP <strong id="ticker-XRPUSDT">Loading...</strong> <em id="ticker-change-XRPUSDT">—</em></span>
-      <span>DOGE <strong id="ticker-DOGEUSDT">Loading...</strong> <em id="ticker-change-DOGEUSDT">—</em></span>
-      <span class="ticker-refresh">Auto refresh · 30 sec</span>
+      <span>BTC <strong id="ticker-BTCUSDT">Loading...</strong> <em id="ticker-change-BTCUSDT">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</em></span>
+      <span>ETH <strong id="ticker-ETHUSDT">Loading...</strong> <em id="ticker-change-ETHUSDT">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</em></span>
+      <span>BNB <strong id="ticker-BNBUSDT">Loading...</strong> <em id="ticker-change-BNBUSDT">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</em></span>
+      <span>SOL <strong id="ticker-SOLUSDT">Loading...</strong> <em id="ticker-change-SOLUSDT">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</em></span>
+      <span>XRP <strong id="ticker-XRPUSDT">Loading...</strong> <em id="ticker-change-XRPUSDT">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</em></span>
+      <span>DOGE <strong id="ticker-DOGEUSDT">Loading...</strong> <em id="ticker-change-DOGEUSDT">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</em></span>
+      <span class="ticker-refresh">Auto refresh ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· 30 sec</span>
     </div>
   </div>
 
@@ -1100,7 +1244,6 @@
     <nav class="main-nav" aria-label="Main navigation">
       <a href="../index.html">Home</a>
       <a href="markets.html">Markets</a>
-      <a href="market-data.html">Market Data</a>
       <a href="mining-plans.html">Mining Plans</a>
       <a href="my-assets.html">Assets</a>
       <a href="about.html" class="active" aria-current="page">About Us</a>
@@ -1108,7 +1251,7 @@
 
       <div class="header-actions">
         <a class="login-btn nav-login" href="login.html">Login</a>
-        <a class="register-btn nav-register" href="register.html">Register ↗</a>
+        <a class="register-btn nav-register" href="register.html">Register ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â</a>
       </div>
     </nav>
   </header>
@@ -1138,13 +1281,9 @@
           </p>
 
           <div class="hero-actions">
-            <a href="#who-we-are" class="primary-btn">
-              Discover Our Story →
-            </a>
+            <a href="#who-we-are" class="primary-btn">Discover Our Story →</a>
 
-            <a href="#our-vision" class="text-link">
-              Explore Our Vision →
-            </a>
+            <a href="#our-vision" class="text-link">Explore Our Vision →</a>
           </div>
 
         </div>
@@ -1200,22 +1339,22 @@
 
           <div class="intro-points">
             <div class="intro-point">
-              <span class="check">✓</span>
+              <span class="check"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l5 5L20 7"/></svg></span>
               User-focused experience
             </div>
 
             <div class="intro-point">
-              <span class="check">✓</span>
+              <span class="check"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l5 5L20 7"/></svg></span>
               Transparent information
             </div>
 
             <div class="intro-point">
-              <span class="check">✓</span>
+              <span class="check"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l5 5L20 7"/></svg></span>
               Digital innovation
             </div>
 
             <div class="intro-point">
-              <span class="check">✓</span>
+              <span class="check"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l5 5L20 7"/></svg></span>
               Continuous improvement
             </div>
           </div>
@@ -1248,7 +1387,7 @@
         <div class="mission-grid">
 
           <article class="mission-card reveal">
-            <div class="feature-icon">◉</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v18 M3 12h18 M5 5l14 14 M19 5L5 19" /></svg></div>
             <h3>Our Mission</h3>
             <p>
               To develop a reliable and user-friendly digital platform
@@ -1259,7 +1398,7 @@
           </article>
 
           <article class="mission-card reveal">
-            <div class="feature-icon">✧</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z M9 12l2 2 4-4" /></svg></div>
             <h3>Our Vision</h3>
             <p>
               To build a forward-looking digital ecosystem where
@@ -1296,7 +1435,7 @@
         <div class="features-grid">
 
           <article class="feature-card reveal">
-            <div class="feature-icon">⌖</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17l6-6 4 4 8-8 M15 7h6v6" /></svg></div>
             <h3>Market Information</h3>
             <p>
               Explore supported market prices and financial asset
@@ -1305,7 +1444,7 @@
           </article>
 
           <article class="feature-card reveal">
-            <div class="feature-icon">▣</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16v13H4z M8 7V4h8v3 M4 11h16" /></svg></div>
             <h3>Digital Wallets</h3>
             <p>
               Access supported internal wallet balances and review
@@ -1314,7 +1453,7 @@
           </article>
 
           <article class="feature-card reveal">
-            <div class="feature-icon">⇄</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z M9 12h6 M12 9v6" /></svg></div>
             <h3>Asset Management</h3>
             <p>
               Explore supported digital asset management features
@@ -1323,7 +1462,7 @@
           </article>
 
           <article class="feature-card reveal">
-            <div class="feature-icon">⌁</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 20h18 M5 20V9l7-5 7 5v11 M9 20v-6h6v6" /></svg></div>
             <h3>Mining Services</h3>
             <p>
               Explore available mining plan information, subscription
@@ -1332,7 +1471,7 @@
           </article>
 
           <article class="feature-card reveal">
-            <div class="feature-icon">◈</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16v14H4z M8 9h8 M8 13h5 M8 16h3" /></svg></div>
             <h3>Account Dashboard</h3>
             <p>
               Access your account information, wallet overview
@@ -1341,7 +1480,7 @@
           </article>
 
           <article class="feature-card reveal">
-            <div class="feature-icon">◇</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v4 M12 17v4 M3 12h4 M17 12h4 M5.6 5.6l2.8 2.8 M15.6 15.6l2.8 2.8 M18.4 5.6l-2.8 2.8 M8.4 15.6l-2.8 2.8" /></svg></div>
             <h3>Digital Innovation</h3>
             <p>
               We continuously explore ways to improve the platform
@@ -1374,8 +1513,7 @@
           </p>
 
           <a href="#our-values" class="primary-btn">
-            Discover Our Values →
-          </a>
+            Discover Our Values </a>
 
         </div>
       </div>
@@ -1402,7 +1540,7 @@
         <div class="values-grid">
 
           <article class="value-card reveal">
-            <div class="feature-icon">◇</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16v14H4z M8 9h8 M8 13h8 M8 17h5" /></svg></div>
             <h3>Transparency</h3>
             <p>
               Clear platform information and straightforward
@@ -1411,7 +1549,7 @@
           </article>
 
           <article class="value-card reveal">
-            <div class="feature-icon">⚖</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z M9 12l2 2 4-4" /></svg></div>
             <h3>Responsibility</h3>
             <p>
               We value thoughtful development and responsible
@@ -1420,7 +1558,7 @@
           </article>
 
           <article class="value-card reveal">
-            <div class="feature-icon">✧</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z" /></svg></div>
             <h3>Innovation</h3>
             <p>
               We continuously look for meaningful ways to
@@ -1429,7 +1567,7 @@
           </article>
 
           <article class="value-card reveal">
-            <div class="feature-icon">◉</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16v14H4z M8 9h8 M8 13h5 M8 16h7" /></svg></div>
             <h3>User Focus</h3>
             <p>
               We aim to make our platform intuitive,
@@ -1470,7 +1608,7 @@
           </p>
 
           <div class="responsibility-item">
-            <div class="feature-icon">✓</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z M9 12l2 2 4-4" /></svg></div>
             <div>
               <h4>Account Protection</h4>
               <p>
@@ -1481,7 +1619,7 @@
           </div>
 
           <div class="responsibility-item">
-            <div class="feature-icon">⌖</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17l6-6 4 4 8-8 M15 7h6v6" /></svg></div>
             <div>
               <h4>Clear Information</h4>
               <p>
@@ -1492,7 +1630,7 @@
           </div>
 
           <div class="responsibility-item">
-            <div class="feature-icon">◉</div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v18 M3 12h18 M7 7l10 10 M17 7L7 17" /></svg></div>
             <div>
               <h4>Continuous Development</h4>
               <p>
@@ -1522,9 +1660,7 @@
           and access your personal SDE Core dashboard.
         </p>
 
-        <a href="dashboard.html" class="primary-btn">
-          Explore Your Dashboard →
-        </a>
+        <a href="dashboard.html" class="primary-btn">Explore Your Dashboard →</a>
 
       </div>
     </section>
@@ -1534,28 +1670,28 @@
   <!-- FOOTER -->
 
   <footer class="site-footer">
-    <a class="brand footer-brand" href="../index.html#home">
-      <span class="brand-mark">SDE</span>
-      <span class="brand-copy">
-        <strong>SDE CORE</strong>
-        <small>SOVEREIGN DIGITAL EXCHANGE</small>
-      </span>
-    </a>
+  <a class="brand footer-brand" href="../../index.html">
+    <span class="brand-mark">SDE</span>
+    <span class="brand-copy">
+      <strong>SDE CORE</strong>
+      <small>SOVEREIGN DIGITAL EXCHANGE</small>
+    </span>
+  </a>
 
-    <div class="footer-links">
-      <a href="../index.html#markets">Markets</a>
-      <a href="../index.html#services">Services</a>
-      <a href="../index.html#investments">Mining Plans</a>
-      <a href="my-assets.html">Assets</a>
-      <a href="about.html">About</a>
-      <a href="../index.html#contact">Contact</a>
-    </div>
+  <div class="footer-links">
+    <a href="../markets.html">Markets</a>
+    <a href="../about.html#services">Services</a>
+    <a href="../mining-plans.html">Mining Plans</a>
+    <a href="../my-assets.html">Assets</a>
+    <a href="../about.html">About</a>
+    <a href="../contact.html">Contact</a>
+  </div>
 
-    <div class="footer-bottom">
-      <span>© 2026 SDE Core. All rights reserved.</span>
-      <span>Market information · Updates periodically</span>
-    </div>
-  </footer>
+  <div class="footer-bottom">
+    <span>&#169; 2026 SDE Core. All rights reserved.</span>
+    <span>Market information &#183; Updates periodically</span>
+  </div>
+</footer>
 
   <!-- EXISTING WEBSITE SCRIPTS -->
 

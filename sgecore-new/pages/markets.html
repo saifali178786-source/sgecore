@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SDE Core global markets Ã¢â‚¬â€ cryptocurrency, gold, metals and financial market data.">
+  <meta name="description" content="SDE Core global markets ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â cryptocurrency, gold, metals and financial market data.">
   <title>Markets | SDE Core</title>
 
   <link rel="stylesheet" href="../css/style.css">
@@ -1024,6 +1024,135 @@
   }
 }
 </style>
+
+<!-- SDE CORE - HOMEPAGE MATCHED HEADER -->
+<style>
+@media (min-width: 900px) {
+  header.site-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    height: 70px !important;
+    min-height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+    box-sizing: border-box !important;
+  }
+
+  header.site-header > .brand {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  header.site-header > .main-nav {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: clamp(11px, 1.45vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  header.site-header > .main-nav > a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header > .main-nav > .header-actions,
+  header.site-header > .header-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  header.site-header #sge-account-menu {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .register-btn,
+  header.site-header .sge-account-trigger {
+    min-height: 40px !important;
+    padding: 0 17px !important;
+    border: 1px solid rgba(217,180,93,.75) !important;
+    border-radius: 7px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .sge-account-trigger {
+    color: #f0d58c !important;
+    background: #0d1a2b !important;
+  }
+
+  header.site-header .register-btn {
+    color: #07111f !important;
+    background: #d9b45d !important;
+    border-color: #d9b45d !important;
+  }
+
+  .about-page header.site-header,
+  .about-page header.site-header > .main-nav,
+  .about-page header.site-header > .main-nav > a,
+  .about-page header.site-header #sge-account-menu,
+  .about-page header.site-header .sge-account-trigger,
+  .about-page header.site-header .login-btn,
+  .about-page header.site-header .register-btn {
+    box-sizing: border-box !important;
+  }
+
+  .about-page header.site-header {
+    height: 70px !important;
+    min-height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+  }
+
+  .about-page header.site-header > .main-nav {
+    justify-content: flex-start !important;
+    gap: clamp(11px, 1.45vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+  }
+
+  .about-page header.site-header > .main-nav > a {
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+  }
+
+  .about-page header.site-header .sge-account-trigger,
+  .about-page header.site-header .login-btn,
+  .about-page header.site-header .register-btn {
+    min-height: 40px !important;
+    padding: 0 17px !important;
+    font-size: 13px !important;
+  }
+}
+
+header.site-header [hidden],
+header.site-header .header-actions [hidden] {
+  display: none !important;
+}
+</style>
 </head>
 
 <body>
@@ -1060,7 +1189,7 @@
   <nav class="main-nav" aria-label="Main navigation">
     <a href="../index.html">Home</a>
     <a href="../pages/markets.html" class="active" aria-current="page">Markets</a>
-    <a href="../pages/market-data.html">Market Data</a>
+    
     <a href="../pages/mining-plans.html">Mining Plans</a>
     <a href="../pages/my-assets.html">Assets</a>
     <a href="../pages/about.html">About Us</a>
@@ -1094,14 +1223,14 @@
       <article class="overview-card">
         <div class="overview-card-top">
           <span class="overview-card-title">
-            <span class="overview-icon">Ã¢â€šÂ¿</span>
+            <span class="overview-icon">ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¿</span>
             BTC Spot Price
           </span>
           <span>BTC</span>
         </div>
         <div class="overview-value" id="overviewBTCPrice">Loading...</div>
         <div class="overview-bottom">
-          <span class="overview-change" id="overviewBTCChange">Ã¢â‚¬â€</span>
+          <span class="overview-change" id="overviewBTCChange">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>
           <svg class="overview-spark" id="overviewBTCSpark" viewBox="0 0 100 32">
             <polyline points="0,20 12,18 24,21 36,12 48,16 60,9 72,13 84,6 100,9"/>
           </svg>
@@ -1111,7 +1240,7 @@
       <article class="overview-card">
         <div class="overview-card-top">
           <span class="overview-card-title">
-            <span class="overview-icon">Ã¢â€”Ë†</span>
+            <span class="overview-icon">ÃƒÂ¢â€”Ã‹â€ </span>
             Bitcoin Dominance
           </span>
           <span>BTC.D</span>
@@ -1128,14 +1257,14 @@
       <article class="overview-card">
         <div class="overview-card-top">
           <span class="overview-card-title">
-            <span class="overview-icon">ÃŽÅ¾</span>
+            <span class="overview-icon">ÃƒÅ½Ã…Â¾</span>
             ETH Price
           </span>
           <span>ETH</span>
         </div>
         <div class="overview-value" id="overviewETHPrice">Loading...</div>
         <div class="overview-bottom">
-          <span class="overview-change" id="overviewETHChange">Ã¢â‚¬â€</span>
+          <span class="overview-change" id="overviewETHChange">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>
           <svg class="overview-spark" id="overviewETHSpark" viewBox="0 0 100 32">
             <polyline points="0,19 12,22 24,16 36,18 48,10 60,13 72,8 84,12 100,6"/>
           </svg>
@@ -1145,14 +1274,14 @@
       <article class="overview-card">
         <div class="overview-card-top">
           <span class="overview-card-title">
-            <span class="overview-icon">Ã¢â€”â€°</span>
+            <span class="overview-icon">ÃƒÂ¢â€”Ã¢â‚¬Â°</span>
             Total Crypto Market Cap
           </span>
           <span>GLOBAL</span>
         </div>
         <div class="overview-value" id="overviewTotalMarketCap">Loading...</div>
         <div class="overview-bottom">
-          <span class="overview-change" id="overviewMarketCapChange">Ã¢â‚¬â€</span>
+          <span class="overview-change" id="overviewMarketCapChange">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>
           <svg class="overview-spark" id="overviewMarketCapSpark" viewBox="0 0 100 32">
             <polyline points="0,21 12,18 24,19 36,13 48,15 60,10 72,12 84,7 100,8"/>
           </svg>
@@ -1179,7 +1308,7 @@
 
       <div class="market-controls">
         <div class="market-search-wrap">
-          <span class="market-search-icon">Ã¢Å’â€¢</span>
+          <span class="market-search-icon">ÃƒÂ¢Ã…â€™Ã¢â‚¬Â¢</span>
           <input
             type="search"
             id="marketSearch"
@@ -1194,7 +1323,7 @@
           <button class="market-filter" data-filter="metals">Gold &amp; Metals</button>
           <button class="market-filter" data-filter="gainers">Gainers</button>
           <button class="market-filter" data-filter="losers">Losers</button>
-          <button class="market-filter" data-filter="favorites">Favorites Ã¢Ëœâ€¦</button>
+          <button class="market-filter" data-filter="favorites">Favorites ÃƒÂ¢Ã‹Å“â€¦</button>
         </div>
       </div>
 
@@ -1202,13 +1331,13 @@
         <table class="market-table">
           <thead>
             <tr>
-              <th>Ã¢Ëœâ€¦</th>
-              <th class="sortable" data-sort="name">Asset Ã¢â€ â€¢</th>
-              <th class="sortable" data-sort="price">Price Ã¢â€ â€¢</th>
-              <th class="sortable" data-sort="change">24H Change Ã¢â€ â€¢</th>
-              <th class="sortable" data-sort="high">24H High Ã¢â€ â€¢</th>
-              <th class="sortable" data-sort="low">24H Low Ã¢â€ â€¢</th>
-              <th class="sortable" data-sort="volume">24H Volume Ã¢â€ â€¢</th>
+              <th>ÃƒÂ¢Ã‹Å“â€¦</th>
+              <th class="sortable" data-sort="name">Asset ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Â¢</th>
+              <th class="sortable" data-sort="price">Price ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Â¢</th>
+              <th class="sortable" data-sort="change">24H Change ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Â¢</th>
+              <th class="sortable" data-sort="high">24H High ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Â¢</th>
+              <th class="sortable" data-sort="low">24H Low ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Â¢</th>
+              <th class="sortable" data-sort="volume">24H Volume ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Â¢</th>
               <th>Trend</th>
               <th>Action</th>
             </tr>
@@ -1263,33 +1392,28 @@
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div>
-          <a class="brand" href="../index.html">
-            <span class="brand-mark">SDE</span>
-            <span class="brand-copy">
-              <strong>SDE CORE</strong>
-              <small>GLOBAL MARKETS</small>
-            </span>
-          </a>
-          <p>Market information and digital asset tracking.</p>
-        </div>
+  <a class="brand footer-brand" href="../index.html">
+    <span class="brand-mark">SDE</span>
+    <span class="brand-copy">
+      <strong>SDE CORE</strong>
+      <small>SOVEREIGN DIGITAL EXCHANGE</small>
+    </span>
+  </a>
 
-        <div class="footer-links">
-          <a href="../index.html">Home</a>
-          <a href="markets.html">Markets</a>
-          <a href="my-assets.html">My Assets</a>
-          <a href="mining.html">Mining Plans</a>
-          <a href="about.html">About Us</a>
-          <a href="contact.html">Contact</a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        Ã‚Â© <span id="footerYear"></span> SDE Core. All rights reserved.
-      </div>
-    </div>
-  </footer>
+  <div class="footer-links">
+    <a href="markets.html">Markets</a>
+    <a href="about.html#services">Services</a>
+    <a href="mining-plans.html">Mining Plans</a>
+    <a href="my-assets.html">Assets</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&#169; 2026 SDE Core. All rights reserved.</span>
+    <span>Market information &#183; Updates periodically</span>
+  </div>
+</footer>
 
 </div>
 
@@ -1420,7 +1544,7 @@
 
   function formatPrice(value, maxDigits) {
     const number = Number(value);
-    if (!Number.isFinite(number)) return "Ã¢â‚¬â€";
+    if (!Number.isFinite(number)) return "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
 
     let digits;
     if (number >= 1000) digits = 2;
@@ -1445,7 +1569,7 @@
 
   function compactNumber(value) {
     const number = Number(value);
-    if (!Number.isFinite(number)) return "Ã¢â‚¬â€";
+    if (!Number.isFinite(number)) return "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
 
     return new Intl.NumberFormat("en-US", {
       notation: "compact",
@@ -1510,7 +1634,7 @@
 
     const number = Number(value);
     node.textContent =
-      (number > 0 ? "+" : "") + number.toFixed(2) + "% Ã‚Â· 24h";
+      (number > 0 ? "+" : "") + number.toFixed(2) + "% Ãƒâ€šÂ· 24h";
 
     node.className =
       "overview-change " +
@@ -1593,7 +1717,7 @@
 
   function formatVolume(value) {
     const number = Number(value);
-    if (!Number.isFinite(number) || number <= 0) return "Ã¢â‚¬â€";
+    if (!Number.isFinite(number) || number <= 0) return "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
     return "$" + compactNumber(number);
   }
 
@@ -1670,19 +1794,19 @@
 
         const changeText = Number.isFinite(asset.change)
           ? (asset.change > 0 ? "+" : "") + asset.change.toFixed(2) + "%"
-          : "Ã¢â‚¬â€";
+          : "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
 
         const priceText = Number.isFinite(asset.price)
           ? "$" + formatPrice(asset.price, asset.digits || 8)
-          : "Ã¢â‚¬â€";
+          : "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
 
         const highText = Number.isFinite(asset.high)
           ? "$" + formatPrice(asset.high, asset.digits || 8)
-          : "Ã¢â‚¬â€";
+          : "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
 
         const lowText = Number.isFinite(asset.low)
           ? "$" + formatPrice(asset.low, asset.digits || 8)
-          : "Ã¢â‚¬â€";
+          : "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â";
 
         return `
           <tr>
@@ -1692,7 +1816,7 @@
                 data-favorite="${asset.id}"
                 aria-label="${favorite ? "Remove from favorites" : "Add to favorites"}"
                 title="${favorite ? "Remove favorite" : "Add favorite"}"
-              >${favorite ? "Ã¢Ëœâ€¦" : "Ã¢Ëœâ€ "}</button>
+              >${favorite ? "ÃƒÂ¢Ã‹Å“â€¦" : "ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â "}</button>
             </td>
 
             <td>
@@ -1718,7 +1842,7 @@
             <td>${highText}</td>
             <td>${lowText}</td>
             <td>${formatVolume(asset.volume)}</td>
-            <td>${asset.trend || "Ã¢â‚¬â€"}</td>
+            <td>${asset.trend || "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"}</td>
             <td>
               <a class="trade-button"
                  href="my-assets.html?asset=${encodeURIComponent(asset.symbol)}">
@@ -1787,7 +1911,7 @@
   });
 
   /* =========================================
-     CRYPTO PRICES Ã¢â‚¬â€ BINANCE
+     CRYPTO PRICES ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â BINANCE
   ========================================= */
 
   async function loadCrypto() {
@@ -1835,7 +1959,7 @@
         low: Number(row.lowPrice),
         volume: Number(row.quoteVolume),
         digits: 8,
-        trend: "Ã¢â‚¬â€"
+        trend: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"
       });
     });
 
@@ -1953,7 +2077,7 @@
   }
 
   /* =========================================
-     GOLD AND SILVER Ã¢â‚¬â€ EXISTING XAUS FEED
+     GOLD AND SILVER ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â EXISTING XAUS FEED
   ========================================= */
 
   async function loadMetals() {
@@ -1980,7 +2104,7 @@
         low: NaN,
         volume: NaN,
         digits: 2,
-        trend: "Ã¢â‚¬â€"
+        trend: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"
       });
     }
 
@@ -1998,7 +2122,7 @@
         low: NaN,
         volume: NaN,
         digits: 4,
-        trend: "Ã¢â‚¬â€"
+        trend: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"
       });
     }
 
@@ -2006,7 +2130,7 @@
   }
 
   /* =========================================
-     YAHOO FINANCE Ã¢â‚¬â€ EXISTING OTHER MARKETS
+     YAHOO FINANCE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â EXISTING OTHER MARKETS
   ========================================= */
 
   async function loadOtherMarkets() {
@@ -2093,7 +2217,7 @@
         low: Number.isFinite(Number(lastLow)) ? Number(lastLow) : NaN,
         volume: Number.isFinite(Number(lastVolume)) ? Number(lastVolume) : NaN,
         digits: item.digits,
-        trend: "Ã¢â‚¬â€"
+        trend: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"
       });
     }));
 
@@ -2355,7 +2479,7 @@
                 href="${item.link}"
                 target="_blank"
                 rel="noopener noreferrer"
-              >Read More Ã¢â€ â€”</a>
+              >Read More ÃƒÂ¢Ã¢â‚¬Â â€”</a>
             </div>
           </div>
         </article>
@@ -2420,7 +2544,7 @@
     }
 
     document.getElementById("newsUpdated").textContent =
-      "Latest publisher updates Ã‚Â· " +
+      "Latest publisher updates Ãƒâ€šÂ· " +
       new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit"
@@ -2542,3 +2666,5 @@
 <script src="../js/auth-ui.js"></script>
 </body>
 </html>
+
+

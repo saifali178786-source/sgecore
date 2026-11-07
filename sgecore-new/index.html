@@ -91,8 +91,36 @@
     .snapshot-asset>span:last-child strong,.snapshot-asset small{display:block}
     .snapshot-asset strong{color:#f4f6fa;font-size:12px}
     .snapshot-asset small{margin-top:4px;color:#8496ad;font-size:10px}
-    .snapshot-coin{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(220,181,93,.2);border-radius:50%;background:rgba(220,181,93,.08);color:#e8b84d;font-size:16px}
-    .snapshot-coin.gold-coin{font-size:12px}
+    /* Market Snapshot - Cryptocurrency Icons */
+.snapshot-coin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.snapshot-coin svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.snapshot-coin.btc { background: #f7931a; }
+.snapshot-coin.eth { background: #627eea; }
+.snapshot-coin.bnb { background: #f3ba2f; }
+.snapshot-coin.sol { background: #111827; }
+.snapshot-coin.xrp { background: #ffffff; }
+.snapshot-coin.doge { background: #c2a633; }
+.snapshot-coin.ada { background: #0033ad; }
+.snapshot-coin.gold-coin { background: #d9b45d; }
     .snapshot-table .muted-cell{color:#718198;font-size:11px}
     .snapshot-table .positive{color:#4bd69a}
     .snapshot-table .negative{color:#ff8585}
@@ -184,6 +212,338 @@
       .crypto-market-card{padding:16px}
       .snapshot-table th,.snapshot-table td{padding:13px 14px}
     }
+    
+/* =========================================
+   SDE CORE - MINING OPPORTUNITY SECTION
+========================================= */
+
+.mining-opportunity-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 100px 5% !important;
+  background:
+    radial-gradient(ellipse at 15% 15%, rgba(217,180,93,.12), transparent 38%),
+    radial-gradient(ellipse at 90% 85%, rgba(39,105,160,.13), transparent 38%),
+    linear-gradient(135deg, #07111f 0%, #0b1c30 55%, #07111f 100%);
+}
+
+.mining-opportunity-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mining-opportunity-glow {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.mining-glow-one {
+  width: 420px;
+  height: 420px;
+  top: -230px;
+  left: -160px;
+  border: 1px solid rgba(217,180,93,.18);
+  box-shadow:
+    0 0 0 45px rgba(217,180,93,.025),
+    0 0 0 95px rgba(217,180,93,.018);
+  animation: miningGlowFloat 13s ease-in-out infinite alternate;
+}
+
+.mining-glow-two {
+  width: 480px;
+  height: 480px;
+  right: -220px;
+  bottom: -260px;
+  border: 1px solid rgba(80,155,210,.18);
+  box-shadow:
+    0 0 0 45px rgba(80,155,210,.025),
+    0 0 0 95px rgba(80,155,210,.015);
+  animation: miningGlowFloat 16s ease-in-out infinite alternate-reverse;
+}
+
+.mining-opportunity-heading {
+  max-width: 790px;
+  margin: 0 auto 55px;
+  text-align: center;
+}
+
+.mining-opportunity-heading .section-label {
+  color: #d9b45d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  margin-bottom: 18px;
+}
+
+.mining-opportunity-heading h2 {
+  color: #f5f7fb;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.2;
+  margin: 0 0 20px;
+  font-weight: 800;
+}
+
+.mining-opportunity-heading h2 span {
+  display: block;
+  color: #e3c477;
+  background: linear-gradient(90deg, #d9b45d, #fff0b8, #c99b43);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.mining-opportunity-heading > p {
+  max-width: 690px;
+  margin: 0 auto;
+  color: #aebdce;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.mining-opportunity-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.mining-opportunity-card {
+  position: relative;
+  min-height: 245px;
+  overflow: hidden;
+  padding: 28px 24px;
+  border: 1px solid rgba(217,180,93,.20);
+  border-radius: 15px;
+  background: linear-gradient(
+    145deg,
+    rgba(19,39,62,.95),
+    rgba(9,23,39,.96)
+  );
+  box-shadow: 0 14px 35px rgba(0,0,0,.20);
+  transition:
+    transform .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease,
+    background .35s ease;
+}
+
+.mining-opportunity-card::before {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -75px;
+  top: -75px;
+  border-radius: 50%;
+  background: rgba(217,180,93,.08);
+  transition: transform .4s ease;
+}
+
+.mining-opportunity-card:hover {
+  transform: translateY(-9px);
+  border-color: rgba(217,180,93,.65);
+  background: linear-gradient(
+    145deg,
+    rgba(27,51,77,.98),
+    rgba(10,26,44,.98)
+  );
+  box-shadow:
+    0 22px 45px rgba(0,0,0,.35),
+    0 0 25px rgba(217,180,93,.10);
+}
+
+.mining-opportunity-card:hover::before {
+  transform: scale(1.6);
+}
+
+.mining-opportunity-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(217,180,93,.48);
+  border-radius: 13px;
+  color: #f0d58c;
+  background: rgba(217,180,93,.10);
+  font-size: 25px;
+  box-shadow: 0 0 20px rgba(217,180,93,.08);
+}
+
+.mining-card-number {
+  position: absolute;
+  top: 29px;
+  right: 25px;
+  color: rgba(217,180,93,.48);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.mining-opportunity-card h3 {
+  position: relative;
+  color: #f2f5fa;
+  font-size: 17px;
+  font-weight: 750;
+  margin: 0 0 12px;
+}
+
+.mining-opportunity-card p {
+  position: relative;
+  color: #aebdce;
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.mining-opportunity-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 35px;
+  padding: 30px 34px;
+  border: 1px solid rgba(217,180,93,.35);
+  border-radius: 16px;
+  background: linear-gradient(
+    110deg,
+    rgba(217,180,93,.12),
+    rgba(17,39,61,.92) 55%,
+    rgba(13,29,47,.96)
+  );
+  box-shadow: 0 15px 40px rgba(0,0,0,.20);
+}
+
+.mining-opportunity-cta .section-label {
+  color: #d9b45d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.mining-opportunity-cta h3 {
+  color: #f5f7fb;
+  font-size: 22px;
+  margin: 9px 0;
+}
+
+.mining-opportunity-cta p {
+  color: #b5c2d1;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.mining-opportunity-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  min-height: 50px;
+  padding: 0 23px;
+  border: 1px solid #f0d58c;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f0d58c, #c69a43);
+  color: #101a27 !important;
+  text-decoration: none !important;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 8px 25px rgba(217,180,93,.17);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.mining-opportunity-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(217,180,93,.30);
+}
+
+.mining-opportunity-button span {
+  font-size: 20px;
+  transition: transform .3s ease;
+}
+
+.mining-opportunity-button:hover span {
+  transform: translateX(4px);
+}
+
+.mining-opportunity-disclaimer {
+  margin: 22px 0 0;
+  color: #7f91a5;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@keyframes miningGlowFloat {
+  from {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(35px, 25px, 0) rotate(15deg);
+  }
+}
+
+@media (max-width: 1000px) {
+  .mining-opportunity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .mining-opportunity-section {
+    padding: 70px 18px !important;
+  }
+
+  .mining-opportunity-heading {
+    margin-bottom: 35px;
+  }
+
+  .mining-opportunity-heading h2 {
+    font-size: 31px;
+  }
+
+  .mining-opportunity-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .mining-opportunity-card {
+    min-height: auto;
+    padding: 24px;
+  }
+
+  .mining-opportunity-cta {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 25px 22px;
+  }
+
+  .mining-opportunity-button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mining-glow-one,
+  .mining-glow-two {
+    animation: none !important;
+  }
+
+  .mining-opportunity-card,
+  .mining-opportunity-button,
+  .mining-opportunity-button span {
+    transition: none !important;
+  }
+}
   </style>
 <style>
 /* SDE CORE - FINAL HOMEPAGE HEADER */
@@ -316,15 +676,15 @@ header.site-header .header-actions [hidden] {
   <div class="market-ticker" aria-label="Market prices ticker">
     <div class="ticker-track">
       <span class="ticker-label">MARKET WATCH</span>
-      <span>GOLD <strong id="ticker-XAU">Loadingâ€¦</strong> <small>USD/g</small></span>
-      <span>SILVER <strong id="ticker-XAG">Loadingâ€¦</strong> <small>USD/oz</small></span>
-      <span>BTC <strong id="ticker-BTCUSDT">Loadingâ€¦</strong> <em id="ticker-change-BTCUSDT">â€”</em></span>
-      <span>ETH <strong id="ticker-ETHUSDT">Loadingâ€¦</strong> <em id="ticker-change-ETHUSDT">â€”</em></span>
-      <span>BNB <strong id="ticker-BNBUSDT">Loadingâ€¦</strong> <em id="ticker-change-BNBUSDT">â€”</em></span>
-      <span>SOL <strong id="ticker-SOLUSDT">Loadingâ€¦</strong> <em id="ticker-change-SOLUSDT">â€”</em></span>
-      <span>XRP <strong id="ticker-XRPUSDT">Loadingâ€¦</strong> <em id="ticker-change-XRPUSDT">â€”</em></span>
-      <span>DOGE <strong id="ticker-DOGEUSDT">Loadingâ€¦</strong> <em id="ticker-change-DOGEUSDT">â€”</em></span>
-      <span class="ticker-refresh">Auto refresh Â· 30 sec</span>
+      <span>GOLD <strong id="ticker-XAU">Loading…</strong> <small>USD/g</small></span>
+      <span>SILVER <strong id="ticker-XAG">Loading…</strong> <small>USD/oz</small></span>
+      <span>BTC <strong id="ticker-BTCUSDT">Loading…</strong> <em id="ticker-change-BTCUSDT">—</em></span>
+      <span>ETH <strong id="ticker-ETHUSDT">Loading…</strong> <em id="ticker-change-ETHUSDT">—</em></span>
+      <span>BNB <strong id="ticker-BNBUSDT">Loading…</strong> <em id="ticker-change-BNBUSDT">—</em></span>
+      <span>SOL <strong id="ticker-SOLUSDT">Loading…</strong> <em id="ticker-change-SOLUSDT">—</em></span>
+      <span>XRP <strong id="ticker-XRPUSDT">Loading…</strong> <em id="ticker-change-XRPUSDT">—</em></span>
+      <span>DOGE <strong id="ticker-DOGEUSDT">Loading…</strong> <em id="ticker-change-DOGEUSDT">—</em></span>
+      <span class="ticker-refresh">Auto refresh · 30 sec</span>
     </div>
   </div>
 
@@ -344,14 +704,13 @@ header.site-header .header-actions [hidden] {
   <nav class="main-nav" aria-label="Main navigation">
     <a href="index.html" class="active" aria-current="page">Home</a>
     <a href="pages/markets.html">Markets</a>
-    <a href="pages/market-data.html">Market Data</a>
     <a href="pages/mining-plans.html">Mining Plans</a>
     <a href="pages/my-assets.html">Assets</a>
     <a href="pages/about.html">About Us</a>
     <a href="pages/contact.html">Contact</a>
     <div class="header-actions">
       <a class="login-btn nav-login" href="pages/login.html">Login</a>
-      <a class="register-btn nav-register" href="pages/register.html">Register <span>â†—</span></a>
+      <a class="register-btn nav-register" href="pages/register.html">Register <span>↗</span></a>
     </div>
   </nav>
 </header>
@@ -370,7 +729,7 @@ header.site-header .header-actions [hidden] {
             in one convenient place.
           </p>
           <div class="hero-actions">
-            <a class="button button-gold" href="#markets">Explore Markets <span>â†’</span></a>
+            <a class="button button-gold" href="#markets">Explore Markets <span>&#8594;</span></a>
             <a class="button button-glass" href="#investments">View Mining Plans</a>
             <a class="button button-glass" href="pages/quick-recharge.html">Quick Recharge <span>â†’</span></a>
           </div>
@@ -383,13 +742,13 @@ header.site-header .header-actions [hidden] {
         <aside class="hero-gold-card" aria-label="Live gold price">
           <span class="gold-card-eyebrow">GOLD SPOT PRICE</span>
           <span class="gold-card-symbol">XAU / USD</span>
-          <strong id="heroGoldPrice">â€”</strong>
+          <strong id="heroGoldPrice">—</strong>
           <span class="gold-card-unit">USD per troy ounce</span>
           <div class="gold-card-divider"></div>
           <span class="gold-card-eyebrow">PRICE PER GRAM</span>
-          <strong class="gold-gram-price" id="heroGoldGram">â€”</strong>
-          <span class="gold-card-unit">USD / gram Â· based on 31.1034768 g per troy oz</span>
-          <span class="gold-card-updated" id="heroGoldUpdated">Waiting for market dataâ€¦</span>
+          <strong class="gold-gram-price" id="heroGoldGram">—</strong>
+          <span class="gold-card-unit">USD / gram · based on 31.1034768 g per troy oz</span>
+          <span class="gold-card-updated" id="heroGoldUpdated">Waiting for market data…</span>
         </aside>
       </div>
 
@@ -411,7 +770,7 @@ header.site-header .header-actions [hidden] {
           </p>
         </div>
         <div class="market-status" id="liveMarketStatus" aria-live="polite">
-          <span class="status-dot status-dot-muted"></span> Connecting to market feedsâ€¦
+          <span class="status-dot status-dot-muted"></span> Connecting to market feeds…
         </div>
       </div>
 
@@ -419,9 +778,9 @@ header.site-header .header-actions [hidden] {
         <div class="snapshot-toolbar">
           <div>
             <strong>Selected markets</strong>
-            <span>Crypto quotes in USD Â· Gold spot in USD</span>
+            <span>Crypto quotes in USD · Gold spot in USD</span>
           </div>
-          <span id="snapshotUpdated">Updating market dataâ€¦</span>
+          <span id="snapshotUpdated">Updating market data…</span>
         </div>
 
         <div class="snapshot-scroll">
@@ -431,43 +790,111 @@ header.site-header .header-actions [hidden] {
             </thead>
             <tbody>
               <tr data-market-row="BTC">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">â‚¿</b><span><strong>Bitcoin</strong><small>BTC</small></span></span></td>
-                <td id="table-price-BTCUSDT">â€”</td><td id="table-change-BTCUSDT">â€”</td><td id="cap-BTC">â€”</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin btc">
+  <svg viewBox="0 0 36 36" aria-label="Bitcoin">
+    <circle cx="18" cy="18" r="18" fill="#f7931a"/>
+    <path d="M22.8 16.1c1.2-.8 1.7-2.1 1.3-3.5-.5-1.9-2.1-2.7-4.5-2.9V6.8h-2.2v2.8h-1.8V6.8h-2.2v2.9H10v2.4h1.8v11.7H10v2.4h3.4v2.9h2.2v-2.9h1.8v2.9h2.2v-3c3.4-.2 5.3-1.7 5.3-4.5 0-2-1-3.3-2.9-4zm-6.9-4.2h2.5c1.7 0 2.6.6 2.6 1.8 0 1.3-.9 1.9-2.6 1.9h-2.5zm3.1 11h-3.1v-4.9H19c2 0 3 .8 3 2.4 0 1.7-1 2.5-3 2.5z" fill="#fff"/>
+  </svg>
+</b><span><strong>Bitcoin</strong><small>BTC</small></span></span></td>
+                <td id="table-price-BTCUSDT">—</td><td id="table-change-BTCUSDT">—</td><td id="cap-BTC">—</td>
                 <td><svg class="sparkline" id="spark-BTC" viewBox="0 0 120 34" role="img" aria-label="Bitcoin seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="ETH">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">â—†</b><span><strong>Ethereum</strong><small>ETH</small></span></span></td>
-                <td id="table-price-ETHUSDT">â€”</td><td id="table-change-ETHUSDT">â€”</td><td id="cap-ETH">â€”</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin eth">
+  <svg viewBox="0 0 36 36" aria-label="Ethereum">
+    <path d="M18 4 8.5 19.2 18 24.8l9.5-5.6z" fill="#fff"/>
+    <path d="m18 27-9.5-5.6L18 32l9.5-10.6z" fill="#c7d2fe"/>
+  </svg>
+</b><span><strong>Ethereum</strong><small>ETH</small></span></span></td>
+                <td id="table-price-ETHUSDT">—</td><td id="table-change-ETHUSDT">—</td><td id="cap-ETH">—</td>
                 <td><svg class="sparkline" id="spark-ETH" viewBox="0 0 120 34" role="img" aria-label="Ethereum seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="BNB">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">â—†</b><span><strong>BNB</strong><small>BNB</small></span></span></td>
-                <td id="table-price-BNBUSDT">â€”</td><td id="table-change-BNBUSDT">â€”</td><td id="cap-BNB">â€”</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin bnb">
+  <svg viewBox="0 0 36 36" aria-label="BNB">
+    <g fill="#fff">
+      <path d="M18 6 22.5 10.5 18 15 13.5 10.5z"/>
+      <path d="m9 15 4.5 4.5L9 24l-4.5-4.5z"/>
+      <path d="m27 15 4.5 4.5L27 24l-4.5-4.5z"/>
+      <path d="m18 21 4.5 4.5L18 30l-4.5-4.5z"/>
+      <path d="m18 15 3 3-3 3-3-3z"/>
+    </g>
+  </svg>
+</b><span><strong>BNB</strong><small>BNB</small></span></span></td>
+                <td id="table-price-BNBUSDT">—</td><td id="table-change-BNBUSDT">—</td><td id="cap-BNB">—</td>
                 <td><svg class="sparkline" id="spark-BNB" viewBox="0 0 120 34" role="img" aria-label="BNB seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="SOL">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">â—Ž</b><span><strong>Solana</strong><small>SOL</small></span></span></td>
-                <td id="table-price-SOLUSDT">â€”</td><td id="table-change-SOLUSDT">â€”</td><td id="cap-SOL">â€”</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin sol">
+  <svg viewBox="0 0 36 36" aria-label="Solana">
+    <defs>
+      <linearGradient id="solGradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#00ffa3"/>
+        <stop offset="1" stop-color="#9945ff"/>
+      </linearGradient>
+    </defs>
+    <g fill="url(#solGradient)">
+      <path d="M9 9h19l-3 4H6z"/>
+      <path d="M9 16h19l-3 4H6z"/>
+      <path d="M9 23h19l-3 4H6z"/>
+    </g>
+  </svg>
+</b><span><strong>Solana</strong><small>SOL</small></span></span></td>
+                <td id="table-price-SOLUSDT">—</td><td id="table-change-SOLUSDT">—</td><td id="cap-SOL">—</td>
                 <td><svg class="sparkline" id="spark-SOL" viewBox="0 0 120 34" role="img" aria-label="Solana seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="XRP">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">âœ•</b><span><strong>XRP</strong><small>XRP</small></span></span></td>
-                <td id="table-price-XRPUSDT">â€”</td><td id="table-change-XRPUSDT">â€”</td><td id="cap-XRP">â€”</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin xrp">
+  <svg viewBox="0 0 36 36" aria-label="XRP">
+    <path d="M8 9h5l5 5 5-5h5l-7.5 7.5a3.5 3.5 0 0 1-5 0zM8 27h5l5-5 5 5h5l-7.5-7.5a3.5 3.5 0 0 0-5 0z" fill="#161b22"/>
+  </svg>
+</b><span><strong>XRP</strong><small>XRP</small></span></span></td>
+                <td id="table-price-XRPUSDT">—</td><td id="table-change-XRPUSDT">—</td><td id="cap-XRP">—</td>
                 <td><svg class="sparkline" id="spark-XRP" viewBox="0 0 120 34" role="img" aria-label="XRP seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="DOGE">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">Ã</b><span><strong>Dogecoin</strong><small>DOGE</small></span></span></td>
-                <td id="table-price-DOGEUSDT">â€”</td><td id="table-change-DOGEUSDT">â€”</td><td id="cap-DOGE">â€”</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin doge">
+  <svg viewBox="0 0 36 36" aria-label="Dogecoin">
+    <circle cx="18" cy="18" r="17" fill="#c2a633"/>
+    <path d="M12 9h7c6 0 9 3.4 9 9s-3 9-9 9h-7v-7H9v-4h3zm5 4v10h2c3 0 5-1.6 5-5s-2-5-5-5z" fill="#fff"/>
+    <path d="M8 17h12v2H8z" fill="#fff"/>
+  </svg>
+</b><span><strong>Dogecoin</strong><small>DOGE</small></span></span></td>
+                <td id="table-price-DOGEUSDT">—</td><td id="table-change-DOGEUSDT">—</td><td id="cap-DOGE">—</td>
                 <td><svg class="sparkline" id="spark-DOGE" viewBox="0 0 120 34" role="img" aria-label="Dogecoin seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr data-market-row="ADA">
-                <td><span class="snapshot-asset"><b class="snapshot-coin">â—</b><span><strong>Cardano</strong><small>ADA</small></span></span></td>
-                <td id="table-price-ADAUSDT">â€”</td><td id="table-change-ADAUSDT">â€”</td><td id="cap-ADA">â€”</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin ada">
+  <svg viewBox="0 0 36 36" aria-label="Cardano">
+    <g fill="#fff">
+      <circle cx="18" cy="18" r="2.8"/>
+      <circle cx="18" cy="9" r="1.8"/>
+      <circle cx="18" cy="27" r="1.8"/>
+      <circle cx="9" cy="18" r="1.8"/>
+      <circle cx="27" cy="18" r="1.8"/>
+      <circle cx="11.6" cy="11.6" r="1.4"/>
+      <circle cx="24.4" cy="11.6" r="1.4"/>
+      <circle cx="11.6" cy="24.4" r="1.4"/>
+      <circle cx="24.4" cy="24.4" r="1.4"/>
+      <circle cx="18" cy="4.5" r="1"/>
+      <circle cx="18" cy="31.5" r="1"/>
+      <circle cx="4.5" cy="18" r="1"/>
+      <circle cx="31.5" cy="18" r="1"/>
+    </g>
+  </svg>
+</b><span><strong>Cardano</strong><small>ADA</small></span></span></td>
+                <td id="table-price-ADAUSDT">—</td><td id="table-change-ADAUSDT">—</td><td id="cap-ADA">—</td>
                 <td><svg class="sparkline" id="spark-ADA" viewBox="0 0 120 34" role="img" aria-label="Cardano seven day trend"><path d="M2 26 L18 19 L34 23 L50 12 L66 17 L82 8 L98 13 L118 5"/></svg></td>
               </tr>
               <tr>
-                <td><span class="snapshot-asset"><b class="snapshot-coin gold-coin">Au</b><span><strong>Gold</strong><small>XAU</small></span></span></td>
-                <td id="table-price-XAU">â€”</td><td id="table-change-XAU">â€”</td><td class="muted-cell">Not supplied</td><td class="muted-cell">History unavailable</td>
+                <td><span class="snapshot-asset"><b class="snapshot-coin gold-coin">
+  <svg viewBox="0 0 36 36" aria-label="Gold">
+    <circle cx="18" cy="18" r="17" fill="#d9b45d"/>
+    <text x="18" y="23" text-anchor="middle"
+          font-size="13" font-weight="800" fill="#07111f">Au</text>
+  </svg>
+</b><span><strong>Gold</strong><small>XAU</small></span></span></td>
+                <td id="table-price-XAU">—</td><td id="table-change-XAU">—</td><td class="muted-cell">Not supplied</td><td class="muted-cell">History unavailable</td>
               </tr>
             </tbody>
           </table>
@@ -482,7 +909,7 @@ header.site-header .header-actions [hidden] {
       </div>
 
       <div class="market-disclaimer" id="marketDataDisclaimer">
-        <span>â“˜</span> Market information is for general reference only, may be
+        <span>&#9432;</span> Market information is for general reference only, may be
         delayed or unavailable, and is not investment advice. Market
         capitalization is not provided for spot gold in this table.
       </div>
@@ -503,88 +930,130 @@ header.site-header .header-actions [hidden] {
       <div class="why-grid">
         <article class="why-card">
           <span class="why-number">01</span>
-          <div class="why-icon">â—ˆ</div>
+          <div class="why-icon">&#9678;</div>
           <h3>Gold market information</h3>
           <p>Follow spot gold prices and explore precious-metals information in one place.</p>
         </article>
         <article class="why-card">
           <span class="why-number">02</span>
-          <div class="why-icon">âŒ</div>
-          <h3>Digital asset overview</h3>
-          <p>Monitor selected cryptocurrency markets with price and 24-hour movement data.</p>
-        </article>
-        <article class="why-card">
-          <span class="why-number">03</span>
-          <div class="why-icon">â–¤</div>
-          <h3>Mining plan information</h3>
-          <p>Review listed mining plans, their stated periods and investment limits before making a decision.</p>
-        </article>
-        <article class="why-card">
-          <span class="why-number">04</span>
-          <div class="why-icon">â—‰</div>
-          <h3>Account tools</h3>
-          <p>Access your member account, dashboard and separate Assets page through the website.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Services -->
-    <section class="services-section section-pad" id="services">
-      <div class="section-heading">
-        <div>
-          <div class="section-label">WHAT WE OFFER</div>
-          <h2>Explore more than <span>a price.</span></h2>
-          <p class="section-description">
-            Market information, mining plan listings and educational resources
-            to help visitors explore the precious-metals and digital asset space.
-          </p>
-        </div>
-      </div>
-
-      <div class="services-grid">
-        <article class="service-card">
-          <div class="service-number">01 / MARKETS</div>
-          <div class="service-icon" aria-hidden="true">Au</div>
+          <div class="why-icon">&#9678;</div>
           <h3>Gold Market Information</h3>
           <p>Explore spot-market information and follow developments in gold pricing.</p>
-          <a href="#markets" class="card-link">View market overview <span>â†’</span></a>
+          <a href="#markets" class="card-link">View market overview <span>&#8594;</span></a>
         </article>
 
         <article class="service-card">
           <div class="service-number">02 / MINING</div>
-          <div class="service-icon" aria-hidden="true">âš’</div>
+          <div class="service-icon" aria-hidden="true">&#9874;</div>
           <h3>Mining Plan Listings</h3>
           <p>Review the listed mining names, plan periods, stated rates and investment limits.</p>
-          <a href="#investments" class="card-link">Explore mining plans <span>â†’</span></a>
+          <a href="pages/mining-plans.html" class="card-link">Explore mining plans <span>&#8594;</span></a>
         </article>
 
         <article class="service-card">
           <div class="service-number">03 / EDUCATION</div>
-          <div class="service-icon" aria-hidden="true">â—‰</div>
+          <div class="service-icon" aria-hidden="true">&#9673;</div>
           <h3>Investment Education</h3>
           <p>Learn about market risks and the importance of research before making financial decisions.</p>
-          <a href="#about" class="card-link">Learn about SDE Core <span>â†’</span></a>
+          <a href="#about" class="card-link">Learn about SDE Core <span>&#8594;</span></a>
         </article>
       </div>
     </section>
 
-    <!-- Mining investment listings -->
-    <section class="investment-section section-pad" id="investments">
-      <div class="section-heading">
-        <div>
-          <div class="section-label">MINING PLAN LISTINGS</div>
-          <h2>Explore the listed <span>mining plans.</span></h2>
-          <p class="section-description">
-            Review the plan information and stated limits for each listing.
-            Read the risk notice before proceeding.
-          </p>
-        </div>
-        <span class="investment-count">12 PLAN LISTINGS</span>
+    
+<!-- Mining investment opportunities -->
+<section class="mining-opportunity-section section-pad" id="investments">
+  <div class="mining-opportunity-glow mining-glow-one"></div>
+  <div class="mining-opportunity-glow mining-glow-two"></div>
+
+  <div class="mining-opportunity-inner">
+
+    <div class="mining-opportunity-heading">
+      <div class="section-label">EXPLORE MINING OPPORTUNITIES</div>
+
+      <h2>
+        Build Your Future Through
+        <span>Mining Investments.</span>
+      </h2>
+
+      <p>
+        Discover opportunities connected to the global mining industry.
+        Explore listed mining companies, review available plans and
+        understand the terms before making your investment decisions.
+      </p>
+    </div>
+
+    <div class="mining-opportunity-grid">
+
+      <article class="mining-opportunity-card">
+        <div class="mining-opportunity-icon">&#9874;</div>
+        <span class="mining-card-number">01</span>
+        <h3>Real-World Industry</h3>
+        <p>
+          Explore opportunities associated with the global mining
+          and natural resources industry.
+        </p>
+      </article>
+
+      <article class="mining-opportunity-card">
+        <div class="mining-opportunity-icon">&#9719;</div>
+        <span class="mining-card-number">02</span>
+        <h3>Long-Term Perspective</h3>
+        <p>
+          Discover investment opportunities with a longer-term
+          outlook and review their individual plan durations.
+        </p>
+      </article>
+
+      <article class="mining-opportunity-card">
+        <div class="mining-opportunity-icon">&#9678;</div>
+        <span class="mining-card-number">03</span>
+        <h3>Multiple Opportunities</h3>
+        <p>
+          Explore different mining companies and compare their
+          available plans, terms and investment limits.
+        </p>
+      </article>
+
+      <article class="mining-opportunity-card">
+        <div class="mining-opportunity-icon">&#10003;</div>
+        <span class="mining-card-number">04</span>
+        <h3>Informed Decisions</h3>
+        <p>
+          Review the available information, understand potential
+          risks and make decisions based on your own research.
+        </p>
+      </article>
+
+    </div>
+
+    <div class="mining-opportunity-cta">
+      <div>
+        <span class="section-label">YOUR NEXT STEP</span>
+        <h3>Explore the available mining plans.</h3>
+        <p>
+          Visit our dedicated mining plans page to see the listed
+          companies and review their plan details.
+        </p>
       </div>
 
-      <div class="investment-grid" id="investmentPlanGrid"></div>
+      <a href="pages/mining-plans.html" class="mining-opportunity-button">
+        Explore Mining Opportunities
+        <span>&#8594;</span>
+      </a>
+    </div>
 
-    </section>
+    <!-- Retained for compatibility with existing homepage scripts -->
+    <div id="investmentPlanGrid" class="investment-grid" hidden></div>
+
+    <p class="mining-opportunity-disclaimer">
+      Mining-related investments involve risk. Returns are not guaranteed.
+      Review all terms and conduct independent research before investing.
+    </p>
+
+  </div>
+</section>
+
 
     <!-- About SDE Core -->
     <section class="about-section section-pad" id="about">
@@ -608,7 +1077,7 @@ header.site-header .header-actions [hidden] {
           research and understand the risks before making financial decisions.
         </p>
 
-        <a class="button button-gold" href="#contact">Connect With Us <span>â†’</span></a>
+        <a class="button button-gold" href="#contact">Connect With Us <span>&#8594;</span></a>
       </div>
 
       <div class="about-panel">
@@ -651,13 +1120,13 @@ header.site-header .header-actions [hidden] {
             information, use the official contact details when they are added here.
           </p>
         </div>
-        <a class="button button-gold" href="#about">Explore SDE Core <span>â†’</span></a>
+        <a class="button button-gold" href="#about">Explore SDE Core <span>&#8594;</span></a>
       </div>
     </section>
   </main>
 
 <footer class="site-footer">
-  <a class="brand footer-brand" href="index.html">
+  <a class="brand footer-brand" href="../index.html">
     <span class="brand-mark">SDE</span>
     <span class="brand-copy">
       <strong>SDE CORE</strong>
@@ -666,17 +1135,17 @@ header.site-header .header-actions [hidden] {
   </a>
 
   <div class="footer-links">
-    <a href="pages/markets.html">Markets</a>
-    <a href="pages/about.html">Services</a>
-    <a href="pages/mining-plans.html">Mining Plans</a>
-    <a href="pages/my-assets.html">Assets</a>
-    <a href="pages/about.html">About</a>
-    <a href="pages/contact.html">Contact</a>
+    <a href="markets.html">Markets</a>
+    <a href="about.html#services">Services</a>
+    <a href="mining-plans.html">Mining Plans</a>
+    <a href="my-assets.html">Assets</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
   </div>
 
   <div class="footer-bottom">
-    <span>Â© 2026 SDE Core. All rights reserved.</span>
-    <span>Market information Â· Updates periodically</span>
+    <span>&#169; 2026 SDE Core. All rights reserved.</span>
+    <span>Market information &#183; Updates periodically</span>
   </div>
 </footer>
 
@@ -773,7 +1242,7 @@ header.site-header .header-actions [hidden] {
     if (logoutButton) {
       logoutButton.addEventListener("click", async function () {
         logoutButton.disabled = true;
-        logoutButton.textContent = "Logging outâ€¦";
+        logoutButton.textContent = "Logging out…";
 
         try {
           const result = await client.auth.signOut();
@@ -821,7 +1290,7 @@ header.site-header .header-actions [hidden] {
         id:"muruntau-1", number:"03", name:"Muruntau Gold Mine",
         location:"Navoi, Uzbekistan", rate:"0.5%", period:"5 days",
         minimum:1000, maximum:9999,
-        description:"A major open-pit gold mine in Uzbekistanâ€™s Navoi region, operated by Navoi Mining and Metallurgical Company.",
+        description:"A major open-pit gold mine in Uzbekistan&#8217;s Navoi region, operated by Navoi Mining and Metallurgical Company.",
         image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Muruntau Gold Mine",
         page:"muruntau-gold-mine.html"
@@ -830,7 +1299,7 @@ header.site-header .header-actions [hidden] {
         id:"muruntau-2", number:"04", name:"Muruntau Gold Mines",
         location:"Navoi, Uzbekistan", rate:"0.6%", period:"5 days",
         minimum:10000, maximum:19999,
-        description:"A major open-pit gold mine in Uzbekistanâ€™s Navoi region, operated by Navoi Mining and Metallurgical Company.",
+        description:"A major open-pit gold mine in Uzbekistan&#8217;s Navoi region, operated by Navoi Mining and Metallurgical Company.",
         image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Muruntau Gold Mines",
         page:"muruntau-gold-mine.html"
@@ -857,7 +1326,7 @@ header.site-header .header-actions [hidden] {
         id:"olimpiada-1", number:"07", name:"Olimpiada Gold Mines",
         location:"Siberia, Russia", rate:"1.2%", period:"30 days",
         minimum:100000, maximum:199999,
-        description:"A large gold operation in Russiaâ€™s Krasnoyarsk region, operated by Polyus and using open-pit mining.",
+        description:"A large gold operation in Russia&#8217;s Krasnoyarsk region, operated by Polyus and using open-pit mining.",
         image:"https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Olimpiada Gold Mines",
         page:"olimpiada-mine.html"
@@ -866,7 +1335,7 @@ header.site-header .header-actions [hidden] {
         id:"olimpiada-2", number:"08", name:"Olimpiada Gold Mines",
         location:"Siberia, Russia", rate:"1.4%", period:"30 days",
         minimum:200000, maximum:299999,
-        description:"A large gold operation in Russiaâ€™s Krasnoyarsk region, operated by Polyus and using open-pit mining.",
+        description:"A large gold operation in Russia&#8217;s Krasnoyarsk region, operated by Polyus and using open-pit mining.",
         image:"https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Olimpiada Gold Mines",
         page:"olimpiada-mine.html"
@@ -875,7 +1344,7 @@ header.site-header .header-actions [hidden] {
         id:"pueblo-1", number:"09", name:"Pueblo Viejo Gold Mines",
         location:"Dominican Republic", rate:"1.6%", period:"90 days",
         minimum:200000, maximum:999999,
-        description:"A gold mine in the Dominican Republic operated through a Barrickâ€“Newmont joint venture.",
+        description:"A gold mine in the Dominican Republic operated through a Barrick–Newmont joint venture.",
         image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Pueblo Viejo Gold Mines",
         page:"pueblo-viejo-mine.html"
@@ -884,7 +1353,7 @@ header.site-header .header-actions [hidden] {
         id:"pueblo-2", number:"10", name:"Pueblo Viejo Gold Mines",
         location:"Dominican Republic", rate:"1.8%", period:"90 days",
         minimum:500000, maximum:999999,
-        description:"A gold mine in the Dominican Republic operated through a Barrickâ€“Newmont joint venture.",
+        description:"A gold mine in the Dominican Republic operated through a Barrick–Newmont joint venture.",
         image:"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Pueblo Viejo Gold Mines",
         page:"pueblo-viejo-mine.html"
@@ -893,7 +1362,7 @@ header.site-header .header-actions [hidden] {
         id:"climax-1", number:"11", name:"Climax Molybdenum Mine",
         location:"Colorado, USA", rate:"2%", period:"90 days",
         minimum:1000000, maximum:10000000,
-        description:"A Colorado open-pit molybdenum operationâ€”not a gold mineâ€”operated by Freeport-McMoRan.",
+        description:"A Colorado open-pit molybdenum operation—not a gold mine—operated by Freeport-McMoRan.",
         image:"https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Climax Molybdenum Mine",
         page:"climax-mine.html"
@@ -902,7 +1371,7 @@ header.site-header .header-actions [hidden] {
         id:"climax-2", number:"12", name:"Climax Molybdenum Mine",
         location:"Colorado, USA", rate:"2.2%", period:"90 days",
         minimum:3000000, maximum:30000000,
-        description:"A Colorado open-pit molybdenum operationâ€”not a gold mineâ€”operated by Freeport-McMoRan.",
+        description:"A Colorado open-pit molybdenum operation—not a gold mine—operated by Freeport-McMoRan.",
         image:"https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85",
         alt:"Illustrative mining landscape for Climax Molybdenum Mine",
         page:"climax-mine.html"
@@ -974,7 +1443,7 @@ header.site-header .header-actions [hidden] {
               >Subscribe</a>
 
               <a class="view-more" href="pages/mining-info/${plan.page}">
-                View More <span aria-hidden="true">â†’</span>
+                View More <span aria-hidden="true">&#8594;</span>
               </a>
             </div>
           </div>
@@ -1029,37 +1498,46 @@ header.site-header .header-actions [hidden] {
         encodeURIComponent(JSON.stringify(cryptoSymbols))
     ];
 
-    const coinGeckoIds = {
-      BTC:"bitcoin", ETH:"ethereum", BNB:"binancecoin",
-      SOL:"solana", XRP:"ripple", DOGE:"dogecoin",
-      ADA:"cardano", TRX:"tron", LINK:"chainlink",
-      AVAX:"avalanche-2", DOT:"polkadot",
-      SHIB:"shiba-inu", TON:"the-open-network"
-    };
 
-    const yahooMarkets = {
-      EURUSD:{symbol:"EURUSD=X",digits:5},
-      GBPUSD:{symbol:"GBPUSD=X",digits:5},
-      USDJPY:{symbol:"JPY=X",digits:3},
-      XPT:{symbol:"XPTUSD=X",digits:2},
-      XPD:{symbol:"XPDUSD=X",digits:2},
-      SP500:{symbol:"%5EGSPC",digits:2},
-      NASDAQ:{symbol:"%5EIXIC",digits:2},
-      DOW:{symbol:"%5EDJI",digits:2},
-      FTSE:{symbol:"%5EFTSE",digits:2},
-      DAX:{symbol:"%5EGDAXI",digits:2},
-      NIKKEI:{symbol:"%5EN225",digits:2},
-      WTI:{symbol:"CL=F",digits:2},
-      BRENT:{symbol:"BZ=F",digits:2},
-      NATGAS:{symbol:"NG=F",digits:3}
-    };
+    const coinGeckoIds = {
+  BTC: "bitcoin",
+  ETH: "ethereum",
+  BNB: "binancecoin",
+  SOL: "solana",
+  XRP: "ripple",
+  DOGE: "dogecoin",
+  ADA: "cardano",
+  TRX: "tron",
+  LINK: "chainlink",
+  AVAX: "avalanche-2",
+  DOT: "polkadot",
+  SHIB: "shiba-inu",
+  TON: "the-open-network"
+};
+
+const yahooMarkets = {
+  EURUSD: { symbol: "EURUSD=X", digits: 5 },
+  GBPUSD: { symbol: "GBPUSD=X", digits: 5 },
+  USDJPY: { symbol: "JPY=X", digits: 3 },
+  XPT: { symbol: "XPTUSD=X", digits: 2 },
+  XPD: { symbol: "XPDUSD=X", digits: 2 },
+  SP500: { symbol: "%5EGSPC", digits: 2 },
+  NASDAQ: { symbol: "%5EIXIC", digits: 2 },
+  DOW: { symbol: "%5EDJI", digits: 2 },
+  FTSE: { symbol: "%5EFTSE", digits: 2 },
+  DAX: { symbol: "%5EGDAXI", digits: 2 },
+  NIKKEI: { symbol: "%5EN225", digits: 2 },
+  WTI: { symbol: "CL=F", digits: 2 },
+  BRENT: { symbol: "BZ=F", digits: 2 },
+  NATGAS: { symbol: "NG=F", digits: 3 }
+};
 
     const numberFormatters = new Map();
 
     function formatPrice(value, maxDigits) {
       const n = Number(value);
 
-      if (!Number.isFinite(n)) return "â€”";
+      if (!Number.isFinite(n)) return "—";
 
       const digits = n >= 1000 ? 2 : (n >= 1 ? 4 : 6);
 
@@ -1144,10 +1622,10 @@ header.site-header .header-actions [hidden] {
           const perGram = gold / 31.1034768;
 
           setText("xauPrice", formatPrice(gold, 2) + " USD / oz");
-          setText("xauUpdated", "Spot price Â· " + stamp);
+          setText("xauUpdated", "Spot price · " + stamp);
           setText("heroGoldPrice", "$" + formatPrice(gold, 2));
           setText("heroGoldGram", "$" + formatPrice(perGram, 2));
-          setText("heroGoldUpdated", "Feed timestamp Â· " + stamp);
+          setText("heroGoldUpdated", "Feed timestamp · " + stamp);
           setText("ticker-XAU", "$" + formatPrice(perGram, 2));
           setText("table-price-XAU", "$" + formatPrice(gold, 2));
         } else {
@@ -1162,7 +1640,7 @@ header.site-header .header-actions [hidden] {
 
           setText(
             "xagUpdated",
-            "Spot price Â· " +
+            "Spot price · " +
             new Date(data.updated_at || data.price_as_of || Date.now())
               .toLocaleTimeString([], {
                 hour:"2-digit",
@@ -1189,12 +1667,12 @@ header.site-header .header-actions [hidden] {
           const pkr = Number(fx && fx.rates && fx.rates.PKR);
 
           if (Number.isFinite(pkr) && pkr > 0) {
-            setText("ticker-USDPKR", "â‚¨" + formatPrice(pkr, 2));
+            setText("ticker-USDPKR", "\u20A8" + formatPrice(pkr, 2));
           } else {
-            setText("ticker-USDPKR", "Unavailable");
+            setText("ticker-USDPKR", "\u20A8" + formatPrice(pkr, 2));
           }
         } catch (_) {
-          setText("ticker-USDPKR", "Unavailable");
+            setText("ticker-USDPKR", "\u20A8" + formatPrice(pkr, 2));
         }
 
         return Number.isFinite(gold) && gold > 0;
@@ -1286,7 +1764,7 @@ header.site-header .header-actions [hidden] {
         if (changeNode && Number.isFinite(change)) {
           changeNode.textContent =
             (change > 0 ? "+" : "") +
-            change.toFixed(2) + "% Â· 24h";
+            change.toFixed(2) + "% · 24h";
 
           changeNode.className =
             "crypto-change " +
@@ -1303,7 +1781,7 @@ header.site-header .header-actions [hidden] {
           minute:"2-digit",
           second:"2-digit"
         }) +
-        " Â· refreshes every 30s"
+        " · refreshes every 30s"
       );
     }
 
@@ -1335,7 +1813,7 @@ header.site-header .header-actions [hidden] {
                   notation:"compact",
                   maximumFractionDigits:2
                 }).format(cap)
-              : "â€”"
+              : "—"
           );
 
           const spark = document.getElementById("spark-" + ticker);
@@ -1372,7 +1850,7 @@ header.site-header .header-actions [hidden] {
 
         setText(
           "snapshotUpdated",
-          "Market details updated Â· " +
+          "Market details updated · " +
           new Date().toLocaleTimeString([], {
             hour:"2-digit",
             minute:"2-digit"
@@ -1430,7 +1908,7 @@ header.site-header .header-actions [hidden] {
           }
 
           const prefix =
-            key === "USDJPY" ? "Â¥" :
+            key === "USDJPY" ? "\u00A5" :
             (key.startsWith("EUR") || key.startsWith("GBP") ? "" : "$");
 
           setText(
@@ -1474,14 +1952,14 @@ header.site-header .header-actions [hidden] {
           if (document.getElementById("price-" + symbol)) {
             setText(
               "change-" + symbol,
-              "Live quote unavailable Â· retrying"
+              "Live quote unavailable · retrying"
             );
           }
         });
 
         setText(
           "cryptoUpdated",
-          "Exchange feed unavailable Â· retrying automatically"
+          "Exchange feed unavailable · retrying automatically"
         );
       }
 
@@ -1490,7 +1968,7 @@ header.site-header .header-actions [hidden] {
           ? "Live prices connected"
           : (metalsOk || cryptoOk
               ? "Some live feeds unavailable"
-              : "Live feeds unavailable Â· retrying"),
+              : "Live feeds unavailable · retrying"),
         metalsOk && cryptoOk
           ? "live"
           : (metalsOk || cryptoOk ? "" : "error")
@@ -1539,3 +2017,4 @@ header.site-header .header-actions [hidden] {
 <script src="js/support-chat.js"></script>
 </body>
 </html>
+

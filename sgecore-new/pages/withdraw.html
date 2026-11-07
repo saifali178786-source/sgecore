@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -235,6 +235,135 @@
   }
 }
 </style>
+
+<!-- SDE CORE - HOMEPAGE MATCHED HEADER -->
+<style>
+@media (min-width: 900px) {
+  header.site-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    height: 70px !important;
+    min-height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+    box-sizing: border-box !important;
+  }
+
+  header.site-header > .brand {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  header.site-header > .main-nav {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: clamp(11px, 1.45vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  header.site-header > .main-nav > a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header > .main-nav > .header-actions,
+  header.site-header > .header-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  header.site-header #sge-account-menu {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .register-btn,
+  header.site-header .sge-account-trigger {
+    min-height: 40px !important;
+    padding: 0 17px !important;
+    border: 1px solid rgba(217,180,93,.75) !important;
+    border-radius: 7px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .sge-account-trigger {
+    color: #f0d58c !important;
+    background: #0d1a2b !important;
+  }
+
+  header.site-header .register-btn {
+    color: #07111f !important;
+    background: #d9b45d !important;
+    border-color: #d9b45d !important;
+  }
+
+  .about-page header.site-header,
+  .about-page header.site-header > .main-nav,
+  .about-page header.site-header > .main-nav > a,
+  .about-page header.site-header #sge-account-menu,
+  .about-page header.site-header .sge-account-trigger,
+  .about-page header.site-header .login-btn,
+  .about-page header.site-header .register-btn {
+    box-sizing: border-box !important;
+  }
+
+  .about-page header.site-header {
+    height: 70px !important;
+    min-height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+  }
+
+  .about-page header.site-header > .main-nav {
+    justify-content: flex-start !important;
+    gap: clamp(11px, 1.45vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+  }
+
+  .about-page header.site-header > .main-nav > a {
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+  }
+
+  .about-page header.site-header .sge-account-trigger,
+  .about-page header.site-header .login-btn,
+  .about-page header.site-header .register-btn {
+    min-height: 40px !important;
+    padding: 0 17px !important;
+    font-size: 13px !important;
+  }
+}
+
+header.site-header [hidden],
+header.site-header .header-actions [hidden] {
+  display: none !important;
+}
+</style>
 </head>
 <body>
   <div class="market-ticker" aria-label="Market prices ticker">
@@ -267,7 +396,7 @@
   <nav class="main-nav" aria-label="Main navigation">
     <a href="../index.html">Home</a>
     <a href="../pages/markets.html">Markets</a>
-    <a href="../pages/market-data.html">Market Data</a>
+    
     <a href="../pages/mining-plans.html">Mining Plans</a>
     <a href="../pages/my-assets.html">Assets</a>
     <a href="../pages/about.html">About Us</a>
@@ -397,5 +526,29 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/supabase.js"></script>
 <script src="../js/auth-ui.js"></script>
+<footer class="site-footer">
+  <a class="brand footer-brand" href="../../index.html">
+    <span class="brand-mark">SDE</span>
+    <span class="brand-copy">
+      <strong>SDE CORE</strong>
+      <small>SOVEREIGN DIGITAL EXCHANGE</small>
+    </span>
+  </a>
+
+  <div class="footer-links">
+    <a href="../markets.html">Markets</a>
+    <a href="../about.html#services">Services</a>
+    <a href="../mining-plans.html">Mining Plans</a>
+    <a href="../my-assets.html">Assets</a>
+    <a href="../about.html">About</a>
+    <a href="../contact.html">Contact</a>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&#169; 2026 SDE Core. All rights reserved.</span>
+    <span>Market information &#183; Updates periodically</span>
+  </div>
+</footer>
 </body>
 </html>
+

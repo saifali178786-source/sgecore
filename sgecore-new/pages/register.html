@@ -1,4 +1,4 @@
-﻿```html
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -138,7 +138,8 @@
       }
     }
   </style>
-<style>
+
+  <style>
     /* Mining plans */
     .investment-section{background:#091321;color:#f5f7fb}
     .investment-section .section-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:32px}
@@ -315,89 +316,606 @@
       .snapshot-table th,.snapshot-table td{padding:13px 14px}
     }
   </style>
-<style>
-/* SDE CORE - FINAL HOMEPAGE HEADER */
-@media (min-width: 900px) {
-  header.site-header > .main-nav {
-    justify-content: flex-start !important;
-    gap: clamp(11px, 1.45vw, 20px) !important;
-  }
-  header.site-header > .main-nav > a {
-    font-size: 13px !important;
-  }
-  header.site-header > .main-nav > .header-actions {
-    margin-left: auto !important;
-  }
-  header.site-header #sge-account-menu {
-    margin-left: auto !important;
-  }
-  header.site-header .sge-account-trigger,
-  header.site-header .login-btn,
-  header.site-header .register-btn {
-    min-height: 40px !important;
-    padding: 0 17px !important;
-    border: 1px solid rgba(217,180,93,.75) !important;
-    border-radius: 7px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    box-sizing: border-box !important;
-  }
-}
-</style>
+
+  <style>
+    /* SDE CORE - FINAL HOMEPAGE HEADER */
+    @media (min-width: 900px) {
+      header.site-header > .main-nav {
+        justify-content: flex-start !important;
+        gap: clamp(11px, 1.45vw, 20px) !important;
+      }
+
+      header.site-header > .main-nav > a {
+        font-size: 13px !important;
+      }
+
+      header.site-header > .main-nav > .header-actions {
+        margin-left: auto !important;
+      }
+
+      header.site-header #sge-account-menu {
+        margin-left: auto !important;
+      }
+
+      header.site-header .sge-account-trigger,
+      header.site-header .login-btn,
+      header.site-header .register-btn {
+        min-height: 40px !important;
+        padding: 0 17px !important;
+        border: 1px solid rgba(217,180,93,.75) !important;
+        border-radius: 7px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        box-sizing: border-box !important;
+      }
+    }
+  </style>
+
+  <style>
+    /* SDE CORE PREMIUM AUTHENTICATION DESIGN */
+
+    .login-wrap,
+    .register-wrap {
+      position: relative;
+      isolation: isolate;
+      background:
+        radial-gradient(ellipse at 15% 15%, rgba(217,180,93,.10), transparent 38%),
+        radial-gradient(ellipse at 85% 85%, rgba(36,83,125,.18), transparent 42%),
+        #07111f;
+    }
+
+    .login-wrap .login-card,
+    .register-wrap .register-card {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 490px;
+      padding: 44px;
+      box-sizing: border-box;
+      border: 1px solid rgba(217,180,93,.38);
+      border-radius: 18px;
+      background: linear-gradient(145deg, #12233a 0%, #0b1728 65%, #0d1a2b 100%);
+      box-shadow:
+        0 25px 75px rgba(0,0,0,.48),
+        0 0 35px rgba(217,180,93,.06);
+    }
+
+    .login-wrap .login-card::before,
+    .register-wrap .register-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #d9b45d, #f0d58c, transparent);
+    }
+
+    .login-wrap .login-brand,
+    .register-wrap .register-brand {
+      display: inline-block;
+      margin-bottom: 30px;
+      color: #f0d58c;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-decoration: none;
+    }
+
+    .login-wrap .login-card h1,
+    .register-wrap .register-card h1 {
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -.7px;
+    }
+
+    .login-wrap .login-intro,
+    .register-wrap .register-intro {
+      margin-bottom: 30px;
+      color: #aebbd0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .login-wrap .login-card label,
+    .register-wrap .register-card label {
+      display: block;
+      margin: 19px 0 9px;
+      color: #e8edf5;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .login-wrap .login-card input,
+    .register-wrap .register-card input {
+      display: block;
+      width: 100%;
+      min-height: 50px;
+      padding: 13px 15px;
+      box-sizing: border-box;
+      border: 1px solid #344963;
+      border-radius: 9px;
+      background: rgba(5,14,26,.85);
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .login-wrap .login-card input::placeholder,
+    .register-wrap .register-card input::placeholder {
+      color: #78879c;
+    }
+
+    .login-wrap .login-card input:focus,
+    .register-wrap .register-card input:focus {
+      outline: none;
+      border-color: #d9b45d;
+      box-shadow: 0 0 0 3px rgba(217,180,93,.13);
+    }
+
+    .login-wrap .login-submit,
+    .register-wrap .register-submit {
+      min-height: 52px;
+      margin-top: 27px;
+      border: 0;
+      border-radius: 9px;
+      background: linear-gradient(110deg, #c99d45, #f0d58c);
+      color: #07111f;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .3px;
+      box-shadow: 0 8px 22px rgba(217,180,93,.15);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .login-wrap .login-submit:hover,
+    .register-wrap .register-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(217,180,93,.25);
+    }
+
+    .login-wrap .google-submit,
+    .register-wrap .google-submit {
+      min-height: 50px;
+      border: 1px solid #40516a;
+      border-radius: 9px;
+      background: #14243a;
+      color: #f5f7fb;
+      font-size: 14px;
+      font-weight: 700;
+      transition: background .2s, border-color .2s;
+    }
+
+    .login-wrap .google-submit:hover,
+    .register-wrap .google-submit:hover {
+      border-color: #d9b45d;
+      background: #1b304b;
+    }
+
+    .login-wrap .login-note,
+    .register-wrap .register-note {
+      margin-top: 25px;
+      color: #aebbd0;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    .login-wrap .login-note a,
+    .register-wrap .register-note a {
+      color: #f0d58c;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .login-wrap .login-note a:hover,
+    .register-wrap .register-note a:hover {
+      text-decoration: underline;
+    }
+
+    .login-wrap .login-message,
+    .register-wrap .register-message {
+      color: #f0d58c;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    /* REGISTRATION PAGE LAYOUT */
+
+    .register-wrap {
+      padding: 55px 20px;
+    }
+
+    .register-wrap .register-card {
+      max-width: 760px;
+      padding: 44px;
+    }
+
+    .register-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px 24px;
+      width: 100%;
+      margin-top: 28px;
+    }
+
+    .register-field {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      gap: 9px;
+    }
+
+    .register-wrap .register-card .register-field label {
+      margin: 0;
+    }
+
+    .register-wrap .register-card .register-field input {
+      width: 100%;
+      margin: 0;
+    }
+
+    .register-grid .register-submit,
+    .register-grid .register-message {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .register-grid .register-submit {
+      margin-top: 6px;
+    }
+
+    .register-grid .register-message {
+      margin: 0;
+    }
+
+    @media (max-width: 600px) {
+      .register-wrap {
+        padding: 30px 15px;
+      }
+
+      .register-wrap .register-card {
+        padding: 30px 22px;
+        border-radius: 14px;
+      }
+
+      .register-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .register-grid .register-submit,
+      .register-grid .register-message {
+        grid-column: 1;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .login-wrap,
+      .register-wrap {
+        padding: 30px 15px;
+      }
+
+      .login-wrap .login-card,
+      .register-wrap .register-card {
+        padding: 32px 23px;
+        border-radius: 14px;
+      }
+
+      .login-wrap .login-card h1,
+      .register-wrap .register-card h1 {
+        font-size: 29px;
+      }
+
+      .register-wrap .register-card {
+        padding: 28px 20px;
+      }
+    }
+  </style>
+
+  <!-- FINAL REGISTRATION PAGE DESIGN OVERRIDES -->
+  <style>
+    /* Attractive full-page background */
+    html,
+    body {
+      min-height: 100%;
+      background-color: #050c17 !important;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 12% 18%, rgba(28, 91, 132, .34), transparent 42%),
+        radial-gradient(ellipse at 88% 78%, rgba(190, 145, 55, .20), transparent 40%),
+        linear-gradient(135deg, #050c17 0%, #0b1b2d 52%, #07111f 100%) !important;
+      background-attachment: fixed !important;
+    }
+
+    .register-wrap {
+      min-height: 100vh;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 48px 20px !important;
+      background: transparent !important;
+    }
+
+    /* Main registration card */
+    .register-wrap .register-card {
+      width: min(760px, 100%) !important;
+      max-width: 760px !important;
+      margin: 0 auto;
+      padding: 42px !important;
+      border: 1px solid rgba(217, 180, 93, .45) !important;
+      border-radius: 20px !important;
+      background: linear-gradient(
+        145deg,
+        rgba(19, 38, 59, .98),
+        rgba(7, 17, 31, .98)
+      ) !important;
+      box-shadow:
+        0 28px 80px rgba(0, 0, 0, .50),
+        0 0 40px rgba(217, 180, 93, .09) !important;
+    }
+
+    /* Centered SDE CORE logo */
+    .register-wrap .register-brand {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      margin: 0 auto 30px !important;
+      padding: 12px 24px;
+      border: 1px solid rgba(217, 180, 93, .38);
+      border-radius: 12px;
+      background: linear-gradient(
+        135deg,
+        rgba(217, 180, 93, .13),
+        rgba(217, 180, 93, .035)
+      );
+      color: #f5e3b0 !important;
+      font-size: 23px !important;
+      font-weight: 900 !important;
+      letter-spacing: 4px !important;
+      text-align: center;
+      text-decoration: none;
+      text-shadow: 0 0 18px rgba(217, 180, 93, .22);
+    }
+
+    .register-wrap .register-brand::before {
+      content: "S";
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-right: 11px;
+      border: 1px solid rgba(217, 180, 93, .8);
+      border-radius: 9px;
+      background: linear-gradient(145deg, #f0d58c, #bd8e35);
+      color: #07111f;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0;
+      box-shadow: 0 4px 15px rgba(217, 180, 93, .18);
+    }
+
+    .register-wrap .register-card h1 {
+      text-align: center;
+      font-size: 34px;
+      color: #fff;
+    }
+
+    .register-wrap .register-intro {
+      margin-bottom: 22px;
+      color: #aebbd0;
+      text-align: center;
+    }
+
+    /* Keep two columns at all viewport widths and zoom levels */
+    .register-wrap .register-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 20px 18px !important;
+      width: 100%;
+      margin-top: 25px;
+    }
+
+    .register-wrap .register-field {
+      display: flex !important;
+      flex-direction: column;
+      min-width: 0;
+      gap: 9px;
+    }
+
+    .register-wrap .register-card .register-field label {
+      margin: 0 !important;
+      color: #e8edf5;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .register-wrap .register-card .register-field input {
+      width: 100% !important;
+      min-width: 0;
+      min-height: 48px;
+      padding: 12px 13px;
+      box-sizing: border-box;
+      border: 1px solid #344963;
+      border-radius: 9px;
+      background: rgba(5, 14, 26, .88);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .register-wrap .register-card .register-field input:focus {
+      outline: none;
+      border-color: #d9b45d;
+      box-shadow: 0 0 0 3px rgba(217, 180, 93, .13);
+    }
+
+    .register-wrap .register-grid .register-submit,
+    .register-wrap .register-grid .register-message {
+      grid-column: 1 / -1 !important;
+      width: 100%;
+    }
+
+    .register-wrap .register-grid .register-submit {
+      min-height: 52px;
+      margin-top: 7px;
+      border-radius: 9px;
+    }
+
+    .register-wrap .google-submit {
+      min-height: 50px;
+      border-radius: 9px;
+    }
+
+    .register-wrap .register-note {
+      text-align: center;
+    }
+
+    /* Smaller screens: retain two columns, reduce spacing only */
+    @media (max-width: 600px) {
+      .register-wrap {
+        padding: 25px 12px !important;
+      }
+
+      .register-wrap .register-card {
+        padding: 25px 16px !important;
+        border-radius: 15px !important;
+      }
+
+      .register-wrap .register-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 16px 10px !important;
+      }
+
+      .register-wrap .register-card .register-field input {
+        min-height: 44px;
+        padding: 10px 8px;
+        font-size: 12px;
+      }
+
+      .register-wrap .register-card .register-field label {
+        font-size: 11px;
+      }
+
+      .register-wrap .register-brand {
+        font-size: 19px !important;
+        letter-spacing: 3px !important;
+        padding: 10px 16px;
+      }
+
+      .register-wrap .register-brand::before {
+        width: 29px;
+        height: 29px;
+        font-size: 17px;
+      }
+
+      .register-wrap .register-card h1 {
+        font-size: 27px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .register-wrap .register-card {
+        padding: 22px 12px !important;
+      }
+
+      .register-wrap .register-grid {
+        column-gap: 8px !important;
+      }
+
+      .register-wrap .register-card .register-field label {
+        font-size: 10px;
+      }
+
+      .register-wrap .register-card .register-field input {
+        padding: 9px 6px;
+        font-size: 11px;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <main class="register-wrap">
     <section class="register-card">
+
       <a class="register-brand" href="../index.html">SDE CORE</a>
 
       <h1>Create Account</h1>
+
       <p class="register-intro">
         Create your SDE CORE account to get started.
       </p>
 
-      <form id="register-form">
-        <label for="full-name">Full Name</label>
-        <input
-          type="text"
-          id="full-name"
-          name="full-name"
-          placeholder="Enter your full name"
-          autocomplete="name"
-          required
-        >
+      <form id="register-form" class="register-grid">
 
-        <label for="email">Email Address</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="you@example.com"
-          autocomplete="email"
-          required
-        >
+        <div class="register-field">
+          <label for="full-name">Full Name</label>
+          <input
+            type="text"
+            id="full-name"
+            name="full-name"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+          >
+        </div>
 
-        <label for="password">Create Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="At least 8 characters"
-          minlength="8"
-          autocomplete="new-password"
-          required
-        >
+        <div class="register-field">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+        </div>
 
-        <label for="confirm-password">Confirm Password</label>
-        <input
-          type="password"
-          id="confirm-password"
-          name="confirm-password"
-          placeholder="Re-enter your password"
-          minlength="8"
-          autocomplete="new-password"
-          required
-        >
+        <div class="register-field">
+          <label for="phone">Phone Number (include country code)</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="+92 300 1234567"
+            autocomplete="tel"
+            pattern="[+0-9() -]{7,20}"
+            title="Include your country code, for example +92 300 1234567"
+            required
+          >
+        </div>
+
+        <div class="register-field">
+          <label for="password">Create Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="At least 8 characters"
+            minlength="8"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        <div class="register-field">
+          <label for="confirm-password">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            placeholder="Re-enter your password"
+            minlength="8"
+            autocomplete="new-password"
+            required
+          >
+        </div>
 
         <button
           class="register-submit"
@@ -413,6 +931,7 @@
           role="status"
           aria-live="polite"
         ></p>
+
       </form>
 
       <button
@@ -427,7 +946,7 @@
         Already have an account?
         <a href="login.html">Login here</a>
         <br>
-        <a href="../index.html">â† Back to homepage</a>
+        <a href="../index.html">← Back to homepage</a>
       </div>
     </section>
   </main>
@@ -478,8 +997,11 @@
           return;
         }
 
+        const phone = document.getElementById("phone").value.trim();
+
         const fullName =
           document.getElementById("full-name").value.trim();
+
         const email =
           document.getElementById("email").value.trim();
 
@@ -492,7 +1014,8 @@
             password: password.value,
             options: {
               data: {
-                full_name: fullName
+                full_name: fullName,
+                phone: phone
               }
             }
           });
@@ -505,22 +1028,28 @@
           if (data.user && !data.session) {
             message.textContent =
               "Account created. Please check your email to confirm your account before logging in.";
+
             form.reset();
+
           } else if (data.user) {
             message.textContent =
               "Account created successfully! Redirecting to your dashboard...";
 
             window.location.href = "dashboard.html";
+
           } else {
             message.textContent =
               "Registration was submitted. Check your email for next steps.";
+
             form.reset();
           }
+
         } catch (error) {
           console.error("Registration error:", error);
 
           message.textContent =
             "Could not connect to Supabase. Check your internet connection and project settings.";
+
         } finally {
           submitButton.disabled = false;
           submitButton.textContent = "Create Account";
@@ -528,6 +1057,29 @@
       });
     })();
   </script>
+<footer class="site-footer">
+  <a class="brand footer-brand" href="../../index.html">
+    <span class="brand-mark">SDE</span>
+    <span class="brand-copy">
+      <strong>SDE CORE</strong>
+      <small>SOVEREIGN DIGITAL EXCHANGE</small>
+    </span>
+  </a>
+
+  <div class="footer-links">
+    <a href="../markets.html">Markets</a>
+    <a href="../about.html#services">Services</a>
+    <a href="../mining-plans.html">Mining Plans</a>
+    <a href="../my-assets.html">Assets</a>
+    <a href="../about.html">About</a>
+    <a href="../contact.html">Contact</a>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&#169; 2026 SDE Core. All rights reserved.</span>
+    <span>Market information &#183; Updates periodically</span>
+  </div>
+</footer>
 </body>
 </html>
-```
+

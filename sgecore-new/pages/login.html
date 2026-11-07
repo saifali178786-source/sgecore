@@ -1,12 +1,15 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
   <title>Login | SDE CORE</title>
   <link rel="stylesheet" href="../css/style.css">
 
   <style>
+    /* Basic login page */
     body {
       min-height: 100vh;
       display: flex;
@@ -138,7 +141,8 @@
       }
     }
   </style>
-<style>
+
+  <style>
     /* Mining plans */
     .investment-section{background:#091321;color:#f5f7fb}
     .investment-section .section-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:32px}
@@ -315,35 +319,557 @@
       .snapshot-table th,.snapshot-table td{padding:13px 14px}
     }
   </style>
-<style>
-/* SDE CORE - FINAL HOMEPAGE HEADER */
-@media (min-width: 900px) {
-  header.site-header > .main-nav {
-    justify-content: flex-start !important;
-    gap: clamp(11px, 1.45vw, 20px) !important;
-  }
-  header.site-header > .main-nav > a {
-    font-size: 13px !important;
-  }
-  header.site-header > .main-nav > .header-actions {
-    margin-left: auto !important;
-  }
-  header.site-header #sge-account-menu {
-    margin-left: auto !important;
-  }
-  header.site-header .sge-account-trigger,
-  header.site-header .login-btn,
-  header.site-header .register-btn {
-    min-height: 40px !important;
-    padding: 0 17px !important;
-    border: 1px solid rgba(217,180,93,.75) !important;
-    border-radius: 7px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    box-sizing: border-box !important;
-  }
-}
-</style>
+
+  <style>
+    /* SDE CORE - FINAL HOMEPAGE HEADER */
+    @media (min-width: 900px) {
+      header.site-header > .main-nav {
+        justify-content: flex-start !important;
+        gap: clamp(11px, 1.45vw, 20px) !important;
+      }
+
+      header.site-header > .main-nav > a {
+        font-size: 13px !important;
+      }
+
+      header.site-header > .main-nav > .header-actions {
+        margin-left: auto !important;
+      }
+
+      header.site-header #sge-account-menu {
+        margin-left: auto !important;
+      }
+
+      header.site-header .sge-account-trigger,
+      header.site-header .login-btn,
+      header.site-header .register-btn {
+        min-height: 40px !important;
+        padding: 0 17px !important;
+        border: 1px solid rgba(217,180,93,.75) !important;
+        border-radius: 7px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        box-sizing: border-box !important;
+      }
+    }
+  </style>
+
+  <style>
+    /* SDE CORE PREMIUM AUTHENTICATION DESIGN */
+
+    .login-wrap,
+    .register-wrap {
+      position: relative;
+      isolation: isolate;
+      background:
+        radial-gradient(ellipse at 15% 15%, rgba(217,180,93,.10), transparent 38%),
+        radial-gradient(ellipse at 85% 85%, rgba(36,83,125,.18), transparent 42%),
+        #07111f;
+    }
+
+    .login-wrap .login-card,
+    .register-wrap .register-card {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 490px;
+      padding: 44px;
+      box-sizing: border-box;
+      border: 1px solid rgba(217,180,93,.38);
+      border-radius: 18px;
+      background: linear-gradient(145deg, #12233a 0%, #0b1728 65%, #0d1a2b 100%);
+      box-shadow:
+        0 25px 75px rgba(0,0,0,.48),
+        0 0 35px rgba(217,180,93,.06);
+    }
+
+    .login-wrap .login-card::before,
+    .register-wrap .register-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #d9b45d, #f0d58c, transparent);
+    }
+
+    .login-wrap .login-brand,
+    .register-wrap .register-brand {
+      display: inline-block;
+      margin-bottom: 30px;
+      color: #f0d58c;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-decoration: none;
+    }
+
+    .login-wrap .login-card h1,
+    .register-wrap .register-card h1 {
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -.7px;
+    }
+
+    .login-wrap .login-intro,
+    .register-wrap .register-intro {
+      margin-bottom: 30px;
+      color: #aebbd0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .login-wrap .login-card label,
+    .register-wrap .register-card label {
+      display: block;
+      margin: 19px 0 9px;
+      color: #e8edf5;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .login-wrap .login-card input,
+    .register-wrap .register-card input {
+      display: block;
+      width: 100%;
+      min-height: 50px;
+      padding: 13px 15px;
+      box-sizing: border-box;
+      border: 1px solid #344963;
+      border-radius: 9px;
+      background: rgba(5,14,26,.85);
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .login-wrap .login-card input::placeholder,
+    .register-wrap .register-card input::placeholder {
+      color: #78879c;
+    }
+
+    .login-wrap .login-card input:focus,
+    .register-wrap .register-card input:focus {
+      outline: none;
+      border-color: #d9b45d;
+      box-shadow: 0 0 0 3px rgba(217,180,93,.13);
+    }
+
+    .login-wrap .login-submit,
+    .register-wrap .register-submit {
+      min-height: 52px;
+      margin-top: 27px;
+      border: 0;
+      border-radius: 9px;
+      background: linear-gradient(110deg, #c99d45, #f0d58c);
+      color: #07111f;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .3px;
+      box-shadow: 0 8px 22px rgba(217,180,93,.15);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .login-wrap .login-submit:hover,
+    .register-wrap .register-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(217,180,93,.25);
+    }
+
+    .login-wrap .google-submit,
+    .register-wrap .google-submit {
+      min-height: 50px;
+      border: 1px solid #40516a;
+      border-radius: 9px;
+      background: #14243a;
+      color: #f5f7fb;
+      font-size: 14px;
+      font-weight: 700;
+      transition: background .2s, border-color .2s;
+    }
+
+    .login-wrap .google-submit:hover,
+    .register-wrap .google-submit:hover {
+      border-color: #d9b45d;
+      background: #1b304b;
+    }
+
+    .login-wrap .login-note,
+    .register-wrap .register-note {
+      margin-top: 25px;
+      color: #aebbd0;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    .login-wrap .login-note a,
+    .register-wrap .register-note a {
+      color: #f0d58c;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .login-wrap .login-note a:hover,
+    .register-wrap .register-note a:hover {
+      text-decoration: underline;
+    }
+
+    .login-wrap .login-message,
+    .register-wrap .register-message {
+      color: #f0d58c;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 520px) {
+      .login-wrap,
+      .register-wrap {
+        padding: 30px 15px;
+      }
+
+      .login-wrap .login-card,
+      .register-wrap .register-card {
+        padding: 32px 23px;
+        border-radius: 14px;
+      }
+
+      .login-wrap .login-card h1,
+      .register-wrap .register-card h1 {
+        font-size: 29px;
+      }
+    }
+  </style>
+
+  <!-- SDE CORE PREMIUM ANIMATED LOGIN DESIGN -->
+  <style>
+    body {
+      min-height: 100vh;
+      background: #050c18 !important;
+      overflow-x: hidden;
+    }
+
+    .login-wrap {
+      position: relative;
+      isolation: isolate;
+      min-height: 100vh;
+      padding: 55px 20px !important;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(217,180,93,.14), transparent 38%),
+        radial-gradient(ellipse at 85% 75%, rgba(32,104,170,.19), transparent 42%),
+        linear-gradient(135deg,#050b15,#0a192b,#07111f) !important;
+      background-size: 180% 180%;
+      animation: loginBackground 16s ease-in-out infinite alternate;
+    }
+
+    /* Ambient light behind the login card */
+    .login-wrap::before,
+    .login-wrap::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      filter: blur(85px);
+      pointer-events: none;
+      opacity: .35;
+    }
+
+    .login-wrap::before {
+      top: 5%;
+      left: -150px;
+      background: rgba(217,180,93,.35);
+      animation: floatingGold 12s ease-in-out infinite alternate;
+    }
+
+    .login-wrap::after {
+      right: -150px;
+      bottom: 0;
+      background: rgba(40,115,190,.35);
+      animation: floatingBlue 15s ease-in-out infinite alternate;
+    }
+
+    /* Animated login box */
+    .login-wrap .login-card {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      width: 100%;
+      max-width: 490px;
+      padding: 44px !important;
+      border: 1px solid rgba(217,180,93,.55);
+      border-radius: 20px;
+      background:
+        linear-gradient(145deg,rgba(19,37,59,.97),rgba(7,19,34,.97),rgba(16,31,50,.97)) !important;
+      background-size: 200% 200%;
+      box-shadow:
+        0 25px 80px rgba(0,0,0,.55),
+        0 0 25px rgba(217,180,93,.12),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      animation: loginCardGlow 5s ease-in-out infinite alternate;
+      transform: translateZ(0);
+    }
+
+    /* Moving light inside the box */
+    .login-wrap .login-card::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      pointer-events: none;
+      opacity: .7;
+      background:
+        radial-gradient(circle at 10% 20%,rgba(217,180,93,.16),transparent 35%),
+        radial-gradient(circle at 90% 85%,rgba(48,121,190,.20),transparent 38%);
+      background-size: 180% 180%;
+      animation: cardLightMovement 9s ease-in-out infinite alternate;
+    }
+
+    /* Animated gold top line */
+    .login-wrap .login-card::before {
+      z-index: 2;
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #c99d45,
+        #fff0b8,
+        #d9b45d,
+        transparent
+      );
+      background-size: 200% 100%;
+      animation: goldLine 4s linear infinite;
+    }
+
+    /* Centered SDE CORE wordmark */
+    .login-wrap .login-brand {
+      display: block !important;
+      width: fit-content;
+      margin: 0 auto 28px !important;
+      text-align: center;
+      color: #f0d58c !important;
+      font-size: 21px !important;
+      font-weight: 900;
+      letter-spacing: 4px !important;
+      text-shadow: 0 0 18px rgba(217,180,93,.35);
+      transition: text-shadow .3s ease;
+    }
+
+    .login-wrap .login-brand::before {
+      content: "S";
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 12px;
+      border: 1px solid rgba(217,180,93,.8);
+      border-radius: 16px;
+      background: linear-gradient(
+        145deg,
+        rgba(217,180,93,.25),
+        rgba(217,180,93,.04)
+      );
+      color: #f0d58c;
+      font-size: 28px;
+      letter-spacing: 0;
+      box-shadow:
+        0 0 22px rgba(217,180,93,.15),
+        inset 0 0 15px rgba(217,180,93,.08);
+      animation: logoGlow 3s ease-in-out infinite alternate;
+    }
+
+    .login-wrap .login-brand:hover {
+      text-shadow: 0 0 25px rgba(217,180,93,.65);
+    }
+
+    /* Heading */
+    .login-wrap .login-card h1 {
+      text-align: center;
+      font-size: 34px !important;
+      letter-spacing: -.8px;
+      color: #fff;
+    }
+
+    .login-wrap .login-intro {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    /* Form fields */
+    .login-wrap .login-card label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e9edf5;
+    }
+
+    .login-wrap .login-card input {
+      min-height: 52px;
+      border: 1px solid rgba(119,145,178,.38);
+      border-radius: 10px;
+      background: rgba(3,12,24,.82);
+      transition:
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+    }
+
+    .login-wrap .login-card input:hover {
+      border-color: rgba(217,180,93,.55);
+    }
+
+    .login-wrap .login-card input:focus {
+      border-color: #e2bd68;
+      background: rgba(5,16,30,.98);
+      box-shadow:
+        0 0 0 3px rgba(217,180,93,.13),
+        0 0 18px rgba(217,180,93,.10);
+    }
+
+    /* Login button */
+    .login-wrap .login-submit {
+      min-height: 53px;
+      border-radius: 10px;
+      background: linear-gradient(110deg,#bd913c,#f0d58c,#d4aa50);
+      background-size: 200% 100%;
+      color: #07111f;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .4px;
+      box-shadow: 0 8px 24px rgba(217,180,93,.18);
+      transition: all .3s ease;
+    }
+
+    .login-wrap .login-submit:hover {
+      background-position: 100% 0;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(217,180,93,.3);
+    }
+
+    .login-wrap .login-submit:active {
+      transform: translateY(0);
+    }
+
+    /* Google button */
+    .login-wrap .google-submit {
+      min-height: 52px;
+      border-radius: 10px;
+      border: 1px solid rgba(145,164,190,.35);
+      background: rgba(22,40,63,.9);
+      transition: all .3s ease;
+    }
+
+    .login-wrap .google-submit:hover {
+      border-color: #d9b45d;
+      background: #1b304b;
+      transform: translateY(-2px);
+    }
+
+    /* Links and messages */
+    .login-wrap .login-note {
+      text-align: center;
+    }
+
+    .login-wrap .login-note a {
+      color: #f0d58c;
+      transition: color .25s ease;
+    }
+
+    .login-wrap .login-note a:hover {
+      color: #fff1bd;
+    }
+
+    .login-wrap .login-message {
+      text-align: center;
+    }
+
+    /* Animation definitions */
+    @keyframes loginBackground {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    @keyframes floatingGold {
+      0% { transform: translate(0,0) scale(.9); }
+      100% { transform: translate(160px,100px) scale(1.25); }
+    }
+
+    @keyframes floatingBlue {
+      0% { transform: translate(0,0) scale(1); }
+      100% { transform: translate(-150px,-100px) scale(1.3); }
+    }
+
+    @keyframes loginCardGlow {
+      0% {
+        box-shadow:
+          0 25px 80px rgba(0,0,0,.55),
+          0 0 18px rgba(217,180,93,.10);
+        border-color: rgba(217,180,93,.38);
+      }
+      100% {
+        box-shadow:
+          0 25px 80px rgba(0,0,0,.55),
+          0 0 34px rgba(217,180,93,.24);
+        border-color: rgba(217,180,93,.75);
+      }
+    }
+
+    @keyframes cardLightMovement {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    @keyframes goldLine {
+      from { background-position: 100% 0; }
+      to { background-position: -100% 0; }
+    }
+
+    @keyframes logoGlow {
+      from {
+        box-shadow: 0 0 12px rgba(217,180,93,.12);
+      }
+      to {
+        box-shadow: 0 0 28px rgba(217,180,93,.32);
+      }
+    }
+
+    /* Smaller screens */
+    @media(max-width:520px) {
+      .login-wrap {
+        padding: 30px 14px !important;
+      }
+
+      .login-wrap .login-card {
+        padding: 32px 22px !important;
+      }
+
+      .login-wrap .login-card h1 {
+        font-size: 29px !important;
+      }
+    }
+
+    /* Respect reduced-motion accessibility settings */
+    @media(prefers-reduced-motion:reduce) {
+      .login-wrap,
+      .login-wrap::before,
+      .login-wrap::after,
+      .login-wrap .login-card,
+      .login-wrap .login-card::before,
+      .login-wrap .login-card::after,
+      .login-wrap .login-brand::before {
+        animation: none !important;
+      }
+
+      .login-wrap .login-card {
+        border-color: rgba(217,180,93,.55);
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -352,12 +878,14 @@
       <a class="login-brand" href="../index.html">SDE CORE</a>
 
       <h1>Welcome Back</h1>
+
       <p class="login-intro">
         Sign in to access your SDE CORE account.
       </p>
 
       <form id="login-form">
         <label for="email">Email Address</label>
+
         <input
           type="email"
           id="email"
@@ -368,6 +896,7 @@
         >
 
         <label for="password">Password</label>
+
         <input
           type="password"
           id="password"
@@ -377,7 +906,11 @@
           required
         >
 
-        <button class="login-submit" id="login-submit" type="submit">
+        <button
+          class="login-submit"
+          id="login-submit"
+          type="submit"
+        >
           Login
         </button>
 
@@ -401,7 +934,7 @@
         Don't have an account?
         <a href="register.html">Register here</a>
         <br>
-        <a href="../index.html">â† Back to homepage</a>
+        <a href="../index.html">&#8592; Back to Home</a>
       </div>
     </section>
   </main>
@@ -458,7 +991,8 @@
             loginMessage.textContent =
               "Login successful! Opening your dashboard...";
 
-            const selectedPlan = new URLSearchParams(window.location.search).get("plan");
+            const selectedPlan =
+              new URLSearchParams(window.location.search).get("plan");
 
             window.location.href = selectedPlan
               ? "mining.html?plan=" + encodeURIComponent(selectedPlan)
@@ -479,5 +1013,29 @@
       });
     })();
   </script>
+<footer class="site-footer">
+  <a class="brand footer-brand" href="../../index.html">
+    <span class="brand-mark">SDE</span>
+    <span class="brand-copy">
+      <strong>SDE CORE</strong>
+      <small>SOVEREIGN DIGITAL EXCHANGE</small>
+    </span>
+  </a>
+
+  <div class="footer-links">
+    <a href="../markets.html">Markets</a>
+    <a href="../about.html#services">Services</a>
+    <a href="../mining-plans.html">Mining Plans</a>
+    <a href="../my-assets.html">Assets</a>
+    <a href="../about.html">About</a>
+    <a href="../contact.html">Contact</a>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&#169; 2026 SDE Core. All rights reserved.</span>
+    <span>Market information &#183; Updates periodically</span>
+  </div>
+</footer>
 </body>
 </html>
+

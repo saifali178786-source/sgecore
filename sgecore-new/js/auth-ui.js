@@ -1,4 +1,4 @@
-﻿
+
 (() => {
   "use strict";
 
@@ -168,7 +168,7 @@
       const toggle = document.createElement("button");
       toggle.type = "button";
       toggle.className = "sge-account-trigger";
-      toggle.textContent = "My Account â–¾";
+      toggle.textContent = "My Account ▾";
       toggle.setAttribute("aria-expanded", "false");
       toggle.style.cssText =
         "padding:10px 14px;border:1px solid #d9b45d;" +

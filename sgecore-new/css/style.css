@@ -1,6 +1,6 @@
-
+﻿
 /* =========================================================
-   SDE CORE — MAIN WEBSITE STYLESHEET
+   SDE CORE â€” MAIN WEBSITE STYLESHEET
    Dark Navy & Gold | Consolidated Responsive Layout
    ========================================================= */
 
@@ -141,11 +141,11 @@ section {
 /* 3. HEADER & NAVIGATION
    Actual HTML:
    .site-header
-     └── .topbar-inner
-          ├── .brand
-          ├── .main-nav
-          ├── .header-actions
-          └── .menu-toggle
+     â””â”€â”€ .topbar-inner
+          â”œâ”€â”€ .brand
+          â”œâ”€â”€ .main-nav
+          â”œâ”€â”€ .header-actions
+          â””â”€â”€ .menu-toggle
 */
 .site-header {
   position: sticky;
@@ -1745,7 +1745,7 @@ section {
 }
 
 /* =========================================================
-   SDE CORE — FINAL MARKET OVERVIEW RESPONSIVE DESIGN
+   SDE CORE â€” FINAL MARKET OVERVIEW RESPONSIVE DESIGN
    ========================================================= */
 
 /* Desktop: three compact market cards */
@@ -1979,7 +1979,7 @@ section {
   }
 }
 /* =========================================================
-   SDE CORE — CONSOLIDATED HEADER & LIVE TICKER
+   SDE CORE â€” CONSOLIDATED HEADER & LIVE TICKER
    ========================================================= */
 
 /* Desktop header: brand, navigation and actions on one row */
@@ -2288,7 +2288,7 @@ section {
 }
 
 /* =========================================
-   SDE CORE HEADER — SINGLE ROW
+   SDE CORE HEADER â€” SINGLE ROW
 ========================================= */
 
 .site-header {
@@ -2476,7 +2476,7 @@ section {
 }
 
 /* =========================================
-   SDE CORE — FINAL HEADER LAYOUT FIX
+   SDE CORE â€” FINAL HEADER LAYOUT FIX
    Matches the existing header HTML
 ========================================= */
 
@@ -3727,3 +3727,197 @@ header.site-header [hidden] {
   header.site-header>.brand .brand-copy small { font-size:8px!important; }
 }
 header.site-header [hidden] { display:none!important; }
+
+/* SDE HOMEPAGE - CONSISTENT CONTENT WIDTH AND SIDE SPACING */
+@media (min-width: 651px) {
+  body > main > section:not(.hero):not(.about-section) {
+    padding-left: max(24px, calc((100% - var(--content)) / 2));
+    padding-right: max(24px, calc((100% - var(--content)) / 2));
+    box-sizing: border-box;
+  }
+
+  body > main > .hero .hero-inner {
+    width: min(var(--content), calc(100% - 48px));
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 650px) {
+  body > main > section:not(.hero):not(.about-section) {
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+}
+
+
+/* SDE HOMEPAGE - MATCH INNER PAGE CONTENT WIDTH */
+main .market-section,
+main .why-section,
+main .investment-section,
+main .contact-section {
+  padding-left: max(24px, calc((100% - 1180px) / 2)) !important;
+  padding-right: max(24px, calc((100% - 1180px) / 2)) !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 650px) {
+  main .market-section,
+  main .why-section,
+  main .investment-section,
+  main .contact-section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+
+
+/* ==========================================
+   SDE CORE - UNIVERSAL FOOTER
+========================================== */
+
+.site-footer {
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    align-items: center !important;
+    column-gap: 35px !important;
+    row-gap: 25px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 38px clamp(20px, 5vw, 65px) 0 !important;
+    border-top: 1px solid rgba(217,180,93,.20) !important;
+    background: #040a12 !important;
+    color: #aebbd0 !important;
+}
+
+.site-footer > .footer-brand {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    max-width: none !important;
+    margin: 0 !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+.site-footer > .footer-brand .brand-copy {
+    display: flex;
+    flex-direction: column;
+}
+
+.site-footer > .footer-brand .brand-copy strong {
+    color: #ffffff;
+}
+
+.site-footer > .footer-brand .brand-copy small {
+    color: #aebbd0;
+}
+
+.site-footer > .footer-links {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 14px 22px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.site-footer > .footer-links a {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 5px 0 !important;
+    color: #aebbd0 !important;
+    font-size: 12px !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    transition: color .2s ease !important;
+}
+
+.site-footer > .footer-links a:hover {
+    color: #f0d58c !important;
+}
+
+.site-footer > .footer-bottom {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 10px 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 18px 0 !important;
+    border-top: 1px solid rgba(255,255,255,.08) !important;
+    color: #8292a7 !important;
+    font-size: 11px !important;
+}
+
+.site-footer > .footer-bottom p {
+    margin: 0 !important;
+}
+
+/* Tablet and mobile */
+@media (max-width: 900px) {
+    .site-footer {
+        grid-template-columns: 1fr !important;
+        row-gap: 20px !important;
+    }
+
+    .site-footer > .footer-brand,
+    .site-footer > .footer-links,
+    .site-footer > .footer-bottom {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+    }
+
+    .site-footer > .footer-links {
+        justify-content: flex-start !important;
+    }
+
+    .site-footer > .footer-bottom {
+        justify-content: flex-start !important;
+    }
+}
+
+
+/* SDE CORE - CONSISTENT PUBLIC PAGE CONTENT WIDTH */
+@media (min-width: 768px) {
+  .markets-container,
+  .plans-container,
+  .contact-container,
+  .assets-container,
+  .mine-container,
+  .about-page .container {
+    width: min(1180px, calc(100% - 48px)) !important;
+    max-width: 1180px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .markets-container,
+  .plans-container,
+  .contact-container,
+  .assets-container,
+  .mine-container,
+  .about-page .container {
+    width: calc(100% - 32px) !important;
+    max-width: 1180px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+

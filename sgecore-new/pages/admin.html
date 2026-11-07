@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -394,7 +394,7 @@
           <button id="refreshButton">Refresh data</button>
         </div>
         <div id="globalMessage" class="message"></div>
-        <div id="pageContent"><div class="loading">Loading dashboardâ€¦</div></div>
+        <div id="pageContent"><div class="loading">Loading dashboard…</div></div>
       </main>
     </div>
   </div>
@@ -449,7 +449,7 @@
 
       function money(value, currency = "USDT") {
         const n = Number(value);
-        if (!Number.isFinite(n)) return "â€”";
+        if (!Number.isFinite(n)) return "—";
         return n.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
@@ -457,13 +457,13 @@
       }
 
       function date(value) {
-        if (!value) return "â€”";
+        if (!value) return "—";
         const d = new Date(value);
-        return Number.isNaN(d.getTime()) ? "â€”" : d.toLocaleString();
+        return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString();
       }
 
       function shortId(value) {
-        return value ? String(value).slice(0, 8) + "â€¦" : "â€”";
+        return value ? String(value).slice(0, 8) + "…" : "—";
       }
 
       function badge(value) {
@@ -517,7 +517,7 @@
         cells.forEach((cell) => {
           const td = el("td");
           if (cell instanceof Node) td.append(cell);
-          else td.textContent = cell === undefined || cell === null ? "â€”" : String(cell);
+          else td.textContent = cell === undefined || cell === null ? "—" : String(cell);
           row.append(td);
         });
         return row;
@@ -532,7 +532,7 @@
       function fieldLabel(labelText, value) {
         const wrap = el("div", undefined, "detail-list");
         wrap.append(el("div", labelText, "key"));
-        wrap.append(el("div", value === undefined || value === null ? "â€”" : String(value)));
+        wrap.append(el("div", value === undefined || value === null ? "—" : String(value)));
         return wrap;
       }
 
@@ -616,7 +616,7 @@
         $("pageSubtitle").textContent = pageInfo[page][1];
         message("globalMessage", "");
         clear(content);
-        content.append(el("div", "Loading " + pageInfo[page][0].toLowerCase() + "â€¦", "loading"));
+        content.append(el("div", "Loading " + pageInfo[page][0].toLowerCase() + "…", "loading"));
 
         document.querySelectorAll(".nav-button").forEach((b) => {
           b.classList.toggle("active", b.dataset.page === page);
@@ -668,7 +668,7 @@
         });
 
         const balanceText = Object.keys(balances).length
-          ? Object.entries(balances).map(([c, v]) => money(v, c)).join(" Â· ")
+          ? Object.entries(balances).map(([c, v]) => money(v, c)).join(" · ")
           : "No wallet balances";
 
         const grid = el("div", undefined, "grid");
@@ -822,7 +822,7 @@
         customerSelect.id = "creditCustomer";
         customerSelect.required = true;
 
-        const defaultOption = el("option", "Loading customersâ€¦");
+        const defaultOption = el("option", "Loading customers…");
         defaultOption.value = "";
         customerSelect.append(defaultOption);
         customerField.append(customerLabel, customerSelect);
@@ -924,7 +924,7 @@
 
             const placeholder = el(
               "option",
-              term ? "Select a matching customerâ€¦" : "Select a customerâ€¦"
+              term ? "Select a matching customer…" : "Select a customer…"
             );
             placeholder.value = "";
             customerSelect.append(placeholder);
@@ -945,7 +945,7 @@
                 p.email || "No email",
                 p.member_id ? "Member " + p.member_id : "",
                 "ID " + shortId(p.id)
-              ].filter(Boolean).join(" Â· ");
+              ].filter(Boolean).join(" · ");
 
               const option = el("option", label);
               option.value = p.id;
@@ -1059,8 +1059,8 @@
           if (!confirm(confirmation)) return;
 
           submit.disabled = true;
-          submit.textContent = "Processingâ€¦";
-          status.textContent = "Submitting the secured database requestâ€¦";
+          submit.textContent = "Processing…";
+          status.textContent = "Submitting the secured database request…";
 
           try {
             const { data, error } = await sgecoreSupabase.rpc(
@@ -1196,7 +1196,7 @@
               shortId(d.user_id),
               [d.method, d.network].filter(Boolean).join(" / "),
               money(d.amount, d.currency),
-              d.transaction_hash || d.payment_reference || "â€”",
+              d.transaction_hash || d.payment_reference || "—",
               badge(d.status),
               actions(...reviewButtons)
             ]);
@@ -1336,7 +1336,7 @@
           const q = term.trim().toLowerCase();
           profiles.filter(p => !q || [p.member_id,p.full_name,p.email,p.id].some(v => String(v || "").toLowerCase().includes(q)))
             .forEach(p => {
-              const label = [p.member_id || shortId(p.id), p.full_name || p.email || "Customer", p.email].filter(Boolean).join(" Â· ");
+              const label = [p.member_id || shortId(p.id), p.full_name || p.email || "Customer", p.email].filter(Boolean).join(" · ");
               const opt = el("option", label); opt.value = p.id; customerSelect.append(opt);
             });
           if (profiles.some(p => p.id === previous)) customerSelect.value = previous;
@@ -1393,10 +1393,10 @@
           const head = el("div", undefined, "page-head");
           const heading = el("div");
           heading.append(el("h2", ticket.subject || "Support ticket"));
-          heading.append(el("div", "Customer Member ID: " + (profile.member_id || "Not assigned") + " Â· " + (profile.full_name || profile.email || shortId(ticket.user_id)), "muted"));
+          heading.append(el("div", "Customer Member ID: " + (profile.member_id || "Not assigned") + " · " + (profile.full_name || profile.email || shortId(ticket.user_id)), "muted"));
           heading.append(el("div", "Ticket " + ticket.id, "muted small"));
           head.append(heading, button("Back to support", () => loadPage("support"))); box.append(head);
-          [["Customer name", profile.full_name || "â€”"], ["Email", profile.email || "â€”"], ["Member ID", profile.member_id || "â€”"], ["User ID", ticket.user_id], ["Status", ticket.status], ["Created", date(ticket.created_at)], ["Last activity", date(ticket.last_message_at || ticket.updated_at)]]
+          [["Customer name", profile.full_name || "—"], ["Email", profile.email || "—"], ["Member ID", profile.member_id || "—"], ["User ID", ticket.user_id], ["Status", ticket.status], ["Created", date(ticket.created_at)], ["Last activity", date(ticket.last_message_at || ticket.updated_at)]]
             .forEach(([k,v]) => box.append(fieldLabel(k,v)));
           const statusRow = el("div", undefined, "toolbar");
           const statusSelect = el("select");
@@ -1621,14 +1621,14 @@
           (a) => tr([
             date(a.created_at), shortId(a.admin_id), a.action,
             a.entity_type, shortId(a.entity_id),
-            a.details ? JSON.stringify(a.details) : "â€”"
+            a.details ? JSON.stringify(a.details) : "—"
           ])
         ));
       }
 
       $("loginForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        message("loginMessage", "Signing inâ€¦");
+        message("loginMessage", "Signing in…");
 
         try {
           const { data, error } = await sgecoreSupabase.auth.signInWithPassword({

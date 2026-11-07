@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -253,7 +253,7 @@
       position: absolute;
       left: 0;
       color: var(--contact-gold);
-      content: "✓";
+      content: "Ã¢Å“â€œ";
       font-weight: 900;
     }
 
@@ -468,7 +468,7 @@
     }
 
     .contact-faq-item[open] summary::after {
-      content: "−";
+      content: "Ã¢Ë†â€™";
     }
 
     .contact-faq-item p {
@@ -499,82 +499,111 @@
       font-size: 14px;
     }
 
-    /* Contact page footer only */
-
-    body:has(.contact-page) .site-footer {
-      border-top: 1px solid rgba(232,184,77,.22);
-      background: #050d18;
-    }
-
-    body:has(.contact-page) .site-footer a {
-      color: #aebbd0;
-      text-decoration: none;
-    }
-
-    body:has(.contact-page) .site-footer a:hover {
-      color: var(--contact-gold-light);
-    }
-
-    /* Responsive */
-
-    @media(max-width:900px) {
-      .contact-form-layout {
-        grid-template-columns: 1fr;
-        gap: 35px;
-      }
-
-      .contact-info-grid {
-        grid-template-columns: repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media(max-width:640px) {
-      .contact-container {
-        width: calc(100% - 30px);
-      }
-
-      .contact-page .contact-hero {
-        padding: 75px 0 65px;
-      }
-
-      .contact-info-section,
-      .contact-offices-section,
-      .contact-faq-section {
-        padding: 62px 0;
-      }
-
-      .contact-form-section {
-        padding: 65px 0;
-      }
-
-      .contact-info-grid,
-      .contact-office-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .contact-form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .contact-field.full {
-        grid-column: auto;
-      }
-
-      .contact-form-box,
-      .contact-hours-card {
-        padding: 23px;
-      }
-
-      .contact-hours-row {
-        align-items: flex-start;
-        font-size: 12px;
-      }
-
-      .contact-final-cta {
-        padding: 65px 0;
-      }
-    }
+    
   </style>
+<style id="sde-contact-homepage-header">
+@media (min-width: 900px) {
+  html body header.site-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    height: 70px !important;
+    min-height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+    box-sizing: border-box !important;
+  }
+
+  html body header.site-header > .brand {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  html body header.site-header > .main-nav {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: clamp(11px, 1.45vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  html body header.site-header > .main-nav > a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+  }
+
+  html body header.site-header .header-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  html body header.site-header #sge-account-menu {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  html body header.site-header .login-btn,
+  html body header.site-header .register-btn,
+  html body header.site-header .sge-account-trigger {
+    min-height: 40px !important;
+    padding: 0 17px !important;
+    border: 1px solid rgba(217,180,93,.75) !important;
+    border-radius: 7px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  html body header.site-header .login-btn,
+  html body header.site-header .sge-account-trigger {
+    color: #f0d58c !important;
+    background: #0d1a2b !important;
+  }
+
+  html body header.site-header .register-btn {
+    color: #07111f !important;
+    background: #d9b45d !important;
+    border-color: #d9b45d !important;
+  }
+}
+
+html body header.site-header [hidden],
+html body header.site-header .header-actions [hidden] {
+  display: none !important;
+}
+</style>
+<style id="sde-contact-gold-svg-icons">
+.contact-icon svg,
+.info-icon svg {
+    width: 26px;
+    height: 26px;
+    display: block;
+    fill: none;
+    stroke: #d9b45d;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+</style>
 </head>
 
 <body>
@@ -585,13 +614,13 @@
       <span class="ticker-label">MARKET WATCH</span>
       <span>GOLD <strong id="ticker-XAU">Loading...</strong> <small>USD/g</small></span>
       <span>SILVER <strong id="ticker-XAG">Loading...</strong> <small>USD/oz</small></span>
-      <span>BTC <strong id="ticker-BTCUSDT">Loading...</strong> <em id="ticker-change-BTCUSDT">—</em></span>
-      <span>ETH <strong id="ticker-ETHUSDT">Loading...</strong> <em id="ticker-change-ETHUSDT">—</em></span>
-      <span>BNB <strong id="ticker-BNBUSDT">Loading...</strong> <em id="ticker-change-BNBUSDT">—</em></span>
-      <span>SOL <strong id="ticker-SOLUSDT">Loading...</strong> <em id="ticker-change-SOLUSDT">—</em></span>
-      <span>XRP <strong id="ticker-XRPUSDT">Loading...</strong> <em id="ticker-change-XRPUSDT">—</em></span>
-      <span>DOGE <strong id="ticker-DOGEUSDT">Loading...</strong> <em id="ticker-change-DOGEUSDT">—</em></span>
-      <span class="ticker-refresh">Auto refresh · 30 sec</span>
+      <span>BTC <strong id="ticker-BTCUSDT">Loading...</strong> <em id="ticker-change-BTCUSDT">Ã¢â‚¬â€</em></span>
+      <span>ETH <strong id="ticker-ETHUSDT">Loading...</strong> <em id="ticker-change-ETHUSDT">Ã¢â‚¬â€</em></span>
+      <span>BNB <strong id="ticker-BNBUSDT">Loading...</strong> <em id="ticker-change-BNBUSDT">Ã¢â‚¬â€</em></span>
+      <span>SOL <strong id="ticker-SOLUSDT">Loading...</strong> <em id="ticker-change-SOLUSDT">Ã¢â‚¬â€</em></span>
+      <span>XRP <strong id="ticker-XRPUSDT">Loading...</strong> <em id="ticker-change-XRPUSDT">Ã¢â‚¬â€</em></span>
+      <span>DOGE <strong id="ticker-DOGEUSDT">Loading...</strong> <em id="ticker-change-DOGEUSDT">Ã¢â‚¬â€</em></span>
+      <span class="ticker-refresh">Auto refresh Ã‚Â· 30 sec</span>
     </div>
   </div>
 
@@ -612,7 +641,6 @@
     <nav class="main-nav" aria-label="Main navigation">
       <a href="../index.html">Home</a>
       <a href="markets.html">Markets</a>
-      <a href="market-data.html">Market Data</a>
       <a href="mining-plans.html">Mining Plans</a>
       <a href="my-assets.html">Assets</a>
       <a href="about.html">About Us</a>
@@ -620,7 +648,7 @@
 
       <div class="header-actions">
         <a class="login-btn nav-login" href="login.html">Login</a>
-        <a class="register-btn nav-register" href="register.html">Register ↗</a>
+        <a class="register-btn nav-register" href="register.html">Register Ã¢â€ â€”</a>
       </div>
     </nav>
   </header>
@@ -636,7 +664,7 @@
           Have a question about SDE Core or need assistance with our platform?
           Our team is here to help you find the information you need.
         </p>
-        <a href="#contact-form" class="contact-button">Get in Touch →</a>
+        <a href="#contact-form" class="contact-button">Get in Touch &#8594;</a>
       </div>
     </section>
 
@@ -654,7 +682,7 @@
 
         <div class="contact-info-grid">
           <div class="contact-info-card">
-            <div class="contact-icon">✉</div>
+            <div class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z M4 7l8 6 8-6"/></svg></div>
             <h3>Email Support</h3>
             <p>
               Send your questions and enquiries to:<br>
@@ -663,7 +691,7 @@
           </div>
 
           <div class="contact-info-card">
-            <div class="contact-icon">☎</div>
+            <div class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v18H7z M10 17h4"/></svg></div>
             <h3>United States</h3>
             <p>
               New York office<br>
@@ -672,7 +700,7 @@
           </div>
 
           <div class="contact-info-card">
-            <div class="contact-icon">⌖</div>
+            <div class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12z M12 9a2 2 0 1 0 0 .01"/></svg></div>
             <h3>Singapore</h3>
             <p>
               Singapore office<br>
@@ -743,7 +771,7 @@
 
               </div>
 
-              <button type="submit" class="contact-submit">Send Message →</button>
+              <button type="submit" class="contact-submit">Send Message &#8594;</button>
 
               <p class="contact-form-note">
                 Submitting this form opens your email application with your
@@ -771,7 +799,7 @@
 
           <div class="contact-office-card">
             <div class="contact-office-top">
-              <small>United States · Main Office</small>
+              <small>United States &#183; Main Office</small>
               <h3>New York</h3>
             </div>
             <div class="contact-office-details">
@@ -784,7 +812,7 @@
 
           <div class="contact-office-card">
             <div class="contact-office-top">
-              <small>Asia Pacific · Branch Office</small>
+              <small>Asia Pacific &#183; Branch Office</small>
               <h3>Singapore</h3>
             </div>
             <div class="contact-office-details">
@@ -806,13 +834,13 @@
           <h2>Business Hours</h2>
 
           <div class="contact-hours-row">
-            <span>Monday – Friday</span>
-            <strong>9:00 AM – 6:00 PM</strong>
+            <span>Monday &#8211; Friday</span>
+            <strong>9:00 AM &#8211; 6:00 PM</strong>
           </div>
 
           <div class="contact-hours-row">
             <span>Saturday</span>
-            <strong>10:00 AM – 2:00 PM</strong>
+            <strong>10:00 AM &#8211; 2:00 PM</strong>
           </div>
 
           <div class="contact-hours-row">
@@ -896,7 +924,7 @@
           Have another question or need assistance? Get in touch with our team
           and let us know how we can help.
         </p>
-        <a href="#contact-form" class="contact-button">Contact Our Team →</a>
+        <a href="#contact-form" class="contact-button">Contact Our Team &#8594;</a>
       </div>
     </section>
 
@@ -904,30 +932,28 @@
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <div class="footer-main">
-      <a class="brand footer-brand" href="../index.html">
-        <span class="brand-mark">SDE</span>
-        <span class="brand-copy">
-          <strong>SDE CORE</strong>
-          <small>SOVEREIGN DIGITAL EXCHANGE</small>
-        </span>
-      </a>
+  <a class="brand footer-brand" href="../index.html">
+    <span class="brand-mark">SDE</span>
+    <span class="brand-copy">
+      <strong>SDE CORE</strong>
+      <small>SOVEREIGN DIGITAL EXCHANGE</small>
+    </span>
+  </a>
 
-      <div class="footer-links">
-        <a href="../index.html">Home</a>
-        <a href="../index.html#markets">Markets</a>
-        <a href="../index.html#investments">Mining Plans</a>
-        <a href="my-assets.html">Assets</a>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Contact</a>
-      </div>
-    </div>
+  <div class="footer-links">
+    <a href="markets.html">Markets</a>
+    <a href="about.html#services">Services</a>
+    <a href="mining-plans.html">Mining Plans</a>
+    <a href="my-assets.html">Assets</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
 
-    <div class="footer-bottom">
-      <p>© <span id="currentYear"></span> SDE Core. All rights reserved.</p>
-      <p>Sovereign Digital Exchange</p>
-    </div>
-  </footer>
+  <div class="footer-bottom">
+    <span>&#169; 2026 SDE Core. All rights reserved.</span>
+    <span>Market information &#183; Updates periodically</span>
+  </div>
+</footer>
 
   <script>
     // Footer year
@@ -970,3 +996,6 @@
 
 </body>
 </html>
+
+
+
