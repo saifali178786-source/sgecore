@@ -3921,3 +3921,43 @@ main .contact-section {
   }
 }
 
+
+/* SDE MINING LOGO IMAGE */
+.brand-logo-image {
+    display: block;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    object-fit: contain;
+}
+
+@media (max-width: 600px) {
+    .brand-logo-image {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+}
+
+/* SDE MINING LOGO - FINAL SIZE */
+.brand-logo-image {
+    display: block !important;
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+    max-height: 58px !important;
+    flex: 0 0 58px !important;
+    object-fit: contain !important;
+}
+
+@media (max-width: 600px) {
+    .brand-logo-image {
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        max-width: 48px !important;
+        max-height: 48px !important;
+        flex-basis: 48px !important;
+    }
+}
