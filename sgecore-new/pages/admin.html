@@ -381,6 +381,7 @@
         <button class="nav-button" data-page="investments">Investments</button>
         <button class="nav-button" data-page="plans">Investment plans</button>
         <button class="nav-button" data-page="support">Support</button>
+        <button class="nav-button" data-page="teamtrade">Team Trade Control</button>
         <button class="nav-button" data-page="addresses">Deposit addresses</button>
         <button class="nav-button" data-page="audit">Audit log</button>
       </aside>
@@ -394,7 +395,7 @@
           <button id="refreshButton">Refresh data</button>
         </div>
         <div id="globalMessage" class="message"></div>
-        <div id="pageContent"><div class="loading">Loading dashboard…</div></div>
+        <div id="pageContent"><div class="loading">Loading dashboardâ€¦</div></div>
       </main>
     </div>
   </div>
@@ -426,6 +427,7 @@
         investments: ["Investments", "Review customer investments."],
         plans: ["Investment plans", "View active and inactive investment plans."],
         support: ["Support", "Review tickets and their messages."],
+        teamtrade: ["Team Trade Control", "Manage trading settings for authorized internal team accounts."],
         addresses: ["Deposit addresses", "Inspect configured deposit addresses."],
         audit: ["Audit log", "Review recorded administrative activity."]
       };
@@ -449,7 +451,7 @@
 
       function money(value, currency = "USDT") {
         const n = Number(value);
-        if (!Number.isFinite(n)) return "—";
+        if (!Number.isFinite(n)) return "â€”";
         return n.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
@@ -457,13 +459,13 @@
       }
 
       function date(value) {
-        if (!value) return "—";
+        if (!value) return "â€”";
         const d = new Date(value);
-        return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString();
+        return Number.isNaN(d.getTime()) ? "â€”" : d.toLocaleString();
       }
 
       function shortId(value) {
-        return value ? String(value).slice(0, 8) + "…" : "—";
+        return value ? String(value).slice(0, 8) + "â€¦" : "â€”";
       }
 
       function badge(value) {
@@ -517,7 +519,7 @@
         cells.forEach((cell) => {
           const td = el("td");
           if (cell instanceof Node) td.append(cell);
-          else td.textContent = cell === undefined || cell === null ? "—" : String(cell);
+          else td.textContent = cell === undefined || cell === null ? "â€”" : String(cell);
           row.append(td);
         });
         return row;
@@ -532,7 +534,7 @@
       function fieldLabel(labelText, value) {
         const wrap = el("div", undefined, "detail-list");
         wrap.append(el("div", labelText, "key"));
-        wrap.append(el("div", value === undefined || value === null ? "—" : String(value)));
+        wrap.append(el("div", value === undefined || value === null ? "â€”" : String(value)));
         return wrap;
       }
 
@@ -616,7 +618,7 @@
         $("pageSubtitle").textContent = pageInfo[page][1];
         message("globalMessage", "");
         clear(content);
-        content.append(el("div", "Loading " + pageInfo[page][0].toLowerCase() + "…", "loading"));
+        content.append(el("div", "Loading " + pageInfo[page][0].toLowerCase() + "â€¦", "loading"));
 
         document.querySelectorAll(".nav-button").forEach((b) => {
           b.classList.toggle("active", b.dataset.page === page);
@@ -635,6 +637,7 @@
             case "investments": await renderInvestments(); break;
             case "plans": await renderPlans(); break;
             case "support": await renderSupport(); break;
+            case "teamtrade": await renderTeamTrade(); break;
             case "addresses": await renderAddresses(); break;
             case "audit": await renderAudit(); break;
             default: content.append(el("div", "Unknown page.", "empty"));
@@ -668,7 +671,7 @@
         });
 
         const balanceText = Object.keys(balances).length
-          ? Object.entries(balances).map(([c, v]) => money(v, c)).join(" · ")
+          ? Object.entries(balances).map(([c, v]) => money(v, c)).join(" Â· ")
           : "No wallet balances";
 
         const grid = el("div", undefined, "grid");
@@ -822,7 +825,7 @@
         customerSelect.id = "creditCustomer";
         customerSelect.required = true;
 
-        const defaultOption = el("option", "Loading customers…");
+        const defaultOption = el("option", "Loading customersâ€¦");
         defaultOption.value = "";
         customerSelect.append(defaultOption);
         customerField.append(customerLabel, customerSelect);
@@ -924,7 +927,7 @@
 
             const placeholder = el(
               "option",
-              term ? "Select a matching customer…" : "Select a customer…"
+              term ? "Select a matching customerâ€¦" : "Select a customerâ€¦"
             );
             placeholder.value = "";
             customerSelect.append(placeholder);
@@ -945,7 +948,7 @@
                 p.email || "No email",
                 p.member_id ? "Member " + p.member_id : "",
                 "ID " + shortId(p.id)
-              ].filter(Boolean).join(" · ");
+              ].filter(Boolean).join(" Â· ");
 
               const option = el("option", label);
               option.value = p.id;
@@ -1059,8 +1062,8 @@
           if (!confirm(confirmation)) return;
 
           submit.disabled = true;
-          submit.textContent = "Processing…";
-          status.textContent = "Submitting the secured database request…";
+          submit.textContent = "Processingâ€¦";
+          status.textContent = "Submitting the secured database requestâ€¦";
 
           try {
             const { data, error } = await sgecoreSupabase.rpc(
@@ -1196,7 +1199,7 @@
               shortId(d.user_id),
               [d.method, d.network].filter(Boolean).join(" / "),
               money(d.amount, d.currency),
-              d.transaction_hash || d.payment_reference || "—",
+              d.transaction_hash || d.payment_reference || "â€”",
               badge(d.status),
               actions(...reviewButtons)
             ]);
@@ -1293,6 +1296,163 @@
         ));
       }
 
+      async function renderTeamTrade() {
+        const settingsCard = el("div", undefined, "card");
+        settingsCard.append(el("h2", "Team Trade Control"));
+        settingsCard.append(el(
+          "p",
+          "Configure win percentages for explicitly authorized internal team accounts. A percentage controls the approximate win rate over time. Accounts without an enabled setting continue using normal market-price settlement.",
+          "muted"
+        ));
+
+        const uidInput = el("input");
+        uidInput.type = "text";
+        uidInput.placeholder = "Enter customer Supabase UID";
+        uidInput.autocomplete = "off";
+        uidInput.style.width = "100%";
+
+        const percentageInput = el("input");
+        percentageInput.type = "number";
+        percentageInput.min = "0";
+        percentageInput.max = "100";
+        percentageInput.step = "0.01";
+        percentageInput.value = "50";
+        percentageInput.style.width = "100%";
+
+        const enabledInput = el("input");
+        enabledInput.type = "checkbox";
+        enabledInput.checked = true;
+
+        const status = el("div", "", "message");
+
+        const listCard = el("div", undefined, "card");
+        listCard.append(el("h2", "Configured Team Accounts"));
+
+        const listContent = el("div");
+        listCard.append(listContent);
+
+        async function loadTeamTradeSettings() {
+          listContent.replaceChildren(
+            el("div", "Loading team account settings...", "loading")
+          );
+
+          const { data, error } = await sgecoreSupabase.rpc(
+            "get_sge_team_trade_controls"
+          );
+
+          if (error) throw error;
+
+          const rows = Array.isArray(data) ? data : [];
+
+          const resultTable = table(
+            ["Customer UID", "Win Percentage", "Status", "Last Updated", "Action"],
+            rows,
+            (item) => {
+              const row = el("tr");
+
+              const uidCell = el("td", item.user_id);
+              const percentageCell = el(
+                "td",
+                Number(item.win_percentage).toFixed(2) + "%"
+              );
+              const statusCell = el(
+                "td",
+                item.enabled ? "Enabled" : "Disabled"
+              );
+              const updatedCell = el("td", date(item.updated_at));
+
+              const actionCell = el("td");
+              actionCell.append(button("Edit", () => {
+                uidInput.value = item.user_id;
+                percentageInput.value = item.win_percentage;
+                enabledInput.checked = item.enabled === true;
+
+                status.textContent = "Account settings loaded. Make your changes and save.";
+                status.className = "message";
+              }));
+
+              row.append(
+                uidCell,
+                percentageCell,
+                statusCell,
+                updatedCell,
+                actionCell
+              );
+
+              return row;
+            }
+          );
+
+          listContent.replaceChildren(resultTable);
+        }
+
+        const saveButton = button("Save Team Trade Settings", async () => {
+          const uid = uidInput.value.trim();
+          const percentage = Number(percentageInput.value);
+
+          const uuidPattern =
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+          if (!uuidPattern.test(uid)) {
+            status.textContent = "Enter a valid customer Supabase UID.";
+            status.className = "message error";
+            return;
+          }
+
+          if (
+            percentageInput.value.trim() === "" ||
+            !Number.isFinite(percentage) ||
+            percentage < 0 ||
+            percentage > 100
+          ) {
+            status.textContent = "Win percentage must be between 0 and 100.";
+            status.className = "message error";
+            return;
+          }
+
+          saveButton.disabled = true;
+          status.textContent = "Saving settings...";
+          status.className = "message";
+
+          try {
+            const { error } = await sgecoreSupabase.rpc(
+              "set_sge_team_trade_control",
+              {
+                p_user_id: uid,
+                p_enabled: enabledInput.checked,
+                p_win_percentage: percentage
+              }
+            );
+
+            if (error) throw error;
+
+            status.textContent = "Team trade settings saved successfully.";
+            status.className = "message success";
+
+            await loadTeamTradeSettings();
+          } catch (e) {
+            status.textContent = e.message || "Unable to save settings.";
+            status.className = "message error";
+          } finally {
+            saveButton.disabled = false;
+          }
+        }, "primary");
+
+        settingsCard.append(
+          el("label", "Customer Supabase UID"),
+          uidInput,
+          el("label", "Win Percentage (0–100)"),
+          percentageInput,
+          el("label", "Enable settings for this account"),
+          enabledInput,
+          saveButton,
+          status
+        );
+
+        content.append(settingsCard, listCard);
+
+        await loadTeamTradeSettings();
+      }
       let supportRealtimeChannel = null;
 
       async function renderSupport() {
@@ -1336,7 +1496,7 @@
           const q = term.trim().toLowerCase();
           profiles.filter(p => !q || [p.member_id,p.full_name,p.email,p.id].some(v => String(v || "").toLowerCase().includes(q)))
             .forEach(p => {
-              const label = [p.member_id || shortId(p.id), p.full_name || p.email || "Customer", p.email].filter(Boolean).join(" · ");
+              const label = [p.member_id || shortId(p.id), p.full_name || p.email || "Customer", p.email].filter(Boolean).join(" Â· ");
               const opt = el("option", label); opt.value = p.id; customerSelect.append(opt);
             });
           if (profiles.some(p => p.id === previous)) customerSelect.value = previous;
@@ -1393,10 +1553,10 @@
           const head = el("div", undefined, "page-head");
           const heading = el("div");
           heading.append(el("h2", ticket.subject || "Support ticket"));
-          heading.append(el("div", "Customer Member ID: " + (profile.member_id || "Not assigned") + " · " + (profile.full_name || profile.email || shortId(ticket.user_id)), "muted"));
+          heading.append(el("div", "Customer Member ID: " + (profile.member_id || "Not assigned") + " Â· " + (profile.full_name || profile.email || shortId(ticket.user_id)), "muted"));
           heading.append(el("div", "Ticket " + ticket.id, "muted small"));
           head.append(heading, button("Back to support", () => loadPage("support"))); box.append(head);
-          [["Customer name", profile.full_name || "—"], ["Email", profile.email || "—"], ["Member ID", profile.member_id || "—"], ["User ID", ticket.user_id], ["Status", ticket.status], ["Created", date(ticket.created_at)], ["Last activity", date(ticket.last_message_at || ticket.updated_at)]]
+          [["Customer name", profile.full_name || "â€”"], ["Email", profile.email || "â€”"], ["Member ID", profile.member_id || "â€”"], ["User ID", ticket.user_id], ["Status", ticket.status], ["Created", date(ticket.created_at)], ["Last activity", date(ticket.last_message_at || ticket.updated_at)]]
             .forEach(([k,v]) => box.append(fieldLabel(k,v)));
           const statusRow = el("div", undefined, "toolbar");
           const statusSelect = el("select");
@@ -1621,14 +1781,14 @@
           (a) => tr([
             date(a.created_at), shortId(a.admin_id), a.action,
             a.entity_type, shortId(a.entity_id),
-            a.details ? JSON.stringify(a.details) : "—"
+            a.details ? JSON.stringify(a.details) : "â€”"
           ])
         ));
       }
 
       $("loginForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        message("loginMessage", "Signing in…");
+        message("loginMessage", "Signing inâ€¦");
 
         try {
           const { data, error } = await sgecoreSupabase.auth.signInWithPassword({

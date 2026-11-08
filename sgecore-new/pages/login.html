@@ -932,7 +932,7 @@
 
       <div class="login-note">
         Don't have an account?
-        <a href="register.html">Register here</a>
+        <a id="register-link" href="register.html">Register here</a>
         <br>
         <a href="../index.html">&#8592; Back to Home</a>
       </div>
@@ -946,73 +946,108 @@
 
   <!-- Email and password login -->
   <script>
-    (() => {
-      "use strict";
+  (() => {
+    "use strict";
 
-      const loginForm = document.getElementById("login-form");
-      const loginMessage = document.getElementById("login-message");
-      const loginButton = document.getElementById("login-submit");
+    const loginForm = document.getElementById("login-form");
+    const loginMessage = document.getElementById("login-message");
+    const loginButton = document.getElementById("login-submit");
+    const registerLink = document.getElementById("register-link");
 
-      loginForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
+if (registerLink) {
+  const params = new URLSearchParams(window.location.search);
+  const redirect = params.get("redirect");
 
-        if (loginButton.disabled) return;
+  if (redirect === "trading.html") {
+    registerLink.href = "register.html?redirect=trading.html";
+  }
+}
 
-        loginMessage.textContent = "";
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-        if (
-          typeof sgecoreSupabase === "undefined" ||
-          !sgecoreSupabase.auth
-        ) {
-          loginMessage.textContent =
-            "Supabase could not be loaded. Check your connection file and internet connection.";
+      if (loginButton.disabled) return;
+
+      loginMessage.textContent = "";
+
+      if (
+        typeof sgecoreSupabase === "undefined" ||
+        !sgecoreSupabase.auth
+      ) {
+        loginMessage.textContent =
+          "Supabase could not be loaded. Check your connection file and internet connection.";
+        return;
+      }
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in...";
+
+      try {
+        const { data, error } =
+          await sgecoreSupabase.auth.signInWithPassword({
+            email,
+            password
+          });
+
+        if (error) {
+          loginMessage.textContent = error.message;
           return;
         }
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-
-        loginButton.disabled = true;
-        loginButton.textContent = "Signing in...";
-
-        try {
-          const { data, error } =
-            await sgecoreSupabase.auth.signInWithPassword({
-              email,
-              password
-            });
-
-          if (error) {
-            loginMessage.textContent = error.message;
-            return;
-          }
-
-          if (data.user) {
-            loginMessage.textContent =
-              "Login successful! Opening your dashboard...";
-
-            const selectedPlan =
-              new URLSearchParams(window.location.search).get("plan");
-
-            window.location.href = selectedPlan
-              ? "mining.html?plan=" + encodeURIComponent(selectedPlan)
-              : "dashboard.html";
-          } else {
-            loginMessage.textContent =
-              "Sign-in could not be completed. Please try again.";
-          }
-        } catch (error) {
-          console.error("Login error:", error);
-
+        if (data.user) {
           loginMessage.textContent =
-            "Unable to connect to Supabase. Check your internet connection and try again.";
-        } finally {
-          loginButton.disabled = false;
-          loginButton.textContent = "Login";
+            "Login successful! Redirecting...";
+
+          const params = new URLSearchParams(
+            window.location.search
+          );
+
+          const selectedPlan = params.get("plan");
+          const requestedRedirect = params.get("redirect");
+
+          const savedRedirect =
+            sessionStorage.getItem("sde_trade_return_to");
+
+          const returnToTrading =
+            requestedRedirect === "trading.html" ||
+            savedRedirect === "trading.html";
+
+          if (returnToTrading) {
+            sessionStorage.removeItem("sde_trade_return_to");
+
+            window.location.replace("trading.html");
+
+          } else if (selectedPlan) {
+            window.location.replace(
+              "mining.html?plan=" +
+              encodeURIComponent(selectedPlan)
+            );
+
+          } else {
+            window.location.replace("dashboard.html");
+          }
+
+        } else {
+          loginMessage.textContent =
+            "Sign-in could not be completed. Please try again.";
         }
-      });
-    })();
-  </script>
+
+      } catch (error) {
+        console.error("Login error:", error);
+
+        loginMessage.textContent =
+          "Unable to connect to Supabase. Check your internet connection and try again.";
+
+      } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = "Login";
+      }
+    });
+  })();
+</script>
 <footer class="site-footer">
   <a class="brand footer-brand" href="../../index.html">
     <span class="brand-mark">SDE</span>

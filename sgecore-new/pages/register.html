@@ -956,60 +956,57 @@
   <script src="../js/supabase.js"></script>
   <script src="../js/auth-ui.js"></script>
 
-  <!-- Registration logic -->
-  <script>
-    (() => {
-      "use strict";
+<!-- Registration logic -->
+<script>
+  (() => {
+    "use strict";
 
-      const form = document.getElementById("register-form");
-      const password = document.getElementById("password");
-      const confirmPassword = document.getElementById("confirm-password");
-      const message = document.getElementById("register-message");
-      const submitButton = document.getElementById("register-submit");
+    const form = document.getElementById("register-form");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirm-password");
+    const message = document.getElementById("register-message");
+    const submitButton = document.getElementById("register-submit");
 
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-        if (submitButton.disabled) return;
+      if (submitButton.disabled) return;
 
-        message.textContent = "";
+      message.textContent = "";
 
-        if (password.value !== confirmPassword.value) {
-          message.textContent =
-            "Your passwords do not match. Please try again.";
-          confirmPassword.focus();
-          return;
-        }
+      if (password.value !== confirmPassword.value) {
+        message.textContent =
+          "Your passwords do not match. Please try again.";
+        confirmPassword.focus();
+        return;
+      }
 
-        if (password.value.length < 8) {
-          message.textContent =
-            "Your password must contain at least 8 characters.";
-          password.focus();
-          return;
-        }
+      if (password.value.length < 8) {
+        message.textContent =
+          "Your password must contain at least 8 characters.";
+        password.focus();
+        return;
+      }
 
-        if (
-          typeof sgecoreSupabase === "undefined" ||
-          !sgecoreSupabase.auth
-        ) {
-          message.textContent =
-            "Supabase could not be loaded. Check js/supabase.js and your internet connection.";
-          return;
-        }
+      if (
+        typeof sgecoreSupabase === "undefined" ||
+        !sgecoreSupabase.auth
+      ) {
+        message.textContent =
+          "Supabase could not be loaded. Check js/supabase.js and your internet connection.";
+        return;
+      }
 
-        const phone = document.getElementById("phone").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const fullName = document.getElementById("full-name").value.trim();
+      const email = document.getElementById("email").value.trim();
 
-        const fullName =
-          document.getElementById("full-name").value.trim();
+      submitButton.disabled = true;
+      submitButton.textContent = "Creating account...";
 
-        const email =
-          document.getElementById("email").value.trim();
-
-        submitButton.disabled = true;
-        submitButton.textContent = "Creating account...";
-
-        try {
-          const { data, error } = await sgecoreSupabase.auth.signUp({
+      try {
+        const { data, error } =
+          await sgecoreSupabase.auth.signUp({
             email,
             password: password.value,
             options: {
@@ -1020,43 +1017,65 @@
             }
           });
 
-          if (error) {
-            message.textContent = error.message;
-            return;
-          }
-
-          if (data.user && !data.session) {
-            message.textContent =
-              "Account created. Please check your email to confirm your account before logging in.";
-
-            form.reset();
-
-          } else if (data.user) {
-            message.textContent =
-              "Account created successfully! Redirecting to your dashboard...";
-
-            window.location.href = "dashboard.html";
-
-          } else {
-            message.textContent =
-              "Registration was submitted. Check your email for next steps.";
-
-            form.reset();
-          }
-
-        } catch (error) {
-          console.error("Registration error:", error);
-
-          message.textContent =
-            "Could not connect to Supabase. Check your internet connection and project settings.";
-
-        } finally {
-          submitButton.disabled = false;
-          submitButton.textContent = "Create Account";
+        if (error) {
+          message.textContent = error.message;
+          return;
         }
-      });
-    })();
-  </script>
+
+        if (data.user && !data.session) {
+          message.textContent =
+            "Account created. Please check your email to confirm your account before logging in.";
+
+          form.reset();
+          return;
+        }
+
+        if (data.user && data.session) {
+          message.textContent =
+            "Account created successfully! Redirecting...";
+
+          const params = new URLSearchParams(
+            window.location.search
+          );
+
+          const requestedRedirect = params.get("redirect");
+
+          const savedRedirect =
+            sessionStorage.getItem("sde_trade_return_to");
+
+          const returnToTrading =
+            requestedRedirect === "trading.html" ||
+            savedRedirect === "trading.html";
+
+          if (returnToTrading) {
+            sessionStorage.removeItem("sde_trade_return_to");
+
+            window.location.replace("trading.html");
+          } else {
+            window.location.replace("dashboard.html");
+          }
+
+          return;
+        }
+
+        message.textContent =
+          "Registration was submitted. Check your email for next steps.";
+
+        form.reset();
+
+      } catch (error) {
+        console.error("Registration error:", error);
+
+        message.textContent =
+          "Could not connect to Supabase. Check your internet connection and project settings.";
+
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Create Account";
+      }
+    });
+  })();
+</script>
 <footer class="site-footer">
   <a class="brand footer-brand" href="../../index.html">
     <span class="brand-mark">SDE</span>
