@@ -625,116 +625,113 @@
         return true;
       }
 
-      async function initialize() {
-        // FIX: validate the actual client and its methods.
-        if (
-          !client ||
-          !client.auth ||
-          typeof client.from !== "function"
-        ) {
-          setStatus(
-            "Supabase client did not initialize. Check the CDN connection " +
-            "and js/supabase.js configuration."
-          );
+      
+async function initialize() {
+  if (
+    !client ||
+    !client.auth ||
+    typeof client.from !== "function"
+  ) {
+    setStatus(
+      "Supabase client did not initialize. Check the CDN connection " +
+      "and js/supabase.js configuration."
+    );
 
-          subscriptionList.textContent =
-            "Subscriptions cannot be loaded until Supabase is available.";
+    subscriptionList.textContent =
+      "Subscriptions cannot be loaded until Supabase is available.";
 
-          console.error(
-            "Expected sgecoreSupabase with auth and from methods."
-          );
+    console.error(
+      "Expected sgecoreSupabase with auth and from methods."
+    );
 
-          return;
-        }
+    return;
+  }
 
-        if (!planId) {
-          setStatus(
-            "No plan was selected. Please return to the plans page."
-          );
+  setStatus("Checking your sign-in status...");
 
-          subscriptionList.textContent =
-            "Select a mining plan to continue.";
+  const { data: authData, error: authError } =
+    await client.auth.getUser();
 
-          return;
-        }
+  if (authError || !authData.user) {
+    const loginUrl = planId
+      ? "login.html?plan=" + encodeURIComponent(planId)
+      : "login.html";
 
-        setStatus("Checking your sign-in status...");
+    window.location.replace(loginUrl);
+    return;
+  }
 
-        const { data: authData, error: authError } =
-          await client.auth.getUser();
+  const userId = authData.user.id;
 
-        if (authError || !authData.user) {
-          window.location.replace(
-            "login.html?plan=" + encodeURIComponent(planId)
-          );
-          return;
-        }
+  // Load previous mining investments even without a selected plan.
+  await loadSubscriptions(userId);
 
-        const userId = authData.user.id;
+  // A plan is only required when starting a new subscription.
+  if (!planId) {
+    setStatus("Your mining investment history is displayed below.");
+    return;
+  }
 
-        setStatus("Loading selected mining plan...");
+  setStatus("Loading selected mining plan...");
 
-        // FIX: use the initialized client for the plan query.
-        const { data: plan, error: planError } = await client
-          .from("mining_plans")
-          .select(
-            "id,name,location,daily_rate,duration_days,min_amount,max_amount,currency,is_active"
-          )
-          .eq("id", planId)
-          .eq("is_active", true)
-          .maybeSingle();
+  const { data: plan, error: planError } = await client
+    .from("mining_plans")
+    .select(
+      "id,name,location,daily_rate,duration_days,min_amount,max_amount,currency,is_active"
+    )
+    .eq("id", planId)
+    .eq("is_active", true)
+    .maybeSingle();
 
-        if (planError || !plan) {
-          setStatus(
-            planError
-              ? "Unable to load this plan: " + planError.message
-              : "This plan is unavailable or inactive. Please choose another plan."
-          );
+  if (planError || !plan) {
+    setStatus(
+      planError
+        ? "Unable to load this plan: " + planError.message
+        : "This plan is unavailable or inactive. Please choose another plan."
+    );
 
-          console.error("Mining plan query error:", planError);
-          return;
-        }
+    console.error("Mining plan query error:", planError);
+    return;
+  }
 
-        currentPlan = plan;
+  currentPlan = plan;
 
-        document.getElementById("planName").textContent =
-          plan.name || "Mining plan";
+  document.getElementById("planName").textContent =
+    plan.name || "Mining plan";
 
-        document.getElementById("planLocation").textContent =
-          plan.location || "";
+  document.getElementById("planLocation").textContent =
+    plan.location || "";
 
-        document.getElementById("planRate").textContent =
-          (Number(plan.daily_rate) * 100).toLocaleString("en-US") +
-          "% per day";
+  document.getElementById("planRate").textContent =
+    (Number(plan.daily_rate) * 100).toLocaleString("en-US") +
+    "% per day";
 
-        document.getElementById("planDuration").textContent =
-          plan.duration_days + " days";
+  document.getElementById("planDuration").textContent =
+    plan.duration_days + " days";
 
-        document.getElementById("planMinimum").textContent =
-          money(plan.min_amount) + " " + plan.currency;
+  document.getElementById("planMinimum").textContent =
+    money(plan.min_amount) + " " + plan.currency;
 
-        document.getElementById("planMaximum").textContent =
-          money(plan.max_amount) + " " + plan.currency;
+  document.getElementById("planMaximum").textContent =
+    money(plan.max_amount) + " " + plan.currency;
 
-        amountInput.min = String(plan.min_amount);
-        amountInput.max = String(plan.max_amount);
+  amountInput.min = String(plan.min_amount);
+  amountInput.max = String(plan.max_amount);
 
-        amountInput.placeholder =
-          money(plan.min_amount) + " to " +
-          money(plan.max_amount) + " " + plan.currency;
+  amountInput.placeholder =
+    money(plan.min_amount) + " to " +
+    money(plan.max_amount) + " " + plan.currency;
 
-        planPanel.hidden = false;
+  planPanel.hidden = false;
 
-        setStatus("Plan loaded. Checking your funding wallet...");
+  setStatus("Plan loaded. Checking your funding wallet...");
 
-        await loadWalletBalance(userId, plan.currency);
+  await loadWalletBalance(userId, plan.currency);
 
-        setStatus(
-          "Plan loaded. Review the details before subscribing."
-        );
-
-        await loadSubscriptions(userId);
-      }
+  setStatus(
+    "Plan loaded. Review the details before subscribing."
+  );
+}
 
       amountInput.addEventListener("input", updateEstimate);
 
