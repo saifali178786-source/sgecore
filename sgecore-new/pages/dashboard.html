@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -555,7 +555,94 @@
     .quick-link.withdraw-link {
       border-color: var(--dash-border);
     }
-  </style>
+  
+/* SDE CORE - KYC VERIFICATION */
+.kyc-card { margin-top:22px; }
+.kyc-status-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    padding:16px;
+    margin:18px 0;
+    border:1px solid var(--dash-border);
+    border-radius:8px;
+    background:var(--dash-panel-light);
+}
+.kyc-status-label { color:var(--dash-muted); font-size:13px; }
+.kyc-status-badge {
+    display:inline-flex;
+    align-items:center;
+    padding:7px 13px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+.kyc-status-badge.pending {
+    color:#f0d58c;
+    background:rgba(217,180,93,.13);
+    border:1px solid rgba(217,180,93,.4);
+}
+.kyc-status-badge.approved {
+    color:#8be0b5;
+    background:rgba(76,175,125,.13);
+    border:1px solid rgba(76,175,125,.4);
+}
+.kyc-status-badge.rejected {
+    color:#ff9999;
+    background:rgba(220,70,70,.13);
+    border:1px solid rgba(220,70,70,.4);
+}
+.kyc-form { margin-top:20px; }
+.kyc-form .form-field { margin-bottom:18px; }
+.kyc-form input,
+.kyc-form select {
+    width:100%;
+    min-height:45px;
+    padding:11px 13px;
+    border:1px solid var(--dash-border);
+    border-radius:6px;
+    background:#091626;
+    color:var(--dash-text);
+}
+.kyc-form input[type=file] { height:auto; padding:12px; }
+.kyc-form input:focus,
+.kyc-form select:focus {
+    outline:none;
+    border-color:var(--dash-gold);
+}
+.kyc-message {
+    margin-top:14px;
+    font-size:13px;
+    line-height:1.6;
+    color:var(--dash-muted);
+}
+.kyc-message.error { color:#ff9999; }
+.kyc-message.success { color:#8be0b5; }
+.kyc-admin-notes {
+    margin-top:16px;
+    padding:15px;
+    border:1px solid var(--dash-border);
+    border-radius:8px;
+    background:var(--dash-panel-light);
+    overflow-wrap:anywhere;
+}
+.kyc-admin-notes strong {
+    display:block;
+    margin-bottom:7px;
+    color:var(--dash-gold-light);
+    font-size:13px;
+}
+.kyc-admin-notes p {
+    margin:0;
+    color:var(--dash-muted);
+    font-size:13px;
+    line-height:1.6;
+}
+.kyc-submit:disabled { opacity:.55; cursor:not-allowed; }</style>
+  <link rel="stylesheet" href="../css/support-chat.css">
 </head>
 
 <body>
@@ -772,7 +859,53 @@
       </section>
     </div>
 
-    <section class="dashboard-card transactions-card" aria-labelledby="transactions-heading">
+    
+<!-- SDE CORE KYC VERIFICATION -->
+<section class="dashboard-card kyc-card" aria-labelledby="kyc-heading">
+    <h2 class="card-heading" id="kyc-heading">KYC Verification</h2>
+    <p class="card-description">Verify your identity by submitting a government-issued document.</p>
+
+    <div class="kyc-status-row">
+        <div>
+            <strong>Verification status</strong>
+            <p class="kyc-status-label" id="kyc-status-date">Checking your verification...</p>
+        </div>
+        <span class="kyc-status-badge pending" id="kyc-status-badge">Loading</span>
+    </div>
+
+    <div id="kyc-admin-notes" class="kyc-admin-notes" hidden>
+        <strong>Administrator's remarks</strong>
+        <p id="kyc-admin-notes-text"></p>
+    </div>
+
+    <form id="kyc-form" class="kyc-form">
+        <div class="form-field">
+            <label for="kyc-document-type">Document type</label>
+            <select id="kyc-document-type" required>
+                <option value="">Select document type</option>
+                <option value="government_id">National ID Card</option>
+                <option value="passport">Passport</option>
+                <option value="driving_license">Driving Licence</option>
+                <option value="other">Other Government-Issued Document</option>
+            </select>
+        </div>
+
+        <div class="form-field">
+            <label for="kyc-document-file">Upload document</label>
+            <input type="file" id="kyc-document-file"
+                accept=".jpg,.jpeg,.png,.webp,.pdf" required>
+            <p class="hint">Accepted formats: JPG, PNG, WebP and PDF. Maximum file size: 10 MB.</p>
+        </div>
+
+        <button type="submit" class="primary-button kyc-submit" id="kyc-submit">
+            Submit KYC Document
+        </button>
+
+        <p class="kyc-message" id="kyc-message" role="status" aria-live="polite"></p>
+    </form>
+</section>
+<!-- END KYC VERIFICATION -->
+<section class="dashboard-card transactions-card" aria-labelledby="transactions-heading">
       <div class="transactions-header">
         <div>
           <h2 class="card-heading" id="transactions-heading">Recent Transactions</h2>
@@ -792,6 +925,38 @@
   <footer class="dashboard-footer">
     &copy; <span id="current-year"></span> SDE CORE. All rights reserved.
   </footer>
+  <!-- Customer Support Chat -->
+  <div id="sge-support-widget" hidden>
+    <button id="sge-support-toggle" type="button"
+      aria-expanded="false" aria-controls="sge-support-panel">
+      <span>Customer Support</span>
+    </button>
+
+    <section id="sge-support-panel" hidden
+      aria-label="Customer support chat">
+
+      <div class="sge-chat-header">
+        <span id="sge-chat-heading">Customer Support</span>
+        <button id="sge-chat-close" type="button"
+          aria-label="Close chat">&times;</button>
+      </div>
+
+      <div id="sge-chat-messages" aria-live="polite"></div>
+
+      <div id="sge-chat-closed" hidden>
+        This conversation is closed.
+      </div>
+
+      <div id="sge-chat-status" role="status"
+        aria-live="polite"></div>
+
+      <div class="sge-chat-composer">
+        <textarea id="sge-chat-input" rows="2"
+          maxlength="4000" placeholder="Type your message..."></textarea>
+        <button id="sge-chat-send" type="button">Send</button>
+      </div>
+    </section>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase.js"></script>
@@ -1488,8 +1653,11 @@
     loadDashboard();
     loadExchangeRates();
   </script>
+  <script src="../js/support-chat.js"></script>
+<script src="../js/kyc.js"></script>
 </body>
 </html>
+
 
 
 

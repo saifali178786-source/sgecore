@@ -1,8 +1,12 @@
-﻿/* SDE CORE - CUSTOMER SUPPORT WITH FILE ATTACHMENTS */
+﻿
+/* SDE CORE - CUSTOMER SUPPORT WITH FILE ATTACHMENTS
+   Automatic support access for every authenticated customer.
+*/
 (function () {
   "use strict";
 
   const client = typeof sgecoreSupabase !== "undefined" ? sgecoreSupabase : null;
+
   if (!client) {
     console.error("SDE Support: Supabase client was not found.");
     return;
@@ -10,9 +14,15 @@
 
   const BUCKET = "support-attachments";
   const MAX_FILE_SIZE = 10 * 1024 * 1024;
-  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+  const ALLOWED_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf"
+  ];
 
   const $ = id => document.getElementById(id);
+
   const widget = $("sge-support-widget");
   const toggle = $("sge-support-toggle");
   const panel = $("sge-support-panel");
@@ -30,6 +40,7 @@
   }
 
   const composer = input.closest(".sge-chat-composer");
+
   if (!composer) {
     console.error("SDE Support: Chat composer was not found.");
     return;
@@ -41,23 +52,29 @@
   let pollHandle = null;
   let supportEnabled = false;
 
-  // Add the attachment controls without changing the page layout HTML.
+  // Add attachment controls without changing the page HTML.
   const attachLabel = document.createElement("label");
+
   attachLabel.textContent = "＋";
   attachLabel.title = "Attach an image, screenshot, or PDF";
   attachLabel.setAttribute("aria-label", "Attach a file");
+
   attachLabel.style.cssText =
     "display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;" +
     "border:1px solid #806b3c;border-radius:10px;background:#17283b;" +
     "color:#e5c878;font-size:25px;font-weight:700;cursor:pointer;";
 
   const fileInput = document.createElement("input");
+
   fileInput.type = "file";
-  fileInput.accept = ".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf";
+  fileInput.accept =
+    ".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf";
   fileInput.style.display = "none";
+
   attachLabel.appendChild(fileInput);
 
   const filePreview = document.createElement("div");
+
   filePreview.style.cssText =
     "display:none;padding:7px 12px;color:#e5c878;background:#0b1727;" +
     "font-size:12px;overflow-wrap:anywhere;";
@@ -67,33 +84,43 @@
 
   function status(message, isError) {
     if (!statusBox) return;
+
     statusBox.textContent = message || "";
     statusBox.classList.toggle("error", Boolean(isError));
   }
 
   function showMessage(text, role, attachmentPath) {
     const wrapper = document.createElement("div");
-    wrapper.className = "sge-chat-message " + (role === "admin" ? "theirs" : "mine");
+
+    wrapper.className =
+      "sge-chat-message " +
+      (role === "admin" ? "theirs" : "mine");
 
     if (text) {
       const bubble = document.createElement("div");
+
       bubble.className = "sge-chat-bubble";
       bubble.textContent = text;
+
       wrapper.appendChild(bubble);
     }
 
     if (attachmentPath) {
       const attachmentBox = document.createElement("div");
+
       attachmentBox.style.cssText =
         "margin-top:7px;padding:8px;background:#14263b;border-radius:9px;";
 
       const loading = document.createElement("div");
+
       loading.textContent = "Loading attachment...";
       loading.style.cssText = "font-size:12px;color:#d8bd7d;";
+
       attachmentBox.appendChild(loading);
       wrapper.appendChild(attachmentBox);
 
-      client.storage.from(BUCKET).createSignedUrl(attachmentPath, 300)
+      client.storage.from(BUCKET)
+        .createSignedUrl(attachmentPath, 300)
         .then(({ data, error }) => {
           attachmentBox.replaceChildren();
 
@@ -104,26 +131,35 @@
           }
 
           const url = data.signedUrl;
-          const filename = attachmentPath.split("/").pop() || "Attachment";
+          const filename =
+            attachmentPath.split("/").pop() || "Attachment";
+
           const isImage = /\.(jpe?g|png|webp)$/i.test(filename);
 
           if (isImage) {
             const image = document.createElement("img");
+
             image.src = url;
             image.alt = filename;
             image.loading = "lazy";
+
             image.style.cssText =
               "display:block;max-width:220px;max-height:180px;" +
               "width:auto;height:auto;border-radius:7px;margin-bottom:7px;";
+
             attachmentBox.appendChild(image);
           }
 
           const link = document.createElement("a");
+
           link.href = url;
           link.target = "_blank";
           link.rel = "noopener noreferrer";
           link.textContent = "Open " + filename;
-          link.style.cssText = "color:#e5c878;font-size:12px;overflow-wrap:anywhere;";
+
+          link.style.cssText =
+            "color:#e5c878;font-size:12px;overflow-wrap:anywhere;";
+
           attachmentBox.appendChild(link);
         })
         .catch(error => {
@@ -137,20 +173,32 @@
 
   function showWelcome(message) {
     messagesBox.replaceChildren();
+
     const welcome = document.createElement("div");
+
     welcome.className = "sge-chat-welcome";
     welcome.textContent = message;
+
     messagesBox.appendChild(welcome);
   }
 
   function setClosed(closed) {
-    const disabled = Boolean(closed) || !currentUser || sending;
-    if (closedNotice) closedNotice.classList.toggle("visible", Boolean(closed));
+    const disabled =
+      Boolean(closed) || !currentUser || sending;
+
+    if (closedNotice) {
+      closedNotice.classList.toggle("visible", Boolean(closed));
+    }
+
     input.disabled = disabled;
     sendButton.disabled = disabled;
+
     attachLabel.style.opacity = disabled ? ".45" : "1";
     attachLabel.style.pointerEvents = disabled ? "none" : "auto";
-    input.placeholder = closed ? "This conversation is closed" : "Type your message...";
+
+    input.placeholder = closed
+      ? "This conversation is closed"
+      : "Type your message...";
   }
 
   function stopPolling() {
@@ -162,6 +210,7 @@
 
   function startPolling() {
     stopPolling();
+
     pollHandle = window.setInterval(() => {
       if (!panel.hidden && currentUser && supportEnabled) {
         loadMessages().catch(error => status(error.message, true));
@@ -171,7 +220,10 @@
 
   async function loadMessages() {
     if (!currentUser || !activeTicket) {
-      showWelcome("Welcome to SDE Core Support. Send us a message to start a conversation.");
+      showWelcome(
+        "Welcome to SDE Core Support. Send us a message to start a conversation."
+      );
+
       setClosed(false);
       return;
     }
@@ -187,13 +239,25 @@
     messagesBox.replaceChildren();
 
     if (!data || data.length === 0) {
-      showWelcome("Welcome to SDE Core Support. Send us a message and our team will reply here.");
+      showWelcome(
+        "Welcome to SDE Core Support. Send us a message and our team will reply here."
+      );
     } else {
-      data.forEach(item => showMessage(item.message, item.sender_role, item.attachment_path));
+      data.forEach(item => {
+        showMessage(
+          item.message,
+          item.sender_role,
+          item.attachment_path
+        );
+      });
+
       messagesBox.scrollTop = messagesBox.scrollHeight;
     }
 
-    setClosed(["closed", "resolved"].includes(activeTicket.status));
+    setClosed(
+      ["closed", "resolved"].includes(activeTicket.status)
+    );
+
     status("");
   }
 
@@ -209,38 +273,72 @@
 
     if (error) throw error;
 
-    if (data && data.length) activeTicket = data[0];
+    if (data && data.length) {
+      activeTicket = data[0];
+    }
+
     await loadMessages();
   }
 
+  /*
+   * SUPPORT ACCESS
+   * Every authenticated customer automatically receives support.
+   * support_enabled is no longer used as an access restriction.
+   * The optional custom heading remains available to administrators.
+   */
   async function checkCustomerSupport() {
     if (!currentUser) {
       supportEnabled = false;
       widget.hidden = true;
-      showWelcome("Please sign in to your SDE Core account before contacting customer support.");
+
+      showWelcome(
+        "Please sign in to your SDE Core account before contacting customer support."
+      );
+
       setClosed(true);
-      return;
-    }
-
-    const { data, error } = await client
-      .from("support_customer_settings")
-      .select("support_enabled,display_heading")
-      .eq("user_id", currentUser.id)
-      .maybeSingle();
-
-    if (error) throw error;
-
-    supportEnabled = Boolean(data && data.support_enabled === true);
-
-    if (!supportEnabled) {
-      widget.hidden = true;
       closeChat();
+
       return;
     }
 
+    // Automatically enable support for every logged-in customer.
+    supportEnabled = true;
     widget.hidden = false;
-    if (heading) heading.textContent = data.display_heading?.trim() || "Customer Support";
+
+    if (heading) {
+      heading.textContent = "Customer Support";
+    }
+
+    // Read the optional heading without making access dependent on settings.
+    try {
+      const { data, error } = await client
+        .from("support_customer_settings")
+        .select("display_heading")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+      if (error) {
+        console.warn(
+          "SDE Support: Custom heading could not be loaded:",
+          error.message
+        );
+      } else if (heading && data?.display_heading?.trim()) {
+        heading.textContent = data.display_heading.trim();
+      }
+    } catch (error) {
+      console.warn(
+        "SDE Support: Heading lookup failed:",
+        error
+      );
+    }
+
+    // Load this customer's existing conversation.
     await loadLatestTicket();
+
+    // Start polling if the chat is already open.
+    if (!panel.hidden) {
+      startPolling();
+    }
   }
 
   function updateFilePreview() {
@@ -253,23 +351,34 @@
     }
 
     filePreview.style.display = "block";
-    filePreview.textContent = "Attached: " + file.name + " (" +
-      (file.size / 1024 / 1024).toFixed(2) + " MB) ";
+
+    filePreview.textContent =
+      "Attached: " +
+      file.name +
+      " (" +
+      (file.size / 1024 / 1024).toFixed(2) +
+      " MB) ";
 
     const remove = document.createElement("button");
+
     remove.type = "button";
     remove.textContent = "Remove";
+
     remove.style.cssText =
-      "margin-left:10px;border:0;background:transparent;color:#ffaaaa;cursor:pointer;";
+      "margin-left:10px;border:0;background:transparent;" +
+      "color:#ffaaaa;cursor:pointer;";
+
     remove.addEventListener("click", () => {
       fileInput.value = "";
       updateFilePreview();
     });
+
     filePreview.appendChild(remove);
   }
 
   fileInput.addEventListener("change", () => {
     const file = fileInput.files?.[0];
+
     if (!file) {
       updateFilePreview();
       return;
@@ -278,14 +387,24 @@
     if (!ALLOWED_TYPES.includes(file.type)) {
       fileInput.value = "";
       updateFilePreview();
-      status("Choose a JPG, PNG, WEBP, or PDF file.", true);
+
+      status(
+        "Choose a JPG, PNG, WEBP, or PDF file.",
+        true
+      );
+
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
       fileInput.value = "";
       updateFilePreview();
-      status("The maximum attachment size is 10 MB.", true);
+
+      status(
+        "The maximum attachment size is 10 MB.",
+        true
+      );
+
       return;
     }
 
@@ -297,12 +416,21 @@
     if (sending) return;
 
     if (!currentUser) {
-      status("Please sign in to contact customer support.", true);
+      status(
+        "Please sign in to contact customer support.",
+        true
+      );
+
       return;
     }
 
+    // No per-customer support_enabled restriction.
     if (!supportEnabled) {
-      status("Customer support is currently unavailable for your account.", true);
+      status(
+        "Please wait while customer support is loading.",
+        true
+      );
+
       return;
     }
 
@@ -310,28 +438,52 @@
     const file = fileInput.files?.[0] || null;
 
     if (!message && !file) {
-      status("Write a message or attach a file first.", true);
+      status(
+        "Write a message or attach a file first.",
+        true
+      );
+
       return;
     }
 
     if (message.length > 4000) {
-      status("Messages must be 4000 characters or fewer.", true);
+      status(
+        "Messages must be 4000 characters or fewer.",
+        true
+      );
+
       return;
     }
 
-    if (file && (!ALLOWED_TYPES.includes(file.type) || file.size > MAX_FILE_SIZE)) {
-      status("Choose a JPG, PNG, WEBP, or PDF file up to 10 MB.", true);
+    if (
+      file &&
+      (
+        !ALLOWED_TYPES.includes(file.type) ||
+        file.size > MAX_FILE_SIZE
+      )
+    ) {
+      status(
+        "Choose a JPG, PNG, WEBP, or PDF file up to 10 MB.",
+        true
+      );
+
       return;
     }
 
     sending = true;
     sendButton.disabled = true;
+
     status("Sending...");
 
     let uploadedPath = null;
 
     try {
-      if (!activeTicket || ["closed", "resolved"].includes(activeTicket.status)) {
+      // Create a new ticket if no active ticket exists
+      // or the previous conversation has been closed.
+      if (
+        !activeTicket ||
+        ["closed", "resolved"].includes(activeTicket.status)
+      ) {
         const { data: ticket, error: ticketError } = await client
           .from("support_tickets")
           .insert({
@@ -343,12 +495,22 @@
           .single();
 
         if (ticketError) throw ticketError;
+
         activeTicket = ticket;
       }
 
+      // Upload optional attachment.
       if (file) {
-        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-100);
-        uploadedPath = activeTicket.id + "/" + crypto.randomUUID() + "-" + safeName;
+        const safeName = file.name
+          .replace(/[^a-zA-Z0-9._-]/g, "_")
+          .slice(-100);
+
+        uploadedPath =
+          activeTicket.id +
+          "/" +
+          crypto.randomUUID() +
+          "-" +
+          safeName;
 
         const { error: uploadError } = await client.storage
           .from(BUCKET)
@@ -360,7 +522,9 @@
         if (uploadError) throw uploadError;
       }
 
-      const messageText = message || (file ? "Attachment: " + file.name : "");
+      const messageText =
+        message ||
+        (file ? "Attachment: " + file.name : "");
 
       const { error: messageError } = await client
         .from("support_messages")
@@ -374,58 +538,101 @@
 
       if (messageError) {
         if (uploadedPath) {
-          await client.storage.from(BUCKET).remove([uploadedPath]);
+          await client.storage
+            .from(BUCKET)
+            .remove([uploadedPath]);
         }
+
         throw messageError;
       }
 
       input.value = "";
       fileInput.value = "";
+
       updateFilePreview();
+
       await loadMessages();
+
       status("");
       input.focus();
+
     } catch (error) {
       console.error("SDE Support send error:", error);
-      status(error.message || "Your message could not be sent. Please try again.", true);
+
+      status(
+        error.message ||
+        "Your message could not be sent. Please try again.",
+        true
+      );
+
     } finally {
       sending = false;
-      setClosed(Boolean(activeTicket && ["closed", "resolved"].includes(activeTicket.status)));
+
+      setClosed(
+        Boolean(
+          activeTicket &&
+          ["closed", "resolved"].includes(activeTicket.status)
+        )
+      );
     }
   }
 
   function openChat() {
     panel.hidden = false;
+
     toggle.setAttribute("aria-expanded", "true");
 
     if (!currentUser) {
-      showWelcome("Please sign in to your SDE Core account to use customer support.");
+      showWelcome(
+        "Please sign in to your SDE Core account to use customer support."
+      );
+
       setClosed(true);
       return;
     }
 
     if (supportEnabled) {
-      loadMessages().catch(error => status(error.message, true));
+      loadMessages().catch(error => {
+        status(error.message, true);
+      });
+
       startPolling();
     }
+
     input.focus();
   }
 
   function closeChat() {
     panel.hidden = true;
+
     toggle.setAttribute("aria-expanded", "false");
+
     stopPolling();
   }
 
   toggle.addEventListener("click", event => {
-    // On the dedicated support page the toggle may be a navigation link.
-    if (toggle.tagName === "A" && toggle.getAttribute("href")) return;
+    // On the dedicated support page, the toggle may be
+    // a navigation link rather than a chat button.
+    if (
+      toggle.tagName === "A" &&
+      toggle.getAttribute("href")
+    ) {
+      return;
+    }
+
     event.preventDefault();
-    if (panel.hidden) openChat();
-    else closeChat();
+
+    if (panel.hidden) {
+      openChat();
+    } else {
+      closeChat();
+    }
   });
 
-  if (closeButton) closeButton.addEventListener("click", closeChat);
+  if (closeButton) {
+    closeButton.addEventListener("click", closeChat);
+  }
+
   sendButton.addEventListener("click", sendMessage);
 
   input.addEventListener("keydown", event => {
@@ -437,29 +644,54 @@
 
   async function refreshForSession(session) {
     currentUser = session?.user || null;
+
     activeTicket = null;
+
+    supportEnabled = false;
+
     stopPolling();
 
     try {
       await checkCustomerSupport();
+
     } catch (error) {
-      console.error("SDE Support load error:", error);
+      console.error(
+        "SDE Support load error:",
+        error
+      );
+
       widget.hidden = !currentUser;
-      status("Support could not be loaded: " + error.message, true);
+
+      status(
+        "Support could not be loaded: " + error.message,
+        true
+      );
     }
   }
 
+  // Check the current login session.
   client.auth.getSession().then(({ data, error }) => {
     if (error) {
-      console.error("SDE Support session error:", error.message);
+      console.error(
+        "SDE Support session error:",
+        error.message
+      );
+
       return;
     }
+
     refreshForSession(data.session);
   });
 
+  // Automatically refresh support when login/logout occurs.
   client.auth.onAuthStateChange((_event, session) => {
-    window.setTimeout(() => refreshForSession(session), 0);
+    window.setTimeout(() => {
+      refreshForSession(session);
+    }, 0);
   });
 
-  showWelcome("Please sign in to your SDE Core account to use customer support.");
+  showWelcome(
+    "Please sign in to your SDE Core account to use customer support."
+  );
+
 })();

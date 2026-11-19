@@ -381,6 +381,7 @@
         <button class="nav-button" data-page="investments">Investments</button>
         <button class="nav-button" data-page="plans">Investment plans</button>
         <button class="nav-button" data-page="support">Support</button>
+        <button class="nav-button" data-page="kyc">KYC Verification</button>
         <button class="nav-button" data-page="teamtrade">Team Trade Control</button>
         <button class="nav-button" data-page="addresses">Deposit addresses</button>
         <button class="nav-button" data-page="audit">Audit log</button>
@@ -395,7 +396,7 @@
           <button id="refreshButton">Refresh data</button>
         </div>
         <div id="globalMessage" class="message"></div>
-        <div id="pageContent"><div class="loading">Loading dashboardâ€¦</div></div>
+        <div id="pageContent"><div class="loading">Loading dashboard…</div></div>
       </main>
     </div>
   </div>
@@ -427,6 +428,7 @@
         investments: ["Investments", "Review customer investments."],
         plans: ["Investment plans", "View active and inactive investment plans."],
         support: ["Support", "Review tickets and their messages."],
+        kyc: ["KYC Verification", "Review customer identity verification submissions."],
         teamtrade: ["Team Trade Control", "Manage trading settings for authorized internal team accounts."],
         addresses: ["Deposit addresses", "Inspect configured deposit addresses."],
         audit: ["Audit log", "Review recorded administrative activity."]
@@ -451,7 +453,7 @@
 
       function money(value, currency = "USDT") {
         const n = Number(value);
-        if (!Number.isFinite(n)) return "â€”";
+        if (!Number.isFinite(n)) return "—";
         return n.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
@@ -459,13 +461,13 @@
       }
 
       function date(value) {
-        if (!value) return "â€”";
+        if (!value) return "—";
         const d = new Date(value);
-        return Number.isNaN(d.getTime()) ? "â€”" : d.toLocaleString();
+        return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString();
       }
 
       function shortId(value) {
-        return value ? String(value).slice(0, 8) + "â€¦" : "â€”";
+        return value ? String(value).slice(0, 8) + "…" : "—";
       }
 
       function badge(value) {
@@ -519,7 +521,7 @@
         cells.forEach((cell) => {
           const td = el("td");
           if (cell instanceof Node) td.append(cell);
-          else td.textContent = cell === undefined || cell === null ? "â€”" : String(cell);
+          else td.textContent = cell === undefined || cell === null ? "—" : String(cell);
           row.append(td);
         });
         return row;
@@ -534,7 +536,7 @@
       function fieldLabel(labelText, value) {
         const wrap = el("div", undefined, "detail-list");
         wrap.append(el("div", labelText, "key"));
-        wrap.append(el("div", value === undefined || value === null ? "â€”" : String(value)));
+        wrap.append(el("div", value === undefined || value === null ? "—" : String(value)));
         return wrap;
       }
 
@@ -618,7 +620,7 @@
         $("pageSubtitle").textContent = pageInfo[page][1];
         message("globalMessage", "");
         clear(content);
-        content.append(el("div", "Loading " + pageInfo[page][0].toLowerCase() + "â€¦", "loading"));
+        content.append(el("div", "Loading " + pageInfo[page][0].toLowerCase() + "…", "loading"));
 
         document.querySelectorAll(".nav-button").forEach((b) => {
           b.classList.toggle("active", b.dataset.page === page);
@@ -636,6 +638,7 @@
             case "withdrawals": await renderWithdrawals(); break;
             case "investments": await renderInvestments(); break;
             case "plans": await renderPlans(); break;
+            case "kyc": await renderKyc(); break;
             case "support": await renderSupport(); break;
             case "teamtrade": await renderTeamTrade(); break;
             case "addresses": await renderAddresses(); break;
@@ -653,6 +656,199 @@
         }
       }
 
+
+      async function renderKyc() {
+        const toolbar = el("div", undefined, "toolbar");
+
+        const filter = el("select");
+        [
+          ["all", "All submissions"],
+          ["pending", "Pending"],
+          ["approved", "Approved"],
+          ["rejected", "Rejected"]
+        ].forEach(([value, label]) => {
+          const option = el("option", label);
+          option.value = value;
+          filter.append(option);
+        });
+
+        toolbar.append(filter);
+        toolbar.append(button("Refresh", () => loadPage("kyc"), "primary"));
+        content.append(toolbar);
+
+        const loading = el("div", "Loading KYC submissions...", "loading");
+        content.append(loading);
+
+        const { data: rows, error } = await sgecoreSupabase
+          .from("kyc_submissions")
+          .select(
+            "id,user_id,document_type,document_name,document_path,status,admin_notes,created_at"
+          )
+          .order("created_at", { ascending: false })
+          .limit(300);
+
+        if (error) throw error;
+
+        clear(content);
+        content.append(toolbar);
+
+        const list = el("div", undefined, "grid");
+        const selectedStatus = filter.value;
+
+        const visibleRows = (rows || []).filter((row) =>
+          selectedStatus === "all" || row.status === selectedStatus
+        );
+
+        filter.addEventListener("change", () => {
+          loadPage("kyc");
+        });
+
+        if (!visibleRows.length) {
+          content.append(el("div", "No KYC submissions found.", "empty"));
+          return;
+        }
+
+        visibleRows.forEach((row) => {
+          const panel = el("div", undefined, "card");
+
+          const heading = el("h2", row.document_type.replaceAll("_", " ").toUpperCase());
+          panel.append(heading);
+
+          const details = [
+            ["Customer UID", row.user_id],
+            ["Submission ID", row.id],
+            ["Document name", row.document_name],
+            ["Document type", row.document_type.replaceAll("_", " ")],
+            ["Submitted", new Date(row.created_at).toLocaleString()],
+            ["Status", row.status.toUpperCase()]
+          ];
+
+          const detailList = el("div", undefined, "detail-list");
+
+          details.forEach(([label, value]) => {
+            detailList.append(el("strong", label));
+            detailList.append(el("span", value || "—"));
+          });
+
+          panel.append(detailList);
+
+          if (row.status === "rejected" && row.admin_notes) {
+            const reason = el("div", undefined, "notice warning");
+            reason.textContent = "Rejection reason: " + row.admin_notes;
+            panel.append(reason);
+          }
+
+          const actions = el("div", undefined, "toolbar");
+
+          actions.append(button("Open private document", async () => {
+            const previewWindow = window.open("about:blank", "_blank");
+
+            if (!previewWindow) {
+              message("globalMessage", "Please allow pop-ups to view the document.", "error");
+              return;
+            }
+
+            previewWindow.opener = null;
+
+            try {
+              const { data, error } = await sgecoreSupabase
+                .storage
+                .from("kyc-documents")
+                .createSignedUrl(row.document_path, 60);
+
+              if (error) throw error;
+              if (!data?.signedUrl) throw new Error("Unable to create document link.");
+
+              previewWindow.location.href = data.signedUrl;
+            } catch (e) {
+              previewWindow.close();
+              message("globalMessage", e.message || "Document could not be opened.", "error");
+            }
+          }, "primary"));
+
+          if (row.status === "pending") {
+
+            actions.append(button("Approve", async () => {
+              if (!window.confirm("Approve this customer's KYC submission?")) return;
+
+              try {
+                const now = new Date().toISOString();
+
+                const { data, error } = await sgecoreSupabase
+                  .from("kyc_submissions")
+                  .update({
+                    status: "approved",
+                    admin_notes: null,
+                    reviewed_by: state.user.id,
+                    reviewed_at: now,
+                    updated_at: now
+                  })
+                  .eq("id", row.id)
+                  .eq("status", "pending")
+                  .select("id")
+                  .maybeSingle();
+
+                if (error) throw error;
+                if (!data) throw new Error("Submission was already reviewed or could not be updated.");
+
+                message("globalMessage", "KYC submission approved.", "success");
+                await loadPage("kyc");
+
+              } catch (e) {
+                message("globalMessage", e.message || "Approval failed.", "error");
+              }
+            }, "primary"));
+
+            actions.append(button("Reject", async () => {
+              const reason = window.prompt(
+                "Enter the reason for rejecting this KYC submission:"
+              );
+
+              if (reason === null) return;
+
+              if (!reason.trim()) {
+                message("globalMessage", "A rejection reason is required.", "error");
+                return;
+              }
+
+              try {
+                const now = new Date().toISOString();
+
+                const { data, error } = await sgecoreSupabase
+                  .from("kyc_submissions")
+                  .update({
+                    status: "rejected",
+                    admin_notes: reason.trim(),
+                    reviewed_by: state.user.id,
+                    reviewed_at: now,
+                    updated_at: now
+                  })
+                  .eq("id", row.id)
+                  .eq("status", "pending")
+                  .select("id")
+                  .maybeSingle();
+
+                if (error) throw error;
+                if (!data) throw new Error("Submission was already reviewed or could not be updated.");
+
+                message("globalMessage", "KYC submission rejected.", "success");
+                await loadPage("kyc");
+
+              } catch (e) {
+                message("globalMessage", e.message || "Rejection failed.", "error");
+              }
+            }, "danger"));
+
+          } else {
+            actions.append(el("span", "This submission has already been reviewed.", "muted"));
+          }
+
+          panel.append(actions);
+          list.append(panel);
+        });
+
+        content.append(list);
+      }
       async function renderOverview() {
         const [customers, wallets, deposits, withdrawals, investments, plans] =
           await Promise.all([
@@ -825,7 +1021,7 @@
         customerSelect.id = "creditCustomer";
         customerSelect.required = true;
 
-        const defaultOption = el("option", "Loading customersâ€¦");
+        const defaultOption = el("option", "Loading customers…");
         defaultOption.value = "";
         customerSelect.append(defaultOption);
         customerField.append(customerLabel, customerSelect);
@@ -927,7 +1123,7 @@
 
             const placeholder = el(
               "option",
-              term ? "Select a matching customerâ€¦" : "Select a customerâ€¦"
+              term ? "Select a matching customer…" : "Select a customer…"
             );
             placeholder.value = "";
             customerSelect.append(placeholder);
@@ -1062,8 +1258,8 @@
           if (!confirm(confirmation)) return;
 
           submit.disabled = true;
-          submit.textContent = "Processingâ€¦";
-          status.textContent = "Submitting the secured database requestâ€¦";
+          submit.textContent = "Processing…";
+          status.textContent = "Submitting the secured database request…";
 
           try {
             const { data, error } = await sgecoreSupabase.rpc(
@@ -1199,7 +1395,7 @@
               shortId(d.user_id),
               [d.method, d.network].filter(Boolean).join(" / "),
               money(d.amount, d.currency),
-              d.transaction_hash || d.payment_reference || "â€”",
+              d.transaction_hash || d.payment_reference || "—",
               badge(d.status),
               actions(...reviewButtons)
             ]);
@@ -1556,7 +1752,7 @@
           heading.append(el("div", "Customer Member ID: " + (profile.member_id || "Not assigned") + " Â· " + (profile.full_name || profile.email || shortId(ticket.user_id)), "muted"));
           heading.append(el("div", "Ticket " + ticket.id, "muted small"));
           head.append(heading, button("Back to support", () => loadPage("support"))); box.append(head);
-          [["Customer name", profile.full_name || "â€”"], ["Email", profile.email || "â€”"], ["Member ID", profile.member_id || "â€”"], ["User ID", ticket.user_id], ["Status", ticket.status], ["Created", date(ticket.created_at)], ["Last activity", date(ticket.last_message_at || ticket.updated_at)]]
+          [["Customer name", profile.full_name || "—"], ["Email", profile.email || "—"], ["Member ID", profile.member_id || "—"], ["User ID", ticket.user_id], ["Status", ticket.status], ["Created", date(ticket.created_at)], ["Last activity", date(ticket.last_message_at || ticket.updated_at)]]
             .forEach(([k,v]) => box.append(fieldLabel(k,v)));
           const statusRow = el("div", undefined, "toolbar");
           const statusSelect = el("select");
@@ -1781,14 +1977,14 @@
           (a) => tr([
             date(a.created_at), shortId(a.admin_id), a.action,
             a.entity_type, shortId(a.entity_id),
-            a.details ? JSON.stringify(a.details) : "â€”"
+            a.details ? JSON.stringify(a.details) : "—"
           ])
         ));
       }
 
       $("loginForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        message("loginMessage", "Signing inâ€¦");
+        message("loginMessage", "Signing in…");
 
         try {
           const { data, error } = await sgecoreSupabase.auth.signInWithPassword({
