@@ -1,4 +1,28 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "sgecoresde-core-saifali178786-source.vercel.app"
+        }
+      ],
+      "destination": "https://www.sdecore.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "sgecore.vercel.app"
+        }
+      ],
+      "destination": "https://www.sdecore.com/:path*",
+      "permanent": true
+    }
+  ]
 }
