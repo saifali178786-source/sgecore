@@ -12,11 +12,9 @@
     return /\/pages\/[^/]*$/i.test(window.location.pathname);
   }
 
+  // Always return Google OAuth users to the main SDE Core website.
   function getDashboardUrl() {
-    return new URL(
-      isPagesFolder() ? "dashboard.html" : "pages/dashboard.html",
-      window.location.href
-    ).href;
+    return "https://www.sdecore.com/pages/dashboard.html";
   }
 
   function showMessage(message, text) {
@@ -67,7 +65,7 @@
     });
   }
 
-  // Start Google OAuth and return to the dashboard on this deployment.
+  // Start Google OAuth and return to the main SDE Core website.
   function setupGoogleSignIn() {
     document.querySelectorAll("[data-google-signin]").forEach((button) => {
       if (button.dataset.googleReady === "true") return;
@@ -105,8 +103,7 @@
 
           if (error) throw error;
 
-          // Supabase normally redirects the browser to Google automatically.
-          // Keep the button disabled while that navigation takes place.
+          // Supabase redirects the browser to Google automatically.
         } catch (error) {
           console.error("Google sign-in error:", error);
 
