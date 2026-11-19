@@ -2580,8 +2580,22 @@ header.site-header .header-actions [hidden] {
       '<div class="news-state">Loading latest financial news...</div>';
 
     const results = await Promise.allSettled(
-      newsFeeds.map(fetchNewsFeed)
+  newsFeeds.map(fetchNewsFeed)
+);
+
+results.forEach((result, index) => {
+  if (result.status === "rejected") {
+    console.error(
+      "[SDE NEWS ERROR] " + newsFeeds[index].source,
+      result.reason
     );
+  } else {
+    console.log(
+      "[SDE NEWS SUCCESS] " + newsFeeds[index].source,
+      result.value.length + " articles"
+    );
+  }
+});
 
     allNews = results
       .filter(result => result.status === "fulfilled")

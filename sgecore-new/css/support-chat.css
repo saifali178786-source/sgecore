@@ -205,17 +205,22 @@
 }
 
 #sge-chat-send {
-  display: grid;
-  place-items: center;
-  flex: 0 0 43px;
-  width: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 76px;
+  width: 76px;
+  min-width: 76px;
   height: 43px;
+  box-sizing: border-box;
+  padding: 0 12px;
   border: 0;
   border-radius: 12px;
   background: #d9b45d;
   color: #101a29;
-  font-size: 19px;
-  font-weight: 900;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
 }
 
