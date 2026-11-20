@@ -263,32 +263,43 @@
       navigation.appendChild(accountMenu);
     }
 
-    supabase.auth.getSession()
-      .then(({ data, error }) => {
-        if (error) {
-          console.error("Could not read session:", error);
-          showSignedOut();
-          return;
-        }
+    // Listen for authentication changes before checking the saved session.
+let authEventReceived = false;
 
-        if (data.session?.user) {
-          showSignedIn(data.session.user);
-        } else {
-          showSignedOut();
-        }
-      })
-      .catch((error) => {
-        console.error("Session initialization error:", error);
-        showSignedOut();
-      });
+supabase.auth.onAuthStateChange((event, session) => {
+  // Let getSession() handle the initial page state.
+  if (event === "INITIAL_SESSION") return;
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        showSignedIn(session.user);
-      } else {
-        showSignedOut();
-      }
-    });
+  authEventReceived = true;
+
+  if (session?.user) {
+    showSignedIn(session.user);
+  } else {
+    showSignedOut();
+  }
+});
+
+// Read the existing Supabase login session.
+supabase.auth.getSession()
+  .then(({ data, error }) => {
+    if (error) {
+      console.error("Could not read session:", error);
+      return;
+    }
+
+    // Do not let an older session check override a newer auth event.
+    if (authEventReceived) return;
+
+    if (data.session?.user) {
+      showSignedIn(data.session.user);
+    } else {
+      showSignedOut();
+    }
+  })
+  .catch((error) => {
+    console.error("Session initialization error:", error);
+  });
+
   }
 
   function initialize() {
