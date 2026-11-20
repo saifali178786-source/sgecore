@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1169,112 +1169,8 @@ header.site-header .header-actions [hidden] {
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
-  <script src="js/auth-ui.js"></script>
+  <script src="js/auth-ui.js?v=20261120"></script>
 
-  <!-- Account navigation and authentication -->
-  <script>
-  (function () {
-    "use strict";
-
-    const client = typeof sgecoreSupabase !== "undefined" ? sgecoreSupabase : null;
-    const loginLink = document.getElementById("sgeLoginLink");
-    const registerLink = document.getElementById("sgeRegisterLink");
-    const accountMenu = document.getElementById("sgeAccountMenu");
-    const accountTrigger = document.getElementById("sgeAccountTrigger");
-    const accountDropdown = document.getElementById("sgeAccountDropdown");
-    const uidLabel = document.getElementById("sgeAccountUid");
-    const logoutButton = document.getElementById("sgeLogoutButton");
-
-    function setLoggedIn(user) {
-      const loggedIn = Boolean(user && user.id);
-
-      if (loginLink) loginLink.hidden = loggedIn;
-      if (registerLink) registerLink.hidden = loggedIn;
-      if (accountMenu) accountMenu.hidden = !loggedIn;
-
-      if (uidLabel && loggedIn) {
-        const uid = user.user_metadata?.uid ||
-                    user.user_metadata?.member_id ||
-                    user.id;
-
-        uidLabel.textContent = "UID: " + String(uid);
-        uidLabel.title = "Supabase account UID: " + String(uid);
-      }
-    }
-
-    function closeDropdown() {
-      if (accountDropdown) accountDropdown.hidden = true;
-      if (accountTrigger) accountTrigger.setAttribute("aria-expanded", "false");
-    }
-
-    if (accountTrigger) {
-      accountTrigger.addEventListener("click", function (event) {
-        event.stopPropagation();
-
-        const open = accountDropdown && accountDropdown.hidden;
-
-        if (accountDropdown) accountDropdown.hidden = !open;
-
-        accountTrigger.setAttribute("aria-expanded", String(Boolean(open)));
-      });
-    }
-
-    document.addEventListener("click", closeDropdown);
-
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") closeDropdown();
-    });
-
-    if (accountDropdown) {
-      accountDropdown.addEventListener("click", function (event) {
-        event.stopPropagation();
-      });
-    }
-
-    if (!client || !client.auth) {
-      console.warn("SDE Core auth navigation: Supabase client not found. Check js/supabase.js.");
-      return;
-    }
-
-    client.auth.getSession()
-      .then(function (result) {
-        setLoggedIn(
-          result.data && result.data.session
-            ? result.data.session.user
-            : null
-        );
-      })
-      .catch(function (error) {
-        console.error("Could not read Supabase session:", error);
-      });
-
-    client.auth.onAuthStateChange(function (_event, session) {
-      setLoggedIn(session ? session.user : null);
-      closeDropdown();
-    });
-
-    if (logoutButton) {
-      logoutButton.addEventListener("click", async function () {
-        logoutButton.disabled = true;
-        logoutButton.textContent = "Logging out…";
-
-        try {
-          const result = await client.auth.signOut();
-
-          if (result.error) throw result.error;
-
-          setLoggedIn(null);
-          window.location.href = "index.html";
-        } catch (error) {
-          console.error("SDE Core logout failed:", error);
-          logoutButton.disabled = false;
-          logoutButton.textContent = "Log Out";
-          alert("Logout failed. Please try again.");
-        }
-      });
-    }
-  })();
-  </script>
 
   <!-- Mining plan listing data -->
   <script>
@@ -2031,8 +1927,3 @@ const yahooMarkets = {
 <script src="js/support-chat.js"></script>
 </body>
 </html>
-
-
-
-
-
