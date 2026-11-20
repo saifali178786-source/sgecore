@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -867,7 +867,7 @@
         });
 
         const balanceText = Object.keys(balances).length
-          ? Object.entries(balances).map(([c, v]) => money(v, c)).join(" Â· ")
+          ? Object.entries(balances).map(([c, v]) => money(v, c)).join(" · ")
           : "No wallet balances";
 
         const grid = el("div", undefined, "grid");
@@ -1144,7 +1144,7 @@
                 p.email || "No email",
                 p.member_id ? "Member " + p.member_id : "",
                 "ID " + shortId(p.id)
-              ].filter(Boolean).join(" Â· ");
+              ].filter(Boolean).join(" · ");
 
               const option = el("option", label);
               option.value = p.id;
@@ -1692,7 +1692,7 @@
           const q = term.trim().toLowerCase();
           profiles.filter(p => !q || [p.member_id,p.full_name,p.email,p.id].some(v => String(v || "").toLowerCase().includes(q)))
             .forEach(p => {
-              const label = [p.member_id || shortId(p.id), p.full_name || p.email || "Customer", p.email].filter(Boolean).join(" Â· ");
+              const label = [p.member_id || shortId(p.id), p.full_name || p.email || "Customer", p.email].filter(Boolean).join(" · ");
               const opt = el("option", label); opt.value = p.id; customerSelect.append(opt);
             });
           if (profiles.some(p => p.id === previous)) customerSelect.value = previous;

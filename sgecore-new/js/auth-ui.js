@@ -1,4 +1,4 @@
-
+﻿
 (() => {
   "use strict";
 
@@ -165,7 +165,7 @@
       const toggle = document.createElement("button");
       toggle.type = "button";
       toggle.className = "sge-account-trigger";
-      toggle.textContent = "My Account ▾";
+      toggle.textContent = "My Account";
       toggle.setAttribute("aria-expanded", "false");
       toggle.style.cssText =
         "padding:10px 14px;border:1px solid #d9b45d;" +
@@ -263,54 +263,61 @@
       navigation.appendChild(accountMenu);
     }
 
-    // Listen for authentication changes before checking the saved session.
-let authEventReceived = false;
+    // Use the existing SDE Core Supabase client.
+    const authClient = getSupabase();
 
-supabase.auth.onAuthStateChange((event, session) => {
-  // Let getSession() handle the initial page state.
-  if (event === "INITIAL_SESSION") return;
-
-  authEventReceived = true;
-
-  if (session?.user) {
-    showSignedIn(session.user);
-  } else {
-    showSignedOut();
-  }
-});
-
-// Read the existing Supabase login session.
-supabase.auth.getSession()
-  .then(({ data, error }) => {
-    if (error) {
-      console.error("Could not read session:", error);
+    if (!authClient) {
+      console.error("SDE Supabase client is unavailable.");
       return;
     }
 
-    // Do not let an older session check override a newer auth event.
-    if (authEventReceived) return;
+    let authEventReceived = false;
 
-    if (data.session?.user) {
-      showSignedIn(data.session.user);
-    } else {
-      showSignedOut();
-    }
-  })
-  .catch((error) => {
-    console.error("Session initialization error:", error);
-  });
+    authClient.auth.onAuthStateChange((event, session) => {
+      console.log("[SDE AUTH DEBUG]", event, "User:", session?.user?.id || "NO SESSION");
 
+      // Process INITIAL_SESSION too, so an existing login updates the header.
+
+      authEventReceived = true;
+
+      if (session?.user) {
+        showSignedIn(session.user);
+      } else {
+        showSignedOut();
+      }
+    });
+
+    authClient.auth.getSession()
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("Could not read session:", error);
+          return;
+        }
+
+        if (authEventReceived) return;
+
+        if (data.session?.user) {
+          showSignedIn(data.session.user);
+        } else {
+          showSignedOut();
+        }
+      })
+      .catch((error) => {
+        console.error("Session initialization error:", error);
+      });
   }
-
-  function initialize() {
+  function initializeAuthUI() {
     setupPasswordVisibility();
     setupGoogleSignIn();
     setupAccountMenu();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initialize);
+    document.addEventListener("DOMContentLoaded", initializeAuthUI, { once: true });
   } else {
-    initialize();
+    initializeAuthUI();
   }
 })();
+
+
+
