@@ -659,29 +659,27 @@
         0 0 40px rgba(217, 180, 93, .09) !important;
     }
 
-    /* Centered SDE CORE logo */
-    .register-wrap .register-brand {
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      margin: 0 auto 30px !important;
-      padding: 12px 24px;
-      border: 1px solid rgba(217, 180, 93, .38);
-      border-radius: 12px;
-      background: linear-gradient(
-        135deg,
-        rgba(217, 180, 93, .13),
-        rgba(217, 180, 93, .035)
-      );
-      color: #f5e3b0 !important;
-      font-size: 23px !important;
-      font-weight: 900 !important;
-      letter-spacing: 4px !important;
-      text-align: center;
-      text-decoration: none;
-      text-shadow: 0 0 18px rgba(217, 180, 93, .22);
-    }
+    /* Center only the SDE logo */
+.register-wrap .register-brand {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 58px !important;
+  height: 58px !important;
+  margin: 0 auto 30px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
+/* Remove the extra gold S */
+.register-wrap .register-brand::before {
+  display: none !important;
+  content: none !important;
+}
 
     .register-wrap .register-brand::before {
       content: "S";
@@ -802,16 +800,16 @@
       }
 
       .register-wrap .register-brand {
-        font-size: 19px !important;
-        letter-spacing: 3px !important;
-        padding: 10px 16px;
-      }
+  width: 58px !important;
+  height: 58px !important;
+  padding: 0 !important;
+  margin: 0 auto 25px !important;
+}
 
-      .register-wrap .register-brand::before {
-        width: 29px;
-        height: 29px;
-        font-size: 17px;
-      }
+.register-wrap .register-brand::before {
+  display: none !important;
+  content: none !important;
+}
 
       .register-wrap .register-card h1 {
         font-size: 27px;
@@ -836,6 +834,69 @@
         font-size: 11px;
       }
     }
+    /* SDE REGISTER - FINAL MOBILE WIDTH FIX */
+@media (max-width: 600px) {
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: clip;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  .register-wrap {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 20px 14px !important;
+    margin: 0;
+    overflow-x: clip;
+  }
+
+  .register-wrap .register-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 24px 16px !important;
+  }
+
+  .register-wrap .register-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .register-wrap .register-field,
+  .register-wrap .register-field input,
+  .register-wrap .register-submit,
+  .register-wrap .google-submit {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .register-wrap .register-grid .register-submit,
+  .register-wrap .register-grid .register-message {
+    grid-column: 1 / -1 !important;
+  }
+
+  .register-wrap .register-brand {
+    flex-shrink: 0;
+  }
+}
   </style>
 </head>
 
@@ -885,10 +946,10 @@
             type="tel"
             id="phone"
             name="phone"
-            placeholder="+92 300 1234567"
+            placeholder="** 300 1234567"
             autocomplete="tel"
             pattern="[+0-9() -]{7,20}"
-            title="Include your country code, for example +92 300 1234567"
+            title="Include your country code, for example ** 300 1234567"
             required
           >
         </div>

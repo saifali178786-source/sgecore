@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -499,7 +499,227 @@
       font-size: 14px;
     }
 
-    
+
+/* =========================================
+   SDE CONTACT PAGE - MOBILE RESPONSIVE FIX
+   Desktop layout remains unchanged
+========================================= */
+
+@media (max-width: 768px) {
+
+  .contact-page {
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  .contact-container {
+    width: calc(100% - 32px);
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Hero */
+  .contact-page .contact-hero {
+    padding: 65px 0 55px;
+  }
+
+  .contact-hero h1 {
+    font-size: clamp(34px, 9vw, 46px);
+    line-height: 1.12;
+    margin-bottom: 17px;
+    overflow-wrap: break-word;
+  }
+
+  .contact-hero p {
+    font-size: 14px;
+    line-height: 1.75;
+    margin-bottom: 24px;
+  }
+
+  .contact-label {
+    font-size: 10px;
+    margin-bottom: 13px;
+  }
+
+  .contact-button {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  /* Contact information cards */
+  .contact-info-section,
+  .contact-offices-section,
+  .contact-faq-section {
+    padding: 52px 0;
+  }
+
+  .contact-info-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .contact-info-card {
+    padding: 25px 20px;
+    border-radius: 12px;
+  }
+
+  .contact-info-card:hover {
+    transform: none;
+  }
+
+  .contact-info-card h3 {
+    font-size: 18px;
+  }
+
+  .contact-info-card p {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+
+  /* Contact form section */
+  .contact-form-section {
+    padding: 55px 0;
+  }
+
+  .contact-form-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 25px;
+  }
+
+  .contact-form-copy {
+    padding: 0;
+  }
+
+  .contact-form-copy h2 {
+    font-size: 30px;
+    line-height: 1.2;
+  }
+
+  .contact-form-copy p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .contact-form-copy ul {
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .contact-form-box {
+    width: 100%;
+    min-width: 0;
+    padding: 23px 17px;
+    border-radius: 12px;
+  }
+
+  .contact-form-box h3 {
+    font-size: 21px;
+    margin-bottom: 20px;
+  }
+
+  .contact-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 17px;
+  }
+
+  .contact-field,
+  .contact-field.full {
+    grid-column: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .contact-field input,
+  .contact-field select,
+  .contact-field textarea {
+    width: 100%;
+    max-width: 100%;
+    min-height: 49px;
+    font-size: 16px;
+  }
+
+  .contact-field textarea {
+    min-height: 130px;
+  }
+
+  .contact-submit {
+    width: 100%;
+    min-height: 49px;
+    margin-top: 20px;
+  }
+
+  .contact-form-note {
+    font-size: 11px;
+  }
+
+  /* Office locations */
+  .contact-office-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .contact-office-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .contact-office-top {
+    padding: 22px 20px;
+  }
+
+  /* FAQ */
+  .contact-faq-item {
+    border-radius: 10px;
+  }
+
+  .contact-faq-item summary {
+    padding: 17px 42px 17px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .contact-faq-item p {
+    padding: 0 16px 17px;
+    font-size: 13px;
+  }
+
+  /* Final call to action */
+  .contact-final-cta {
+    padding: 48px 18px;
+  }
+
+  .contact-final-cta h2 {
+    font-size: 29px;
+    line-height: 1.2;
+  }
+
+  .contact-final-cta p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+}
+
+/* Smaller mobile screens */
+@media (max-width: 380px) {
+
+  .contact-container {
+    width: calc(100% - 24px);
+  }
+
+  .contact-hero h1 {
+    font-size: 32px;
+  }
+
+  .contact-form-box {
+    padding: 20px 14px;
+  }
+
+  .contact-form-copy h2 {
+    font-size: 27px;
+  }
+}
+
   </style>
 <style id="sde-contact-homepage-header">
 @media (min-width: 900px) {
@@ -971,35 +1191,94 @@ html body header.site-header .header-actions [hidden] {
 
   <script>
     // Footer year
-    document.getElementById("currentYear").textContent =
-      new Date().getFullYear();
+const currentYearElement = document.getElementById("currentYear");
 
-    // Contact form: open a prepared email draft
-    const contactForm = document.getElementById("contactForm");
+if (currentYearElement) {
+  currentYearElement.textContent = new Date().getFullYear();
+}
 
-    if (contactForm) {
-      contactForm.addEventListener("submit", function(event) {
-        event.preventDefault();
 
-        const name = document.getElementById("contactName").value.trim();
-        const email = document.getElementById("contactEmail").value.trim();
-        const subject = document.getElementById("contactSubject").value;
-        const message = document.getElementById("contactMessage").value.trim();
+// Contact form: save enquiries to Supabase
+const contactForm = document.getElementById("contactForm");
 
-        const emailSubject = encodeURIComponent("SDE Core - " + subject);
+if (contactForm) {
+  const submitButton = contactForm.querySelector(
+    'button[type="submit"]'
+  );
 
-        const emailBody = encodeURIComponent(
-          "Name: " + name +
-          "\nEmail: " + email +
-          "\nSubject: " + subject +
-          "\n\nMessage:\n" + message
-        );
+  const formNote = contactForm.querySelector(".contact-form-note");
 
-        window.location.href =
-          "mailto:contact.sdecore@gmail.com?subject=" +
-          emailSubject + "&body=" + emailBody;
-      });
+  // Create a status message without changing the page layout
+  const formStatus = document.createElement("p");
+  formStatus.id = "contactFormStatus";
+  formStatus.setAttribute("role", "status");
+  formStatus.setAttribute("aria-live", "polite");
+
+  if (formNote) {
+    formNote.insertAdjacentElement("afterend", formStatus);
+  } else {
+    contactForm.appendChild(formStatus);
+  }
+
+  contactForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const client =
+      typeof sgecoreSupabase !== "undefined"
+        ? sgecoreSupabase
+        : null;
+
+    if (!client) {
+      formStatus.textContent =
+        "Unable to connect. Please try again later.";
+      return;
     }
+
+    const name = document.getElementById("contactName").value.trim();
+    const email = document.getElementById("contactEmail").value.trim();
+    const subject = document.getElementById("contactSubject").value;
+    const message = document.getElementById("contactMessage").value.trim();
+
+    if (!name || !email || !subject || !message) {
+      formStatus.textContent = "Please complete all fields.";
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting...";
+    formStatus.textContent = "";
+
+    try {
+      const { error } = await client
+        .from("contact_messages")
+        .insert([{
+          name: name,
+          email: email,
+          subject: subject,
+          message: message
+        }]);
+
+      if (error) {
+        throw error;
+      }
+
+      formStatus.textContent =
+        "Thank you! Your message has been submitted successfully.";
+
+      contactForm.reset();
+
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
+
+      formStatus.textContent =
+        "Your message could not be submitted. Please try again.";
+    } finally {
+      submitButton.disabled = false;
+      submitButton.innerHTML = 'Send Message &#8594;';
+    }
+  });
+}
+
   </script>
 
   <script src="../js/main.js"></script>
