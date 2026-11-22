@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -998,6 +998,7 @@ if (registerLink) {
           return;
         }
 
+        
         if (data.user) {
           loginMessage.textContent =
             "Login successful! Redirecting...";
@@ -1016,15 +1017,32 @@ if (registerLink) {
             requestedRedirect === "trading.html" ||
             savedRedirect === "trading.html";
 
+          const { data: leaderMembership, error: leaderCheckError } =
+            await sgecoreSupabase
+              .from("team_members")
+              .select("team_id")
+              .eq("user_id", data.user.id)
+              .eq("member_role", "team_leader")
+              .eq("is_active", true)
+              .maybeSingle();
+
+          if (leaderCheckError) {
+            throw leaderCheckError;
+          }
+
           if (returnToTrading) {
             sessionStorage.removeItem("sde_trade_return_to");
-
             window.location.replace("trading.html");
 
           } else if (selectedPlan) {
             window.location.replace(
               "mining.html?plan=" +
               encodeURIComponent(selectedPlan)
+            );
+
+          } else if (leaderMembership) {
+            window.location.replace(
+              "team-leader-dashboard.html"
             );
 
           } else {

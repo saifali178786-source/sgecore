@@ -381,8 +381,10 @@
         <button class="nav-button" data-page="investments">Investments</button>
         <button class="nav-button" data-page="plans">Investment plans</button>
         <button class="nav-button" data-page="support">Support</button>
+        <button class="nav-button" data-page="customerlabels">Customer Labels</button>
         <button class="nav-button" data-page="kyc">KYC Verification</button>
         <button class="nav-button" data-page="teamtrade">Team Trade Control</button>
+        <button class="nav-button" data-page="teammanagement">Team Management</button>
         <button class="nav-button" data-page="addresses">Deposit addresses</button>
         <button class="nav-button" data-page="audit">Audit log</button>
       </aside>
@@ -391,7 +393,7 @@
         <div class="page-head">
           <div>
             <h1 id="pageTitle">Overview</h1>
-            <div id="pageSubtitle" class="muted">Your platform at a glance.</div>
+            <div id="pageSubtitle" class="muted">My platform at a glance.</div>
           </div>
           <button id="refreshButton">Refresh data</button>
         </div>
@@ -409,13 +411,15 @@
       const content = $("pageContent");
 
       const state = {
-        user: null,
-        page: "overview",
-        cache: {},
-        customerQuery: "",
-        depositFilter: "all",
-        ticketFilter: "all"
-      };
+  user: null,
+  page: "overview",
+  cache: {},
+  customerQuery: "",
+  walletQuery: "",
+  depositFilter: "all",
+    ticketFilter: "all",
+  supportLabelFilter: "all"
+};
 
       const pageInfo = {
         overview: ["Overview", "Your platform at a glance."],
@@ -428,8 +432,13 @@
         investments: ["Investments", "Review customer investments."],
         plans: ["Investment plans", "View active and inactive investment plans."],
         support: ["Support", "Review tickets and their messages."],
+        customerlabels: ["Customer Labels", "Create private labels and organize customer accounts."],
         kyc: ["KYC Verification", "Review customer identity verification submissions."],
         teamtrade: ["Team Trade Control", "Manage trading settings for authorized internal team accounts."],
+        teammanagement: [
+  "Team Management",
+  "Create teams, assign team leaders and organize customers."
+],
         addresses: ["Deposit addresses", "Inspect configured deposit addresses."],
         audit: ["Audit log", "Review recorded administrative activity."]
       };
@@ -459,16 +468,45 @@
           maximumFractionDigits: 2
         }) + " " + currency;
       }
+function shortId(value) {
+  if (value === null || value === undefined || value === "") {
+    return "—";
+  }
 
+  const text = String(value);
+
+  if (text.length <= 12) return text;
+
+  return text.slice(0, 8) + "..." + text.slice(-4);
+}
       function date(value) {
         if (!value) return "—";
         const d = new Date(value);
         return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString();
       }
 
-      function shortId(value) {
-        return value ? String(value).slice(0, 8) + "…" : "—";
-      }
+      async function getMemberIdMap(userIds) {
+  const ids = [...new Set((userIds || []).filter(Boolean))];
+
+  if (!ids.length) return new Map();
+
+  const profiles = await query(
+    "profiles",
+    "id,member_id",
+    { in: ["id", ids], limit: 1000 }
+  );
+
+  return new Map(
+    profiles.map(profile => [
+      profile.id,
+      profile.member_id || "Member ID unavailable"
+    ])
+  );
+}
+
+function memberIdFor(userId, memberMap) {
+  return memberMap?.get(userId) || "Member ID unavailable";
+}
 
       function badge(value) {
         const text = value || "unknown";
@@ -640,7 +678,9 @@
             case "plans": await renderPlans(); break;
             case "kyc": await renderKyc(); break;
             case "support": await renderSupport(); break;
+            case "customerlabels": await renderCustomerLabels(); break;
             case "teamtrade": await renderTeamTrade(); break;
+            case "teammanagement": await renderTeamManagement(); break;
             case "addresses": await renderAddresses(); break;
             case "audit": await renderAudit(); break;
             default: content.append(el("div", "Unknown page.", "empty"));
@@ -657,198 +697,261 @@
       }
 
 
-      async function renderKyc() {
-        const toolbar = el("div", undefined, "toolbar");
+      
+async function renderKyc() {
+  const toolbar = el("div", undefined, "toolbar");
 
-        const filter = el("select");
-        [
-          ["all", "All submissions"],
-          ["pending", "Pending"],
-          ["approved", "Approved"],
-          ["rejected", "Rejected"]
-        ].forEach(([value, label]) => {
-          const option = el("option", label);
-          option.value = value;
-          filter.append(option);
-        });
+  const filter = el("select");
+  [
+    ["all", "All submissions"],
+    ["pending", "Pending"],
+    ["approved", "Approved"],
+    ["rejected", "Rejected"]
+  ].forEach(([value, label]) => {
+    const option = el("option", label);
+    option.value = value;
+    filter.append(option);
+  });
 
-        toolbar.append(filter);
-        toolbar.append(button("Refresh", () => loadPage("kyc"), "primary"));
-        content.append(toolbar);
+  toolbar.append(filter);
+  toolbar.append(button("Refresh", () => loadPage("kyc"), "primary"));
+  content.append(toolbar);
 
-        const loading = el("div", "Loading KYC submissions...", "loading");
-        content.append(loading);
+  content.append(el("div", "Loading KYC submissions...", "loading"));
 
-        const { data: rows, error } = await sgecoreSupabase
-          .from("kyc_submissions")
-          .select(
-            "id,user_id,document_type,document_name,document_path,status,admin_notes,created_at"
-          )
-          .order("created_at", { ascending: false })
-          .limit(300);
+  const { data: rows, error } = await sgecoreSupabase
+    .from("kyc_submissions")
+    .select(
+      "id,user_id,document_type,document_name,document_path,document_back_path,status,admin_notes,created_at"
+    )
+    .order("created_at", { ascending: false })
+    .limit(300);
 
-        if (error) throw error;
+  if (error) throw error;
 
-        clear(content);
-        content.append(toolbar);
+  const memberMap = await getMemberIdMap(
+    (rows || []).map(row => row.user_id)
+  );
 
-        const list = el("div", undefined, "grid");
-        const selectedStatus = filter.value;
+  clear(content);
+  content.append(toolbar);
 
-        const visibleRows = (rows || []).filter((row) =>
-          selectedStatus === "all" || row.status === selectedStatus
+  const list = el("div", undefined, "grid");
+  const emptyState = el(
+    "div",
+    "No KYC submissions found for this status.",
+    "empty"
+  );
+
+  const visibleRows = rows || [];
+
+  visibleRows.forEach((row) => {
+    const panel = el("div", undefined, "card");
+    panel.dataset.status = row.status;
+
+    const heading = el(
+      "h2",
+      row.document_type.replaceAll("_", " ").toUpperCase()
+    );
+    panel.append(heading);
+
+    const details = [
+      ["Customer Member ID", memberIdFor(row.user_id, memberMap)],
+      ["Document name", row.document_name],
+      ["Document type", row.document_type.replaceAll("_", " ")],
+      ["Submitted", new Date(row.created_at).toLocaleString()],
+      ["Status", row.status.toUpperCase()]
+    ];
+
+    const detailList = el("div", undefined, "detail-list");
+
+    details.forEach(([label, value]) => {
+      detailList.append(el("strong", label));
+      detailList.append(el("span", value || "—"));
+    });
+
+    panel.append(detailList);
+
+    if (row.status === "rejected" && row.admin_notes) {
+      const reason = el("div", undefined, "notice warning");
+      reason.textContent = "Rejection reason: " + row.admin_notes;
+      panel.append(reason);
+    }
+
+    
+const actions = el("div", undefined, "toolbar");
+
+actions.append(button("View Front Side", async () => {
+  const previewWindow = window.open("about:blank", "_blank");
+
+  if (!previewWindow) {
+    message("globalMessage", "Please allow pop-ups to view the document.", "error");
+    return;
+  }
+
+  previewWindow.opener = null;
+
+  try {
+    const { data, error } = await sgecoreSupabase
+      .storage
+      .from("kyc-documents")
+      .createSignedUrl(row.document_path, 60);
+
+    if (error) throw error;
+    if (!data?.signedUrl) {
+      throw new Error("Unable to create front-side document link.");
+    }
+
+    previewWindow.location.href = data.signedUrl;
+  } catch (e) {
+    previewWindow.close();
+    message("globalMessage", e.message || "Front-side document could not be opened.", "error");
+  }
+}, "primary"));
+
+if (row.document_back_path) {
+  actions.append(button("View Back Side", async () => {
+    const previewWindow = window.open("about:blank", "_blank");
+
+    if (!previewWindow) {
+      message("globalMessage", "Please allow pop-ups to view the document.", "error");
+      return;
+    }
+
+    previewWindow.opener = null;
+
+    try {
+      const { data, error } = await sgecoreSupabase
+        .storage
+        .from("kyc-documents")
+        .createSignedUrl(row.document_back_path, 60);
+
+      if (error) throw error;
+      if (!data?.signedUrl) {
+        throw new Error("Unable to create back-side document link.");
+      }
+
+      previewWindow.location.href = data.signedUrl;
+    } catch (e) {
+      previewWindow.close();
+      message("globalMessage", e.message || "Back-side document could not be opened.", "error");
+    }
+  }));
+}
+
+
+    if (row.status === "pending") {
+      actions.append(button("Approve", async () => {
+        if (!window.confirm("Approve this customer's KYC submission?")) return;
+
+        try {
+          const now = new Date().toISOString();
+
+          const { data, error } = await sgecoreSupabase
+            .from("kyc_submissions")
+            .update({
+              status: "approved",
+              admin_notes: null,
+              reviewed_by: state.user.id,
+              reviewed_at: now,
+              updated_at: now
+            })
+            .eq("id", row.id)
+            .eq("status", "pending")
+            .select("id")
+            .maybeSingle();
+
+          if (error) throw error;
+          if (!data) {
+            throw new Error("Submission was already reviewed or could not be updated.");
+          }
+
+          message("globalMessage", "KYC submission approved.", "success");
+          await loadPage("kyc");
+
+        } catch (e) {
+          message("globalMessage", e.message || "Approval failed.", "error");
+        }
+      }, "primary"));
+
+      actions.append(button("Reject", async () => {
+        const reason = window.prompt(
+          "Enter the reason for rejecting this KYC submission:"
         );
 
-        filter.addEventListener("change", () => {
-          loadPage("kyc");
-        });
+        if (reason === null) return;
 
-        if (!visibleRows.length) {
-          content.append(el("div", "No KYC submissions found.", "empty"));
+        if (!reason.trim()) {
+          message("globalMessage", "A rejection reason is required.", "error");
           return;
         }
 
-        visibleRows.forEach((row) => {
-          const panel = el("div", undefined, "card");
+        try {
+          const now = new Date().toISOString();
 
-          const heading = el("h2", row.document_type.replaceAll("_", " ").toUpperCase());
-          panel.append(heading);
+          const { data, error } = await sgecoreSupabase
+            .from("kyc_submissions")
+            .update({
+              status: "rejected",
+              admin_notes: reason.trim(),
+              reviewed_by: state.user.id,
+              reviewed_at: now,
+              updated_at: now
+            })
+            .eq("id", row.id)
+            .eq("status", "pending")
+            .select("id")
+            .maybeSingle();
 
-          const details = [
-            ["Customer UID", row.user_id],
-            ["Submission ID", row.id],
-            ["Document name", row.document_name],
-            ["Document type", row.document_type.replaceAll("_", " ")],
-            ["Submitted", new Date(row.created_at).toLocaleString()],
-            ["Status", row.status.toUpperCase()]
-          ];
-
-          const detailList = el("div", undefined, "detail-list");
-
-          details.forEach(([label, value]) => {
-            detailList.append(el("strong", label));
-            detailList.append(el("span", value || "—"));
-          });
-
-          panel.append(detailList);
-
-          if (row.status === "rejected" && row.admin_notes) {
-            const reason = el("div", undefined, "notice warning");
-            reason.textContent = "Rejection reason: " + row.admin_notes;
-            panel.append(reason);
+          if (error) throw error;
+          if (!data) {
+            throw new Error("Submission was already reviewed or could not be updated.");
           }
 
-          const actions = el("div", undefined, "toolbar");
+          message("globalMessage", "KYC submission rejected.", "success");
+          await loadPage("kyc");
 
-          actions.append(button("Open private document", async () => {
-            const previewWindow = window.open("about:blank", "_blank");
+        } catch (e) {
+          message("globalMessage", e.message || "Rejection failed.", "error");
+        }
+      }, "danger"));
 
-            if (!previewWindow) {
-              message("globalMessage", "Please allow pop-ups to view the document.", "error");
-              return;
-            }
+    } else {
+      actions.append(
+        el("span", "This submission has already been reviewed.", "muted")
+      );
+    }
 
-            previewWindow.opener = null;
+    panel.append(actions);
+    list.append(panel);
+  });
 
-            try {
-              const { data, error } = await sgecoreSupabase
-                .storage
-                .from("kyc-documents")
-                .createSignedUrl(row.document_path, 60);
+  list.append(emptyState);
+  content.append(list);
 
-              if (error) throw error;
-              if (!data?.signedUrl) throw new Error("Unable to create document link.");
+  function applyKycFilter() {
+    const selectedStatus = filter.value;
+    let visibleCount = 0;
 
-              previewWindow.location.href = data.signedUrl;
-            } catch (e) {
-              previewWindow.close();
-              message("globalMessage", e.message || "Document could not be opened.", "error");
-            }
-          }, "primary"));
+    Array.from(list.children).forEach((item) => {
+      if (item === emptyState) return;
 
-          if (row.status === "pending") {
+      const show =
+        selectedStatus === "all" ||
+        item.dataset.status === selectedStatus;
 
-            actions.append(button("Approve", async () => {
-              if (!window.confirm("Approve this customer's KYC submission?")) return;
+      item.style.display = show ? "" : "none";
 
-              try {
-                const now = new Date().toISOString();
+      if (show) visibleCount++;
+    });
 
-                const { data, error } = await sgecoreSupabase
-                  .from("kyc_submissions")
-                  .update({
-                    status: "approved",
-                    admin_notes: null,
-                    reviewed_by: state.user.id,
-                    reviewed_at: now,
-                    updated_at: now
-                  })
-                  .eq("id", row.id)
-                  .eq("status", "pending")
-                  .select("id")
-                  .maybeSingle();
+    emptyState.style.display = visibleCount === 0 ? "" : "none";
+  }
 
-                if (error) throw error;
-                if (!data) throw new Error("Submission was already reviewed or could not be updated.");
+  filter.addEventListener("change", applyKycFilter);
+  applyKycFilter();
+}
 
-                message("globalMessage", "KYC submission approved.", "success");
-                await loadPage("kyc");
-
-              } catch (e) {
-                message("globalMessage", e.message || "Approval failed.", "error");
-              }
-            }, "primary"));
-
-            actions.append(button("Reject", async () => {
-              const reason = window.prompt(
-                "Enter the reason for rejecting this KYC submission:"
-              );
-
-              if (reason === null) return;
-
-              if (!reason.trim()) {
-                message("globalMessage", "A rejection reason is required.", "error");
-                return;
-              }
-
-              try {
-                const now = new Date().toISOString();
-
-                const { data, error } = await sgecoreSupabase
-                  .from("kyc_submissions")
-                  .update({
-                    status: "rejected",
-                    admin_notes: reason.trim(),
-                    reviewed_by: state.user.id,
-                    reviewed_at: now,
-                    updated_at: now
-                  })
-                  .eq("id", row.id)
-                  .eq("status", "pending")
-                  .select("id")
-                  .maybeSingle();
-
-                if (error) throw error;
-                if (!data) throw new Error("Submission was already reviewed or could not be updated.");
-
-                message("globalMessage", "KYC submission rejected.", "success");
-                await loadPage("kyc");
-
-              } catch (e) {
-                message("globalMessage", e.message || "Rejection failed.", "error");
-              }
-            }, "danger"));
-
-          } else {
-            actions.append(el("span", "This submission has already been reviewed.", "muted"));
-          }
-
-          panel.append(actions);
-          list.append(panel);
-        });
-
-        content.append(list);
-      }
       async function renderOverview() {
         const [customers, wallets, deposits, withdrawals, investments, plans] =
           await Promise.all([
@@ -936,17 +1039,17 @@
         }
 
         content.append(table(
-          ["Member ID", "Name", "Email", "Verified", "Joined", "Actions"],
-          rows,
-          (p) => tr([
-            p.member_id ?? shortId(p.id),
-            p.full_name,
-            p.email,
-            p.email_verified ? "Yes" : "No",
-            date(p.created_at),
-            actions(button("View account", () => showCustomer(p), "primary"))
-          ])
-        ));
+  ["Member ID", "Name", "Email", "Verified", "Joined", "Actions"],
+  rows,
+  (p) => tr([
+    p.member_id || "Member ID unavailable",
+    p.full_name,
+    p.email,
+    p.email_verified ? "Yes" : "No",
+    date(p.created_at),
+    actions(button("View account", () => showCustomer(p), "primary"))
+  ])
+));
         content.append(el("p", "Showing up to 500 customer profiles. Search filters the rows returned to this page.", "muted small"));
       }
 
@@ -970,7 +1073,7 @@
 
           const details = el("div", undefined, "card");
           details.append(el("h3", "Profile"));
-          details.append(fieldLabel("User UUID", profile.id));
+          details.append(fieldLabel("Member ID", profile.member_id || "Member ID unavailable"));
           details.append(fieldLabel("Email", profile.email));
           details.append(fieldLabel("Email verified", profile.email_verified ? "Yes" : "No"));
           details.append(fieldLabel("Created", date(profile.created_at)));
@@ -1325,103 +1428,533 @@
         }
       }
 
-      async function renderWallets() {
-        const rows = await query("wallets", "id,user_id,wallet_type,currency,balance,created_at,updated_at", {
-          order: "created_at", limit: 500
-        });
-        content.append(table(
-          ["Wallet", "Customer", "Type", "Currency", "Balance", "Updated"],
-          rows,
-          (w) => tr([shortId(w.id), shortId(w.user_id), w.wallet_type, w.currency, money(w.balance, w.currency), date(w.updated_at)])
-        ));
-      }
+      
 
-      async function renderTransactions() {
-        const rows = await query("wallet_transactions", "id,user_id,wallet_id,transaction_type,amount,currency,status,reference_id,description,created_at", {
-          order: "created_at", limit: 500
-        });
-        content.append(table(
-          ["Date", "Customer", "Type", "Amount", "Status", "Description", "Reference"],
-          rows,
-          (t) => tr([date(t.created_at), shortId(t.user_id), t.transaction_type, money(t.amount, t.currency), badge(t.status), t.description, shortId(t.reference_id)])
-        ));
-      }
+async function renderWallets() {
+  const toolbar = el("div", undefined, "toolbar");
 
-      async function renderDeposits() {
-        const toolbar = el("div", undefined, "toolbar");
-        const filter = el("select");
+  const search = el("input");
+  search.type = "search";
+  search.placeholder = "Search by 5-digit Customer ID, name or email";
+  search.value = state.walletQuery;
+  search.style.flex = "1";
+  search.style.minWidth = "220px";
+
+  const go = button("Search", async () => {
+    state.walletQuery = search.value.trim();
+    await loadPage("wallets");
+  }, "primary");
+
+  search.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") go.click();
+  });
+
+  const clear = button("Clear", () => {
+    state.walletQuery = "";
+    loadPage("wallets");
+  });
+
+  toolbar.append(search, go, clear);
+  content.append(toolbar);
+
+  const rows = await query(
+    "wallets",
+    "id,wallet_number,user_id,wallet_type,currency,balance,created_at,updated_at",
+    {
+      order: "created_at",
+      limit: 500
+    }
+  );
+
+  const userIds = [...new Set(
+    rows.map(w => w.user_id).filter(Boolean)
+  )];
+
+  const profiles = userIds.length
+    ? await query(
+        "profiles",
+        "id,member_id,full_name,email",
+        {
+          in: ["id", userIds],
+          limit: 1000
+        }
+      )
+    : [];
+      const profileMap = new Map(
+    profiles.map(p => [p.id, p])
+  );
+
+  const memberMap = new Map(
+  profiles.map(p => [
+    p.id,
+    p.member_id || "Member ID unavailable"
+  ])
+);
+
+  let filteredRows = rows;
+
+  if (state.walletQuery) {
+    const q = state.walletQuery.toLowerCase();
+
+    filteredRows = rows.filter(w => {
+      const profile = profileMap.get(w.user_id);
+
+      return [
+        profile?.member_id,
+        profile?.full_name,
+        profile?.email
+      ].some(value =>
+        String(value ?? "").toLowerCase().includes(q)
+      );
+    });
+  }
+
+  content.append(table(
+    [
+      "Wallet ID",
+      "Customer ID",
+      "Wallet Type",
+      "Asset",
+      "Available Balance",
+      "Last Updated"
+    ],
+    filteredRows,
+    w => tr([
+      w.wallet_number ?? "Wallet ID unavailable",
+      memberIdFor(w.user_id, memberMap),
+      w.wallet_type,
+      w.currency,
+      money(w.balance, w.currency),
+      date(w.updated_at)
+    ])
+  ));
+
+  content.append(
+    el(
+      "p",
+      `Showing ${filteredRows.length} wallet records. Search matches Customer ID, name and email.`,
+      "muted small"
+    )
+  );
+}
+  
+async function renderTransactions() {
+  const box = el("div", undefined, "card");
+  box.append(el("h2", "Find Customer Transactions"));
+  box.append(el(
+    "p",
+    "Search by 5-digit Member ID, customer name or email. Only deposits and withdrawals will be displayed.",
+    "muted"
+  ));
+
+  const profiles = await query(
+    "profiles",
+    "id,member_id,full_name,email",
+    { order: "created_at", limit: 1000 }
+  );
+
+  const search = el("input");
+  search.type = "search";
+  search.placeholder = "Enter Member ID, customer name or email";
+  search.autocomplete = "off";
+
+  const customerSelect = el("select");
+  customerSelect.disabled = true;
+
+  const placeholder = el("option", "Search for a customer first");
+  placeholder.value = "";
+  customerSelect.append(placeholder);
+
+  const selectedDetails = el("div", undefined, "notice");
+  selectedDetails.textContent = "No customer selected.";
+
+  const status = el("div", "", "message");
+
+  const resultsBox = el("div");
+  resultsBox.className = "card";
+  resultsBox.append(el("h2", "Deposit and Withdrawal History"));
+  resultsBox.append(el("div", "Select a customer to view their transactions.", "empty"));
+
+  function updateCustomerResults() {
+    const term = search.value.trim().toLowerCase();
+
+    clear(customerSelect);
+
+    const option = el("option", "Select a matching customer");
+    option.value = "";
+    customerSelect.append(option);
+
+    if (!term) {
+      customerSelect.disabled = true;
+      return;
+    }
+
+    const matches = profiles.filter(profile =>
+      [
+        profile.member_id,
+        profile.full_name,
+        profile.email
+      ].some(value =>
+        String(value || "").toLowerCase().includes(term)
+      )
+    ).slice(0, 50);
+
+    matches.forEach(profile => {
+      const label = [
+        profile.member_id || "Member ID unavailable",
+        profile.full_name || "Unnamed customer",
+        profile.email || "No email"
+      ].join(" — ");
+
+      const customerOption = el("option", label);
+      customerOption.value = profile.id;
+      customerSelect.append(customerOption);
+    });
+
+    customerSelect.disabled = matches.length === 0;
+
+    if (!matches.length) {
+      const noResults = el("option", "No matching customer found");
+      noResults.value = "";
+      customerSelect.append(noResults);
+    }
+  }
+
+  function showCustomerDetails(profile) {
+    clear(selectedDetails);
+
+    if (!profile) {
+      selectedDetails.textContent = "No customer selected.";
+      return;
+    }
+
+    selectedDetails.append(el("h3", "Selected Customer"));
+
+    const details = el("div", undefined, "detail-list");
+
+    [
+      ["Member ID", profile.member_id || "Member ID unavailable"],
+      ["Customer Name", profile.full_name || "Not available"],
+      ["Email", profile.email || "Not available"]
+    ].forEach(([label, value]) => {
+      details.append(el("strong", label));
+      details.append(el("span", value));
+    });
+
+    selectedDetails.append(details);
+  }
+
+  async function loadCustomerTransactions() {
+    const profile = profiles.find(
+      item => item.id === customerSelect.value
+    );
+
+    if (!profile) {
+      status.textContent = "Please search for and select a customer.";
+      status.className = "message error";
+      return;
+    }
+
+    showCustomerDetails(profile);
+
+    status.textContent = "Loading customer transactions...";
+    status.className = "message";
+
+    resultsBox.replaceChildren(
+      el("h2", "Deposit and Withdrawal History"),
+      el("div", "Loading transactions...", "loading")
+    );
+
+    try {
+      const allTransactions = await query(
+        "wallet_transactions",
+        "id,user_id,wallet_id,transaction_type,amount,currency,status,reference_id,description,created_at",
+        {
+          eq: ["user_id", profile.id],
+          order: "created_at",
+          limit: 500
+        }
+      );
+
+      const transactions = allTransactions.filter(transaction => {
+        const type = String(
+          transaction.transaction_type || ""
+        ).toLowerCase();
+
+        return type.includes("deposit") || type.includes("withdraw");
+      });
+
+      const heading = el("h2", "Deposit and Withdrawal History");
+
+      const customerInfo = el(
+        "p",
+        (profile.member_id || "Member ID unavailable") +
+        " · " +
+        (profile.full_name || profile.email || "Customer"),
+        "muted small"
+      );
+
+      const resultTable = table(
         [
-          ["all", "All statuses"],
-          ["pending", "Pending"],
-          ["under_review", "Under review"],
-          ["approved", "Approved"],
-          ["rejected", "Rejected"]
-        ].forEach(([value, label]) => {
-          const opt = el("option", label);
-          opt.value = value;
-          filter.append(opt);
-        });
-        filter.value = state.depositFilter;
-        filter.addEventListener("change", () => {
-          state.depositFilter = filter.value;
-          loadPage("deposits");
-        });
-        toolbar.append(filter);
-        content.append(toolbar);
+          "Date",
+          "Member ID",
+          "Type",
+          "Amount",
+          "Status",
+          "Description",
+          "Reference"
+        ],
+        transactions,
+        transaction => {
+          const type = String(
+            transaction.transaction_type || ""
+          ).toLowerCase();
 
-        let rows = await query("deposit_requests",
-          "id,user_id,wallet_id,method,currency,network,amount,transaction_hash,payment_reference,receipt_path,status,reviewed_by,reviewed_at,review_note,created_at",
-          { order: "created_at", limit: 500 }
+          const displayType = type.includes("deposit")
+            ? "Deposit"
+            : "Withdrawal";
+
+          return tr([
+            date(transaction.created_at),
+            profile.member_id || "Member ID unavailable",
+            displayType,
+            money(transaction.amount, transaction.currency),
+            badge(transaction.status),
+            transaction.description || "—",
+            transaction.reference_id || "—"
+          ]);
+        }
+      );
+
+      resultsBox.replaceChildren(
+        heading,
+        customerInfo,
+        el(
+          "p",
+          "Total deposit and withdrawal records: " + transactions.length,
+          "muted small"
+        ),
+        resultTable
+      );
+
+      status.textContent = "Customer transaction history loaded.";
+      status.className = "message success";
+
+    } catch (e) {
+      resultsBox.replaceChildren(
+        el("h2", "Deposit and Withdrawal History"),
+        el("p", e.message || "Unable to load transactions.", "error")
+      );
+
+      status.textContent = "Unable to load customer transactions.";
+      status.className = "message error";
+    }
+  }
+
+  const viewButton = button(
+    "View Transactions",
+    loadCustomerTransactions,
+    "primary"
+  );
+
+  const clearButton = button("Clear Search", () => {
+    search.value = "";
+    updateCustomerResults();
+    customerSelect.value = "";
+    showCustomerDetails(null);
+    status.textContent = "";
+
+    resultsBox.replaceChildren(
+      el("h2", "Deposit and Withdrawal History"),
+      el("div", "Select a customer to view their transactions.", "empty")
+    );
+  });
+
+  search.addEventListener("input", () => {
+    updateCustomerResults();
+    customerSelect.value = "";
+    showCustomerDetails(null);
+  });
+
+  search.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      if (customerSelect.options.length === 2) {
+        customerSelect.selectedIndex = 1;
+        loadCustomerTransactions();
+      }
+    }
+  });
+
+  customerSelect.addEventListener("change", () => {
+    const profile = profiles.find(
+      item => item.id === customerSelect.value
+    );
+
+    showCustomerDetails(profile || null);
+  });
+
+  box.append(
+    el("label", "Search Customer"),
+    search,
+    el("label", "Matching Customers"),
+    customerSelect,
+    selectedDetails,
+    viewButton,
+    clearButton,
+    status
+  );
+
+  content.append(box, resultsBox);
+}
+
+
+      
+async function renderDeposits() {
+  const toolbar = el("div", undefined, "toolbar");
+  const filter = el("select");
+
+  [
+    ["all", "All statuses"],
+    ["pending", "Pending"],
+    ["under_review", "Under review"],
+    ["approved", "Approved"],
+    ["rejected", "Rejected"]
+  ].forEach(([value, label]) => {
+    const opt = el("option", label);
+    opt.value = value;
+    filter.append(opt);
+  });
+
+  filter.value = state.depositFilter;
+
+  filter.addEventListener("change", () => {
+    state.depositFilter = filter.value;
+    loadPage("deposits");
+  });
+
+  toolbar.append(filter);
+  content.append(toolbar);
+
+  let rows = await query(
+    "deposit_requests",
+    "id,deposit_number,user_id,wallet_id,method,currency,network,amount,transaction_hash,payment_reference,receipt_path,status,reviewed_by,reviewed_at,review_note,created_at",
+    { order: "created_at", limit: 500 }
+  );
+
+  if (state.depositFilter !== "all") {
+    rows = rows.filter(d => d.status === state.depositFilter);
+  }
+
+  // Load permanent Customer IDs.
+  const memberMap = await getMemberIdMap(
+    rows.map(d => d.user_id)
+  );
+
+  // Load permanent Wallet IDs.
+  const walletIds = [
+    ...new Set(rows.map(d => d.wallet_id).filter(Boolean))
+  ];
+
+  const walletRows = walletIds.length
+    ? await query(
+        "wallets",
+        "id,wallet_number",
+        { in: ["id", walletIds], limit: 1000 }
+      )
+    : [];
+
+  const walletMap = new Map(
+    walletRows.map(w => [w.id, w.wallet_number])
+  );
+
+  content.append(el(
+    "div",
+    "Approvals use the existing review_sge_deposit database function. The database checks authorization, request status, duplicate transactions and wallet crediting.",
+    "notice"
+  ));
+
+  content.append(table(
+    [
+      "Date",
+      "Customer ID",
+      "Method / Network",
+      "Amount",
+      "Reference",
+      "Status",
+      "Review"
+    ],
+    rows,
+    d => {
+      const reviewButtons = [];
+
+      if (["pending", "under_review"].includes(d.status)) {
+        reviewButtons.push(
+          button("Approve", () => reviewDeposit(d, "approved"), "primary")
         );
 
-        if (state.depositFilter !== "all") {
-          rows = rows.filter((d) => d.status === state.depositFilter);
-        }
-
-        content.append(el("div", "Approvals use the existing review_sge_deposit database function. The database checks authorization, request status, duplicate transactions and wallet crediting.", "notice"));
-
-        content.append(table(
-          ["Date", "Customer", "Method / Network", "Amount", "Reference", "Status", "Review"],
-          rows,
-          (d) => {
-            const reviewButtons = [];
-            if (["pending", "under_review"].includes(d.status)) {
-              reviewButtons.push(button("Approve", () => reviewDeposit(d, "approved"), "primary"));
-              reviewButtons.push(button("Reject", () => reviewDeposit(d, "rejected"), "danger"));
-            }
-            reviewButtons.push(button("Details", () => showDepositDetails(d)));
-            return tr([
-              date(d.created_at),
-              shortId(d.user_id),
-              [d.method, d.network].filter(Boolean).join(" / "),
-              money(d.amount, d.currency),
-              d.transaction_hash || d.payment_reference || "—",
-              badge(d.status),
-              actions(...reviewButtons)
-            ]);
-          }
-        ));
+        reviewButtons.push(
+          button("Reject", () => reviewDeposit(d, "rejected"), "danger")
+        );
       }
 
-      async function showDepositDetails(d) {
-        const box = el("div", undefined, "card");
-        box.append(el("h2", "Deposit request details"));
-        [
-          ["Request ID", d.id], ["Customer UUID", d.user_id],
-          ["Wallet UUID", d.wallet_id], ["Method", d.method],
-          ["Currency", d.currency], ["Network", d.network],
-          ["Amount", money(d.amount, d.currency)],
-          ["Transaction hash", d.transaction_hash],
-          ["Payment reference", d.payment_reference],
-          ["Receipt path", d.receipt_path],
-          ["Status", d.status], ["Review note", d.review_note],
-          ["Reviewed at", date(d.reviewed_at)], ["Created at", date(d.created_at)]
-        ].forEach(([k, v]) => box.append(fieldLabel(k, v)));
+      reviewButtons.push(
+        button(
+          "Details",
+          () => showDepositDetails(d, memberMap, walletMap)
+        )
+      );
 
-        box.append(button("Back to deposits", () => loadPage("deposits")));
-        clear(content);
-        content.append(box);
-      }
+      return tr([
+        date(d.created_at),
+        memberIdFor(d.user_id, memberMap),
+        [d.method, d.network].filter(Boolean).join(" / "),
+        money(d.amount, d.currency),
+        d.transaction_hash || d.payment_reference || "—",
+        badge(d.status),
+        actions(...reviewButtons)
+      ]);
+    }
+  ));
+}
+
+
+function showDepositDetails(d, memberMap, walletMap) {
+  const box = el("div", undefined, "card");
+
+  box.append(el("h2", "Deposit request details"));
+
+  const customerId = memberIdFor(d.user_id, memberMap);
+  const walletId = walletMap?.get(d.wallet_id) || "Wallet ID unavailable";
+
+  [
+    ["Request ID", d.deposit_number ?? "Request ID unavailable"],
+    ["Customer ID", customerId],
+    ["Wallet ID", walletId],
+    ["Method", d.method],
+    ["Currency", d.currency],
+    ["Network", d.network],
+    ["Amount", money(d.amount, d.currency)],
+    ["Transaction hash", d.transaction_hash],
+    ["Payment reference", d.payment_reference],
+    ["Receipt path", d.receipt_path],
+    ["Status", d.status],
+    ["Review note", d.review_note],
+    ["Reviewed at", date(d.reviewed_at)],
+    ["Created at", date(d.created_at)]
+  ].forEach(([label, value]) => {
+    box.append(fieldLabel(label, value));
+  });
+
+  box.append(
+    button("Back to deposits", () => loadPage("deposits"))
+  );
+
+  clear(content);
+  content.append(box);
+}
+
 
       async function reviewDeposit(deposit, decision) {
         const promptText = decision === "approved"
@@ -1492,250 +2025,1934 @@
         ));
       }
 
-      async function renderTeamTrade() {
-        const settingsCard = el("div", undefined, "card");
-        settingsCard.append(el("h2", "Team Trade Control"));
-        settingsCard.append(el(
-          "p",
-          "Configure win percentages for explicitly authorized internal team accounts. A percentage controls the approximate win rate over time. Accounts without an enabled setting continue using normal market-price settlement.",
-          "muted"
-        ));
+  
 
-        const uidInput = el("input");
-        uidInput.type = "text";
-        uidInput.placeholder = "Enter customer Supabase UID";
-        uidInput.autocomplete = "off";
-        uidInput.style.width = "100%";
+async function renderTeamManagement() {
+  content.innerHTML = "";
 
-        const percentageInput = el("input");
-        percentageInput.type = "number";
-        percentageInput.min = "0";
-        percentageInput.max = "100";
-        percentageInput.step = "0.01";
-        percentageInput.value = "50";
-        percentageInput.style.width = "100%";
+  const wrapper = document.createElement("div");
+  wrapper.style.cssText = "display:grid;gap:20px;";
 
-        const enabledInput = el("input");
-        enabledInput.type = "checkbox";
-        enabledInput.checked = true;
+  const cardStyle =
+    "background:#0d1a2b;border:1px solid rgba(217,180,93,.25);border-radius:12px;padding:22px;";
 
-        const status = el("div", "", "message");
+  // CREATE TEAM CARD
+  const createCard = document.createElement("section");
+  createCard.style.cssText = cardStyle;
 
-        const listCard = el("div", undefined, "card");
-        listCard.append(el("h2", "Configured Team Accounts"));
+  createCard.innerHTML = `
+    <h2 style="color:#f0d58c;margin:0 0 8px;">Create New Team</h2>
+    <p style="color:#9eacc0;margin:0 0 20px;">
+      Create a team before assigning its leader and customers.
+    </p>
 
-        const listContent = el("div");
-        listCard.append(listContent);
+    <form id="sdeCreateTeamForm" style="display:grid;gap:14px;max-width:600px;">
+      <div>
+        <label for="sdeTeamName" style="display:block;margin-bottom:7px;color:#dce5f1;">
+          Team Name
+        </label>
+        <input id="sdeTeamName" type="text" maxlength="100" required
+          placeholder="Enter team name"
+          style="width:100%;padding:12px;border-radius:7px;border:1px solid #34445b;background:#07111f;color:#fff;box-sizing:border-box;">
+      </div>
 
-        async function loadTeamTradeSettings() {
-          listContent.replaceChildren(
-            el("div", "Loading team account settings...", "loading")
-          );
+      <div>
+        <label for="sdeTeamDescription" style="display:block;margin-bottom:7px;color:#dce5f1;">
+          Description
+        </label>
+        <textarea id="sdeTeamDescription" rows="3"
+          placeholder="Enter team description (optional)"
+          style="width:100%;padding:12px;border-radius:7px;border:1px solid #34445b;background:#07111f;color:#fff;box-sizing:border-box;"></textarea>
+      </div>
 
-          const { data, error } = await sgecoreSupabase.rpc(
-            "get_sge_team_trade_controls"
-          );
+      <button type="submit"
+        style="width:max-content;padding:12px 22px;border:0;border-radius:7px;background:#d9b45d;color:#07111f;font-weight:700;cursor:pointer;">
+        Create Team
+      </button>
+
+      <p id="sdeTeamCreateMessage" role="status" style="margin:0;"></p>
+    </form>
+  `;
+
+  // ASSIGN TEAM LEADER CARD
+  const leaderCard = document.createElement("section");
+  leaderCard.style.cssText = cardStyle;
+
+  leaderCard.innerHTML = `
+    <h2 style="color:#f0d58c;margin:0 0 8px;">Assign Team Leader</h2>
+    <p style="color:#9eacc0;margin:0 0 20px;">
+      Select a team and assign a registered user as its team leader.
+    </p>
+
+    <form id="sdeAssignLeaderForm" style="display:grid;gap:14px;max-width:650px;">
+
+      <div>
+        <label for="sdeLeaderTeam" style="display:block;margin-bottom:7px;color:#dce5f1;">
+          Select Team
+        </label>
+        <select id="sdeLeaderTeam" required
+          style="width:100%;padding:12px;border-radius:7px;border:1px solid #34445b;background:#07111f;color:#fff;">
+          <option value="">Loading teams...</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="sdeLeaderUser" style="display:block;margin-bottom:7px;color:#dce5f1;">
+          Select Team Leader
+        </label>
+        <select id="sdeLeaderUser" required
+          style="width:100%;padding:12px;border-radius:7px;border:1px solid #34445b;background:#07111f;color:#fff;">
+          <option value="">Loading users...</option>
+        </select>
+      </div>
+
+      <p style="color:#9eacc0;font-size:12px;margin:0;">
+        Users already assigned as customers cannot be assigned as team leaders.
+        An existing team leader can be reassigned to another team.
+      </p>
+
+      <button type="submit"
+        style="width:max-content;padding:12px 22px;border:0;border-radius:7px;background:#d9b45d;color:#07111f;font-weight:700;cursor:pointer;">
+        Assign Leader
+      </button>
+
+      <p id="sdeLeaderMessage" role="status" style="margin:0;"></p>
+    </form>
+  `;
+
+  // ASSIGN CUSTOMERS CARD
+  const customerCard = document.createElement("section");
+  customerCard.style.cssText = cardStyle;
+
+  customerCard.innerHTML = `
+    <h2 style="color:#f0d58c;margin:0 0 8px;">Assign Customers</h2>
+    <p style="color:#9eacc0;margin:0 0 20px;">
+      Assign customers to a team or move an existing customer to another team.
+    </p>
+
+    <form id="sdeAssignCustomerForm"
+      style="display:grid;gap:14px;max-width:650px;">
+
+      <div>
+        <label for="sdeCustomerTeam"
+          style="display:block;margin-bottom:7px;color:#dce5f1;">
+          Select Team
+        </label>
+        <select id="sdeCustomerTeam" required
+          style="width:100%;padding:12px;border-radius:7px;border:1px solid #34445b;background:#07111f;color:#fff;">
+          <option value="">Loading teams...</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="sdeCustomerUser"
+          style="display:block;margin-bottom:7px;color:#dce5f1;">
+          Select Customer
+        </label>
+        <select id="sdeCustomerUser" required
+          style="width:100%;padding:12px;border-radius:7px;border:1px solid #34445b;background:#07111f;color:#fff;">
+          <option value="">Loading customers...</option>
+        </select>
+      </div>
+
+      <p style="color:#9eacc0;font-size:12px;margin:0;">
+        Active team leaders cannot be assigned as customers.
+      </p>
+
+      <button type="submit"
+        style="width:max-content;padding:12px 22px;border:0;border-radius:7px;background:#d9b45d;color:#07111f;font-weight:700;cursor:pointer;">
+        Assign Customer
+      </button>
+
+      <p id="sdeCustomerMessage" role="status" style="margin:0;"></p>
+    </form>
+
+    <h3 style="color:#f0d58c;margin:25px 0 12px;">
+      Assigned Customers
+    </h3>
+    <div id="sdeAssignedCustomerList" style="color:#9eacc0;">
+      Loading customers...
+    </div>
+  `;
+
+  // EXISTING TEAMS CARD
+  const listCard = document.createElement("section");
+  listCard.style.cssText = cardStyle;
+
+  listCard.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
+      <h2 style="color:#f0d58c;margin:0;">Existing Teams</h2>
+      <button id="sdeRefreshTeams" type="button"
+        style="padding:9px 16px;border:1px solid #d9b45d;border-radius:7px;background:transparent;color:#f0d58c;cursor:pointer;">
+        Refresh Data
+      </button>
+    </div>
+    <div id="sdeTeamList" style="color:#9eacc0;">Loading teams...</div>
+  `;
+
+  wrapper.append(createCard, leaderCard, customerCard, listCard);
+  content.append(wrapper);
+
+  const teamList = wrapper.querySelector("#sdeTeamList");
+  const createForm = wrapper.querySelector("#sdeCreateTeamForm");
+  const createMessage = wrapper.querySelector("#sdeTeamCreateMessage");
+  const leaderForm = wrapper.querySelector("#sdeAssignLeaderForm");
+  const leaderMessage = wrapper.querySelector("#sdeLeaderMessage");
+  const teamSelect = wrapper.querySelector("#sdeLeaderTeam");
+  const userSelect = wrapper.querySelector("#sdeLeaderUser");
+  const customerForm = wrapper.querySelector("#sdeAssignCustomerForm");
+const customerTeamSelect = wrapper.querySelector("#sdeCustomerTeam");
+const customerUserSelect = wrapper.querySelector("#sdeCustomerUser");
+const customerMessage = wrapper.querySelector("#sdeCustomerMessage");
+const assignedCustomerList = wrapper.querySelector("#sdeAssignedCustomerList");
+
+  let teams = [];
+  let profiles = [];
+  let customerIds = new Set();
+let customerAssignments = [];
+let memberships = [];
+
+  function setMessage(element, text, success) {
+    element.textContent = text;
+    element.style.color = success ? "#65d69a" : "#ff7777";
+  }
+
+  function addOption(select, value, label) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    select.append(option);
+  }
+
+  // LOAD TEAMS, USERS AND MEMBERSHIPS
+  async function loadTeams() {
+    teamList.textContent = "Loading teams...";
+
+    const [
+      teamResult,
+      profileResult,
+      customerResult,
+      memberResult
+    ] = await Promise.all([
+      sgecoreSupabase.from("teams").select("*"),
+      sgecoreSupabase.from("profiles")
+        .select("id, full_name, email, member_id"),
+      sgecoreSupabase.from("team_customers")
+  .select("user_id, team_id"),
+      sgecoreSupabase.from("team_members")
+        .select("user_id, team_id, member_role, is_active")
+    ]);
+
+    const errorResult = [
+      teamResult,
+      profileResult,
+      customerResult,
+      memberResult
+    ].find(result => result.error);
+
+    if (errorResult) {
+      teamList.textContent =
+        "Unable to load Team Management data: " +
+        errorResult.error.message;
+      return;
+    }
+
+    teams = (teamResult.data || []).filter(
+      team => team.is_active !== false
+    );
+
+    profiles = profileResult.data || [];
+
+    customerAssignments = customerResult.data || [];
+
+customerIds = new Set(
+  customerAssignments.map(item => item.user_id)
+);
+
+    memberships = memberResult.data || [];
+
+    // DISPLAY ASSIGNED CUSTOMERS
+    assignedCustomerList.replaceChildren();
+
+    if (!customerAssignments.length) {
+      assignedCustomerList.textContent =
+        "No customers have been assigned to any team yet.";
+    } else {
+      const customerTable = document.createElement("table");
+
+      customerTable.style.cssText =
+        "width:100%;border-collapse:collapse;color:#dce5f1;";
+
+      const customerHead = document.createElement("thead");
+      const customerHeaderRow = document.createElement("tr");
+
+      ["Customer", "Email", "Member ID", "Assigned Team"].forEach(label => {
+        const th = document.createElement("th");
+        th.textContent = label;
+        th.style.cssText =
+          "padding:12px;text-align:left;border-bottom:1px solid #34445b;color:#f0d58c;";
+        customerHeaderRow.append(th);
+      });
+
+      customerHead.append(customerHeaderRow);
+      customerTable.append(customerHead);
+
+      const customerBody = document.createElement("tbody");
+
+      customerAssignments.forEach(assignment => {
+        const profile = profiles.find(
+          item => item.id === assignment.user_id
+        );
+
+        const team = teams.find(
+          item => item.id === assignment.team_id
+        );
+
+        const row = document.createElement("tr");
+
+        const values = [
+          profile?.full_name || "Unknown Customer",
+          profile?.email || "No email",
+          profile?.member_id || "N/A",
+          team?.team_name || "Inactive or unavailable team"
+        ];
+
+        values.forEach(value => {
+          const td = document.createElement("td");
+          td.textContent = String(value);
+          td.style.cssText =
+            "padding:12px;border-bottom:1px solid #26364a;overflow-wrap:anywhere;";
+          row.append(td);
+        });
+
+        customerBody.append(row);
+      });
+
+      customerTable.append(customerBody);
+      assignedCustomerList.append(customerTable);
+    }
+
+
+    // TEAM DROPDOWN
+    const previousTeam = teamSelect.value;
+
+    teamSelect.replaceChildren();
+
+    addOption(teamSelect, "", "Select a team");
+
+    teams.forEach(team => {
+      addOption(
+        teamSelect,
+        team.id,
+        team.team_name || "Unnamed Team"
+      );
+    });
+
+    if (teams.some(team => team.id === previousTeam)) {
+      teamSelect.value = previousTeam;
+    }
+
+    // TEAM LEADER DROPDOWN
+    const previousUser = userSelect.value;
+
+    userSelect.replaceChildren();
+
+    addOption(userSelect, "", "Select a team leader");
+
+    const eligibleProfiles = profiles.filter(profile => {
+      if (customerIds.has(profile.id)) return false;
+
+      const membership = memberships.find(
+        member => member.user_id === profile.id
+      );
+
+      
+    // Allow unassigned users and existing team leaders only.
+    if (
+      membership &&
+      membership.member_role !== "team_leader"
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
+  eligibleProfiles.forEach(profile => {
+    const name = profile.full_name || "Unnamed User";
+    const email = profile.email || "No email";
+    const memberId = profile.member_id || "N/A";
+
+    addOption(
+      userSelect,
+      profile.id,
+      `${name} | ${email} | ID: ${memberId}`
+    );
+  });
+
+  if (
+    eligibleProfiles.some(profile => profile.id === previousUser)
+  ) {
+    userSelect.value = previousUser;
+  }
+
+  // CUSTOMER TEAM DROPDOWN
+  const previousCustomerTeam = customerTeamSelect.value;
+
+  customerTeamSelect.replaceChildren();
+  addOption(customerTeamSelect, "", "Select a team");
+
+  teams.forEach(team => {
+    addOption(
+      customerTeamSelect,
+      team.id,
+      team.team_name || "Unnamed Team"
+    );
+  });
+
+  if (teams.some(team => team.id === previousCustomerTeam)) {
+    customerTeamSelect.value = previousCustomerTeam;
+  }
+
+  // CUSTOMER USER DROPDOWN
+  const previousCustomer = customerUserSelect.value;
+
+  customerUserSelect.replaceChildren();
+  addOption(customerUserSelect, "", "Select a customer");
+
+  const activeLeaderIds = new Set(
+    memberships
+      .filter(member =>
+        member.member_role === "team_leader" &&
+        member.is_active !== false
+      )
+      .map(member => member.user_id)
+  );
+
+  const eligibleCustomers = profiles.filter(
+    profile => !activeLeaderIds.has(profile.id)
+  );
+
+  eligibleCustomers.forEach(profile => {
+    const name = profile.full_name || "Unnamed Customer";
+    const email = profile.email || "No email";
+    const memberId = profile.member_id || "N/A";
+
+    const assignment = customerAssignments.find(
+      item => item.user_id === profile.id
+    );
+
+    const assignedTeam = assignment
+      ? teams.find(team => team.id === assignment.team_id)
+      : null;
+
+    const assignmentLabel = assignment
+      ? ` | Currently assigned: ${assignedTeam?.team_name || "Another team"}`
+      : " | Not assigned";
+
+    addOption(
+      customerUserSelect,
+      profile.id,
+      `${name} | ${email} | ID: ${memberId}${assignmentLabel}`
+    );
+  });
+
+  if (
+    eligibleCustomers.some(profile => profile.id === previousCustomer)
+  ) {
+    customerUserSelect.value = previousCustomer;
+  }
+
+
+    // EXISTING TEAMS TABLE
+    if (!teams.length) {
+      teamList.textContent = "No active teams have been created yet.";
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.style.cssText =
+      "width:100%;border-collapse:collapse;color:#dce5f1;";
+
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+
+    [
+      "Team Name",
+      "Description",
+      "Team Leader",
+      "Team ID"
+    ].forEach(label => {
+      const th = document.createElement("th");
+      th.textContent = label;
+      th.style.cssText =
+        "padding:12px;text-align:left;border-bottom:1px solid #34445b;color:#f0d58c;";
+      headerRow.append(th);
+    });
+
+    thead.append(headerRow);
+    table.append(thead);
+
+    const tbody = document.createElement("tbody");
+
+    teams.forEach(team => {
+      const row = document.createElement("tr");
+
+      const leader = memberships.find(member =>
+        member.team_id === team.id &&
+        member.member_role === "team_leader" &&
+        member.is_active === true
+      );
+
+      const leaderProfile = leader
+        ? profiles.find(profile => profile.id === leader.user_id)
+        : null;
+
+      const leaderName = leaderProfile
+        ? `${leaderProfile.full_name || "Unnamed User"} (${leaderProfile.email || "No email"})`
+        : "Not assigned";
+
+      const values = [
+        team.team_name || "Unnamed Team",
+        team.description || "—",
+        leaderName,
+        team.id || "—"
+      ];
+
+      values.forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = String(value);
+        td.style.cssText =
+          "padding:12px;border-bottom:1px solid #26364a;overflow-wrap:anywhere;";
+        row.append(td);
+      });
+
+      tbody.append(row);
+    });
+
+    table.append(tbody);
+    teamList.replaceChildren(table);
+  }
+
+  // CREATE TEAM
+  createForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const teamName =
+      wrapper.querySelector("#sdeTeamName").value.trim();
+
+    const description =
+      wrapper.querySelector("#sdeTeamDescription").value.trim();
+
+    const submitButton =
+      createForm.querySelector('button[type="submit"]');
+
+    if (!teamName) {
+      setMessage(createMessage, "Please enter a team name.", false);
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Creating...";
+    createMessage.textContent = "";
+
+    try {
+      const { error } = await sgecoreSupabase.rpc(
+        "sde_create_team",
+        {
+          p_team_name: teamName,
+          p_description: description || null
+        }
+      );
+
+      if (error) throw error;
+
+      setMessage(createMessage, "Team created successfully.", true);
+
+      createForm.reset();
+      await loadTeams();
+
+    } catch (error) {
+      setMessage(
+        createMessage,
+        "Unable to create team: " + error.message,
+        false
+      );
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Create Team";
+    }
+  });
+
+  // ASSIGN TEAM LEADER
+  leaderForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const selectedTeamId = teamSelect.value;
+    const selectedUserId = userSelect.value;
+
+    const submitButton =
+      leaderForm.querySelector('button[type="submit"]');
+
+    if (!selectedTeamId || !selectedUserId) {
+      setMessage(
+        leaderMessage,
+        "Please select both a team and a team leader.",
+        false
+      );
+      return;
+    }
+
+    if (customerIds.has(selectedUserId)) {
+      setMessage(
+        leaderMessage,
+        "This user is already assigned as a customer.",
+        false
+      );
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Assigning...";
+    leaderMessage.textContent = "";
+
+    try {
+      const { data, error } = await sgecoreSupabase.rpc(
+        "sde_assign_team_leader",
+        {
+          p_team_id: selectedTeamId,
+          p_user_id: selectedUserId
+        }
+      );
+
+      if (error) throw error;
+
+      if (data && data.success === false) {
+        throw new Error("The team leader could not be assigned.");
+      }
+
+      setMessage(
+        leaderMessage,
+        "Team leader assigned successfully.",
+        true
+      );
+
+      userSelect.value = "";
+
+      await loadTeams();
+
+    } catch (error) {
+      setMessage(
+        leaderMessage,
+        "Unable to assign team leader: " + error.message,
+        false
+      );
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Assign Leader";
+    }
+  });
+
+  // ASSIGN CUSTOMER TO TEAM
+  customerForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const selectedTeamId = customerTeamSelect.value;
+    const selectedUserId = customerUserSelect.value;
+
+    const submitButton =
+      customerForm.querySelector('button[type="submit"]');
+
+    if (!selectedTeamId || !selectedUserId) {
+      setMessage(
+        customerMessage,
+        "Please select both a team and a customer.",
+        false
+      );
+      return;
+    }
+
+    if (
+      memberships.some(member =>
+        member.user_id === selectedUserId &&
+        member.member_role === "team_leader" &&
+        member.is_active !== false
+      )
+    ) {
+      setMessage(
+        customerMessage,
+        "A team leader cannot be assigned as a customer.",
+        false
+      );
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Assigning...";
+    customerMessage.textContent = "";
+
+    try {
+      const { data, error } = await sgecoreSupabase.rpc(
+        "sde_assign_team_customer",
+        {
+          p_team_id: selectedTeamId,
+          p_user_id: selectedUserId
+        }
+      );
+
+      if (error) throw error;
+
+      if (data && data.success === false) {
+        throw new Error("The customer could not be assigned.");
+      }
+
+      setMessage(
+        customerMessage,
+        "Customer assigned successfully.",
+        true
+      );
+
+      customerUserSelect.value = "";
+
+      await loadTeams();
+
+    } catch (error) {
+      setMessage(
+        customerMessage,
+        "Unable to assign customer: " + error.message,
+        false
+      );
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Assign Customer";
+    }
+  });
+
+  // REFRESH DATA
+  wrapper.querySelector("#sdeRefreshTeams")
+    .addEventListener("click", async () => {
+      await loadTeams();
+    });
+
+  await loadTeams();
+}
+
+    
+async function renderTeamTrade() {
+  const settingsCard = el("div", undefined, "card");
+  settingsCard.append(el("h2", "Team Trade Control"));
+  settingsCard.append(el(
+    "p",
+    "Configure win percentages for explicitly authorized internal team accounts. A percentage controls the approximate win rate over time. Accounts without an enabled setting continue using normal market-price settlement.",
+    "muted"
+  ));
+
+  // Load customer profiles for searching and displaying customer details.
+  const profiles = await query(
+    "profiles",
+    "id,member_id,full_name,email",
+    { order: "created_at", limit: 1000 }
+  );
+
+  const profileById = new Map(
+    profiles.map(profile => [profile.id, profile])
+  );
+
+  let selectedCustomer = null;
+
+  // Customer search
+  const searchInput = el("input");
+  searchInput.type = "search";
+  searchInput.placeholder = "Search by 5-digit Member ID, name or email";
+  searchInput.autocomplete = "off";
+  searchInput.style.width = "100%";
+
+  const customerSelect = el("select");
+  customerSelect.style.width = "100%";
+
+  const selectedDetails = el("div", undefined, "notice");
+  selectedDetails.textContent = "No customer selected.";
+
+  function showSelectedCustomer(profile) {
+    selectedCustomer = profile || null;
+    clear(selectedDetails);
+
+    if (!profile) {
+      selectedDetails.textContent = "No customer selected.";
+      return;
+    }
+
+    selectedDetails.append(el("h3", "Selected Customer"));
+
+    const details = el("div", undefined, "detail-list");
+
+    [
+      ["Member ID", profile.member_id || "Unavailable"],
+      ["Name", profile.full_name || "Not available"],
+      ["Email", profile.email || "Not available"]
+    ].forEach(([label, value]) => {
+      details.append(el("strong", label));
+      details.append(el("span", value));
+    });
+
+    selectedDetails.append(details);
+  }
+
+  function updateCustomerResults() {
+    const search = searchInput.value.trim().toLowerCase();
+
+    customerSelect.replaceChildren();
+
+    const placeholder = el("option", "Select a customer");
+    placeholder.value = "";
+    customerSelect.append(placeholder);
+
+    if (!search) {
+      customerSelect.disabled = true;
+      return;
+    }
+
+    const matches = profiles.filter(profile =>
+      [
+        profile.member_id,
+        profile.full_name,
+        profile.email
+      ].some(value =>
+        String(value || "").toLowerCase().includes(search)
+      )
+    ).slice(0, 50);
+
+    matches.forEach(profile => {
+      const memberId = profile.member_id || "No Member ID";
+      const name = profile.full_name || "Unnamed customer";
+      const email = profile.email || "No email";
+
+      const option = el(
+        "option",
+        memberId + " — " + name + " (" + email + ")"
+      );
+
+      option.value = profile.id;
+      customerSelect.append(option);
+    });
+
+    customerSelect.disabled = matches.length === 0;
+
+    if (!matches.length) {
+      const noResults = el("option", "No matching customers found");
+      noResults.value = "";
+      customerSelect.append(noResults);
+    }
+  }
+
+  searchInput.addEventListener("input", () => {
+    showSelectedCustomer(null);
+    updateCustomerResults();
+  });
+
+  customerSelect.addEventListener("change", () => {
+    const profile = profileById.get(customerSelect.value);
+    showSelectedCustomer(profile);
+  });
+
+  const percentageInput = el("input");
+  percentageInput.type = "number";
+  percentageInput.min = "0";
+  percentageInput.max = "100";
+  percentageInput.step = "0.01";
+  percentageInput.value = "50";
+  percentageInput.style.width = "100%";
+
+  const enabledInput = el("input");
+  enabledInput.type = "checkbox";
+  enabledInput.checked = true;
+
+  const status = el("div", "", "message");
+
+  const listCard = el("div", undefined, "card");
+  listCard.append(el("h2", "Configured Team Accounts"));
+
+  const listContent = el("div");
+  listCard.append(listContent);
+
+  async function loadTeamTradeSettings() {
+    listContent.replaceChildren(
+      el("div", "Loading team account settings...", "loading")
+    );
+
+    const { data, error } = await sgecoreSupabase.rpc(
+      "get_sge_team_trade_controls"
+    );
+
+    if (error) throw error;
+
+    const rows = Array.isArray(data) ? data : [];
+
+    // Resolve UUIDs internally to customer profiles.
+    const missingIds = rows
+      .filter(item => !profileById.has(item.user_id))
+      .map(item => item.user_id)
+      .filter(Boolean);
+
+    if (missingIds.length) {
+      const extraProfiles = await query(
+        "profiles",
+        "id,member_id,full_name,email",
+        { in: ["id", missingIds], limit: 1000 }
+      );
+
+      extraProfiles.forEach(profile => {
+        profileById.set(profile.id, profile);
+      });
+    }
+
+    const resultTable = table(
+      [
+        "Member ID",
+        "Customer Name",
+        "Email",
+        "Win Percentage",
+        "Status",
+        "Last Updated",
+        "Action"
+      ],
+      rows,
+      item => {
+        const profile = profileById.get(item.user_id);
+
+        const memberId = profile?.member_id || "Unavailable";
+        const customerName = profile?.full_name || "Customer unavailable";
+        const email = profile?.email || "Unavailable";
+
+        const actionCell = el("td");
+
+        actionCell.append(button("Edit", () => {
+          if (!profile) {
+            status.textContent =
+              "Customer profile could not be found. Settings cannot be edited.";
+            status.className = "message error";
+            return;
+          }
+
+          searchInput.value =
+            profile.member_id || profile.full_name || profile.email || "";
+
+          updateCustomerResults();
+          customerSelect.value = profile.id;
+
+          showSelectedCustomer(profile);
+
+          percentageInput.value = item.win_percentage;
+          enabledInput.checked = item.enabled === true;
+
+          status.textContent =
+            "Account settings loaded. Make your changes and save.";
+          status.className = "message";
+        }));
+
+        return tr([
+          memberId,
+          customerName,
+          email,
+          Number(item.win_percentage).toFixed(2) + "%",
+          item.enabled ? "Enabled" : "Disabled",
+          date(item.updated_at),
+          actionCell
+        ]);
+      }
+    );
+
+    listContent.replaceChildren(resultTable);
+  }
+
+  const saveButton = button("Save Team Trade Settings", async () => {
+    if (!selectedCustomer) {
+      status.textContent = "Search for and select a customer first.";
+      status.className = "message error";
+      return;
+    }
+
+    const percentage = Number(percentageInput.value);
+
+    if (
+      percentageInput.value.trim() === "" ||
+      !Number.isFinite(percentage) ||
+      percentage < 0 ||
+      percentage > 100
+    ) {
+      status.textContent = "Win percentage must be between 0 and 100.";
+      status.className = "message error";
+      return;
+    }
+
+    saveButton.disabled = true;
+    status.textContent = "Saving settings...";
+    status.className = "message";
+
+    try {
+      const { error } = await sgecoreSupabase.rpc(
+        "set_sge_team_trade_control",
+        {
+          p_user_id: selectedCustomer.id,
+          p_enabled: enabledInput.checked,
+          p_win_percentage: percentage
+        }
+      );
+
+      if (error) throw error;
+
+      status.textContent =
+        "Team trade settings saved successfully.";
+      status.className = "message success";
+
+      await loadTeamTradeSettings();
+
+    } catch (e) {
+      status.textContent =
+        e.message || "Unable to save settings.";
+      status.className = "message error";
+
+    } finally {
+      saveButton.disabled = false;
+    }
+  }, "primary");
+
+  settingsCard.append(
+    el("label", "Search Customer (5-digit Member ID, Name or Email)"),
+    searchInput,
+    el("label", "Matching Customers"),
+    customerSelect,
+    selectedDetails,
+    el("label", "Win Percentage (0–100)"),
+    percentageInput,
+    el("label", "Enable settings for this account"),
+    enabledInput,
+    saveButton,
+    status
+  );
+
+  content.append(settingsCard, listCard);
+
+  await loadTeamTradeSettings();
+}
+
+async function renderCustomerLabels() {
+  const [labels, profiles, memberships] = await Promise.all([
+    query("support_customer_labels", "id,name,color,created_at,updated_at", {
+      order: "created_at",
+      limit: 500
+    }),
+    query("profiles", "id,member_id,full_name,email", {
+      order: "created_at",
+      limit: 500
+    }),
+    query("support_customer_label_members", "label_id,user_id,created_at", {
+      limit: 5000
+    })
+  ]);
+
+  const profileById = new Map(profiles.map(p => [p.id, p]));
+
+  const selectedId = labels.some(
+    label => label.id === state.customerLabelSelectedId
+  )
+    ? state.customerLabelSelectedId
+    : (labels[0]?.id || null);
+
+  state.customerLabelSelectedId = selectedId;
+
+  // Create a new label
+  const createCard = el("div", undefined, "card");
+  createCard.append(el("h2", "Create a customer label"));
+  createCard.append(el(
+    "p",
+    "Create private categories such as Deposit Clients, Potential Clients, VIP Clients or Fellows. Only administrators can see these labels.",
+    "muted"
+  ));
+
+  const createName = el("input");
+  createName.type = "text";
+  createName.maxLength = 50;
+  createName.placeholder = "Enter label name (e.g. Deposit Clients)";
+
+  const createColor = el("input");
+  createColor.type = "color";
+  createColor.value = "#d9b45b";
+  createColor.style.width = "75px";
+  createColor.style.height = "42px";
+  createColor.style.padding = "4px";
+
+  const createStatus = el("div", "", "message");
+
+  const createButton = button("Create label", async () => {
+    const name = createName.value.trim();
+
+    if (!name) {
+      createStatus.textContent = "Enter a label name.";
+      createStatus.className = "message error";
+      return;
+    }
+
+    createButton.disabled = true;
+    createStatus.textContent = "Creating label...";
+    createStatus.className = "message";
+
+    try {
+      const { data, error } = await sgecoreSupabase
+        .from("support_customer_labels")
+        .insert({
+          name,
+          color: createColor.value,
+          created_by: state.user.id
+        })
+        .select("id")
+        .single();
+
+      if (error) throw error;
+
+      state.customerLabelSelectedId = data.id;
+      await loadPage("customerlabels");
+
+    } catch (e) {
+      createStatus.textContent = e.message;
+      createStatus.className = "message error";
+    } finally {
+      createButton.disabled = false;
+    }
+  }, "primary");
+
+  const createRow = el("div", undefined, "toolbar");
+  createRow.append(createColor, createName, createButton);
+  createCard.append(createRow, createStatus);
+  content.append(createCard);
+
+  // Existing labels
+  const listCard = el("div", undefined, "card");
+  listCard.append(el("h2", "Your customer labels"));
+
+  const labelRows = labels.map(label => {
+    const count = memberships.filter(
+      member => member.label_id === label.id
+    ).length;
+
+    return {
+      label,
+      count
+    };
+  });
+
+  content.append(listCard);
+
+  if (!labelRows.length) {
+    listCard.append(el(
+      "div",
+      "No labels created yet. Create your first label above.",
+      "empty"
+    ));
+    return;
+  }
+
+  listCard.append(table(
+    ["Label", "Customers", "Created", "Actions"],
+    labelRows,
+    item => {
+      const swatch = el("span");
+      swatch.style.cssText =
+        "display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;background:" +
+        item.label.color;
+
+      const labelName = el("span");
+      labelName.append(swatch, el("strong", item.label.name));
+
+      return tr([
+        labelName,
+        item.count,
+        date(item.label.created_at),
+        actions(
+          button("Manage", () => {
+            state.customerLabelSelectedId = item.label.id;
+            loadPage("customerlabels");
+          }, "primary")
+        )
+      ]);
+    }
+  ));
+
+  // Selected label management
+  const selectedLabel = labels.find(label => label.id === selectedId);
+  if (!selectedLabel) return;
+
+  const manageCard = el("div", undefined, "card");
+  manageCard.append(el("h2", "Manage: " + selectedLabel.name));
+  manageCard.append(el(
+    "p",
+    "Edit this label or assign customers. A customer can belong to multiple labels.",
+    "muted"
+  ));
+
+  const editName = el("input");
+  editName.type = "text";
+  editName.maxLength = 50;
+  editName.value = selectedLabel.name;
+
+  const editColor = el("input");
+  editColor.type = "color";
+  editColor.value = selectedLabel.color || "#d9b45b";
+  editColor.style.width = "75px";
+  editColor.style.height = "42px";
+  editColor.style.padding = "4px";
+
+  const editStatus = el("div", "", "message");
+
+  const saveButton = button("Save label changes", async () => {
+    const name = editName.value.trim();
+
+    if (!name) {
+      editStatus.textContent = "Label name cannot be empty.";
+      editStatus.className = "message error";
+      return;
+    }
+
+    saveButton.disabled = true;
+
+    try {
+      const { error } = await sgecoreSupabase
+        .from("support_customer_labels")
+        .update({
+          name,
+          color: editColor.value,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", selectedLabel.id);
+
+      if (error) throw error;
+
+      await loadPage("customerlabels");
+
+    } catch (e) {
+      editStatus.textContent = e.message;
+      editStatus.className = "message error";
+    } finally {
+      saveButton.disabled = false;
+    }
+  }, "primary");
+
+  const deleteButton = button("Delete label", async () => {
+    const confirmed = confirm(
+      "Delete the label '" + selectedLabel.name +
+      "'? Its customer assignments will also be deleted. Customer accounts will not be affected."
+    );
+
+    if (!confirmed) return;
+
+    deleteButton.disabled = true;
+
+    try {
+      const { error } = await sgecoreSupabase
+        .from("support_customer_labels")
+        .delete()
+        .eq("id", selectedLabel.id);
+
+      if (error) throw error;
+
+      state.customerLabelSelectedId = null;
+      await loadPage("customerlabels");
+
+    } catch (e) {
+      editStatus.textContent = e.message;
+      editStatus.className = "message error";
+    } finally {
+      deleteButton.disabled = false;
+    }
+  }, "danger");
+
+  const editRow = el("div", undefined, "toolbar");
+  editRow.append(editColor, editName, saveButton, deleteButton);
+  manageCard.append(editRow, editStatus);
+
+  // Customer assignment
+  manageCard.append(el("h3", "Assign a customer"));
+
+  const assignedIds = new Set(
+    memberships
+      .filter(member => member.label_id === selectedLabel.id)
+      .map(member => member.user_id)
+  );
+
+  const customerSearch = el("input");
+  customerSearch.type = "search";
+  customerSearch.placeholder = "Search by Member ID, name or email";
+
+  const customerSelect = el("select");
+  customerSelect.style.width = "100%";
+
+  function populateLabelCustomers(term = "") {
+    const q = term.trim().toLowerCase();
+    const previous = customerSelect.value;
+
+    customerSelect.replaceChildren();
+
+    const placeholder = el("option", "Select a customer...");
+    placeholder.value = "";
+    customerSelect.append(placeholder);
+
+    profiles
+      .filter(profile => {
+        if (assignedIds.has(profile.id)) return false;
+
+        return !q || [
+          profile.member_id,
+          profile.full_name,
+          profile.email,
+          profile.id
+        ].some(value =>
+          String(value || "").toLowerCase().includes(q)
+        );
+      })
+      .forEach(profile => {
+        const optionText = [
+          profile.member_id || shortId(profile.id),
+          profile.full_name || "Unnamed customer",
+          profile.email
+        ].filter(Boolean).join(" · ");
+
+        const option = el("option", optionText);
+        option.value = profile.id;
+        customerSelect.append(option);
+      });
+
+    if (previous && [...customerSelect.options].some(
+      option => option.value === previous
+    )) {
+      customerSelect.value = previous;
+    }
+  }
+
+  customerSearch.addEventListener("input", () => {
+    populateLabelCustomers(customerSearch.value);
+  });
+
+  populateLabelCustomers();
+
+  const assignStatus = el("div", "", "message");
+
+  const assignButton = button("Add customer to label", async () => {
+    const userId = customerSelect.value;
+
+    if (!userId) {
+      assignStatus.textContent = "Select a customer first.";
+      assignStatus.className = "message error";
+      return;
+    }
+
+    assignButton.disabled = true;
+    assignStatus.textContent = "Assigning customer...";
+    assignStatus.className = "message";
+
+    try {
+      const { error } = await sgecoreSupabase
+        .from("support_customer_label_members")
+        .insert({
+          label_id: selectedLabel.id,
+          user_id: userId
+        });
+
+      if (error) throw error;
+
+      await loadPage("customerlabels");
+
+    } catch (e) {
+      assignStatus.textContent = e.message;
+      assignStatus.className = "message error";
+    } finally {
+      assignButton.disabled = false;
+    }
+  }, "primary");
+
+  const assignmentRow = el("div", undefined, "toolbar");
+  assignmentRow.append(customerSearch, customerSelect, assignButton);
+  manageCard.append(assignmentRow, assignStatus);
+
+  // Current members of this label
+  manageCard.append(el("h3", "Customers in this label"));
+
+  const currentMembers = memberships
+    .filter(member => member.label_id === selectedLabel.id)
+    .map(member => ({
+      member,
+      profile: profileById.get(member.user_id) || {}
+    }));
+
+  manageCard.append(table(
+    ["Member ID", "Customer", "Email", "Added", "Action"],
+    currentMembers,
+    item => {
+      const profile = item.profile;
+
+      return tr([
+        profile.member_id || shortId(item.member.user_id),
+        profile.full_name || "Unnamed customer",
+        profile.email || "—",
+        date(item.member.created_at),
+        actions(
+          button("Remove", async () => {
+            if (!confirm(
+              "Remove this customer from '" + selectedLabel.name + "'?"
+            )) return;
+
+            try {
+              const { error } = await sgecoreSupabase
+                .from("support_customer_label_members")
+                .delete()
+                .eq("label_id", selectedLabel.id)
+                .eq("user_id", item.member.user_id);
+
+              if (error) throw error;
+
+              await loadPage("customerlabels");
+
+            } catch (e) {
+              message("globalMessage", e.message, "error");
+            }
+          }, "danger")
+        )
+      ]);
+    }
+  ));
+
+  content.append(manageCard);
+}
+
+      let supportRealtimeChannel = null;
+
+      
+async function renderSupport() {
+  const [tickets, profiles, settings, labels, memberships] = await Promise.all([
+    query("support_tickets", "id,user_id,subject,status,assigned_to,assigned_admin,created_at,updated_at,last_message_at", {
+      order: "last_message_at",
+      limit: 500
+    }),
+    query("profiles", "id,member_id,full_name,email", {
+      order: "created_at",
+      limit: 500
+    }),
+    query("support_customer_settings", "user_id,support_enabled,display_heading,updated_at", {
+      limit: 1000
+    }),
+    query("support_customer_labels", "id,name,color", {
+      order: "name",
+      limit: 500
+    }),
+    query("support_customer_label_members", "label_id,user_id,created_at", {
+      limit: 5000
+    })
+  ]);
+
+  const profileById = new Map(profiles.map(p => [p.id, p]));
+  const settingsById = new Map(settings.map(s => [s.user_id, s]));
+  const labelById = new Map(labels.map(label => [label.id, label]));
+
+  const labelsByUser = new Map();
+
+  memberships.forEach(member => {
+    const label = labelById.get(member.label_id);
+    if (!label) return;
+
+    if (!labelsByUser.has(member.user_id)) {
+      labelsByUser.set(member.user_id, []);
+    }
+
+    labelsByUser.get(member.user_id).push(label);
+  });
+
+  // CUSTOMER SUPPORT SETTINGS
+  const settingsCard = el("div", undefined, "card");
+  settingsCard.append(el("h2", "Customer support access"));
+
+  settingsCard.append(el(
+    "p",
+    "Enable or disable support separately for each customer. The custom heading changes only the support title, not the customer's account name or Member ID.",
+    "muted"
+  ));
+
+  const search = el("input");
+  search.type = "search";
+  search.placeholder = "Search by Member ID, name, email or user ID";
+
+  const customerSelect = el("select");
+  customerSelect.style.width = "100%";
+
+  const enabled = el("input");
+  enabled.type = "checkbox";
+
+  const headingInput = el("input");
+  headingInput.type = "text";
+  headingInput.maxLength = 100;
+  headingInput.placeholder = "Customer Support";
+  headingInput.style.width = "100%";
+
+  const status = el("div", "", "message");
+
+  const save = button("Save customer support settings", async () => {
+    const userId = customerSelect.value;
+
+    if (!userId) {
+      status.textContent = "Select a customer first.";
+      status.className = "message error";
+      return;
+    }
+
+    save.disabled = true;
+    status.textContent = "Saving...";
+    status.className = "message";
+
+    try {
+      const { error } = await sgecoreSupabase
+        .from("support_customer_settings")
+        .upsert({
+          user_id: userId,
+          support_enabled: enabled.checked,
+          display_heading: headingInput.value.trim() || null,
+          updated_at: new Date().toISOString()
+        }, { onConflict: "user_id" });
+
+      if (error) throw error;
+
+      status.textContent = "Support settings saved for this customer.";
+      status.className = "message success";
+
+    } catch (e) {
+      status.textContent = e.message;
+      status.className = "message error";
+    } finally {
+      save.disabled = false;
+    }
+  }, "primary");
+
+  function populateCustomerOptions(term = "") {
+    const previous = customerSelect.value;
+    customerSelect.replaceChildren();
+
+    const placeholder = el("option", "Select a customer...");
+    placeholder.value = "";
+    customerSelect.append(placeholder);
+
+    const q = term.trim().toLowerCase();
+
+    profiles
+      .filter(p => !q || [
+        p.member_id,
+        p.full_name,
+        p.email,
+        p.id
+      ].some(v => String(v || "").toLowerCase().includes(q)))
+      .forEach(p => {
+        const label = [
+          p.member_id || shortId(p.id),
+          p.full_name || p.email || "Customer",
+          p.email
+        ].filter(Boolean).join(" · ");
+
+        const opt = el("option", label);
+        opt.value = p.id;
+        customerSelect.append(opt);
+      });
+
+    if (profiles.some(p => p.id === previous)) {
+      customerSelect.value = previous;
+    }
+
+    if (!customerSelect.value && customerSelect.options.length > 1) {
+      customerSelect.selectedIndex = 1;
+    }
+
+    loadSelectedCustomerSettings();
+  }
+
+  function loadSelectedCustomerSettings() {
+    const row = settingsById.get(customerSelect.value);
+    enabled.checked = row?.support_enabled === true;
+    headingInput.value = row?.display_heading || "";
+  }
+
+  search.addEventListener("input", () => {
+    populateCustomerOptions(search.value);
+  });
+
+  customerSelect.addEventListener("change", loadSelectedCustomerSettings);
+
+  settingsCard.append(
+    search,
+    el("label", "Customer"),
+    customerSelect,
+    el("label", "Enable support for this customer"),
+    enabled,
+    el("label", "Custom support heading (optional)"),
+    headingInput,
+    save,
+    status
+  );
+
+  content.append(settingsCard);
+  populateCustomerOptions();
+
+  // SUPPORT INBOX FILTERS
+  const toolbar = el("div", undefined, "toolbar");
+
+  const filter = el("select");
+
+  [
+    ["all", "All tickets"],
+    ["open", "Open"],
+    ["pending", "Pending"],
+    ["closed", "Closed"],
+    ["resolved", "Resolved"]
+  ].forEach(([v, label]) => {
+    const opt = el("option", label);
+    opt.value = v;
+    filter.append(opt);
+  });
+
+  filter.value = state.ticketFilter || "all";
+
+  filter.addEventListener("change", () => {
+    state.ticketFilter = filter.value;
+    loadPage("support");
+  });
+
+  const labelFilter = el("select");
+
+  const allLabelsOption = el("option", "All customer labels");
+  allLabelsOption.value = "all";
+  labelFilter.append(allLabelsOption);
+
+  labels.forEach(label => {
+    const opt = el("option", label.name);
+    opt.value = label.id;
+    labelFilter.append(opt);
+  });
+
+  labelFilter.value = state.ticketLabelFilter || "all";
+
+  if (
+    labelFilter.value !== "all" &&
+    !labels.some(label => label.id === labelFilter.value)
+  ) {
+    labelFilter.value = "all";
+    state.ticketLabelFilter = "all";
+  }
+
+  labelFilter.addEventListener("change", () => {
+    state.ticketLabelFilter = labelFilter.value;
+    loadPage("support");
+  });
+
+  toolbar.append(filter, labelFilter);
+  content.append(toolbar);
+
+  // APPLY BOTH FILTERS
+  const filtered = tickets.filter(ticket => {
+    const statusMatches =
+      (state.ticketFilter || "all") === "all" ||
+      String(ticket.status || "").toLowerCase() === state.ticketFilter;
+
+    const assignedLabels = labelsByUser.get(ticket.user_id) || [];
+
+    const labelMatches =
+      (state.ticketLabelFilter || "all") === "all" ||
+      assignedLabels.some(label => label.id === state.ticketLabelFilter);
+
+    return statusMatches && labelMatches;
+  });
+
+  // TICKET TABLE WITH CUSTOMER LABELS
+  content.append(table(
+    [
+      "Last activity",
+      "Member ID",
+      "Customer",
+      "Subject",
+      "Customer labels",
+      "Status",
+      "Actions"
+    ],
+    filtered,
+    t => {
+      const p = profileById.get(t.user_id) || {};
+      const assignedLabels = labelsByUser.get(t.user_id) || [];
+
+      const labelCell = el("div");
+      labelCell.style.cssText =
+        "display:flex;flex-wrap:wrap;gap:6px;min-width:120px;";
+
+      if (!assignedLabels.length) {
+        labelCell.append(el("span", "No labels", "muted small"));
+      } else {
+        assignedLabels.forEach(label => {
+          const chip = el("span", label.name);
+
+          chip.style.cssText = [
+            "display:inline-block",
+            "padding:5px 9px",
+            "border-radius:20px",
+            "font-size:11px",
+            "font-weight:700",
+            "white-space:nowrap",
+            "border:1px solid " + (label.color || "#d9b45b"),
+            "color:" + (label.color || "#d9b45b"),
+            "background:#091626"
+          ].join(";");
+
+          labelCell.append(chip);
+        });
+      }
+
+      return tr([
+        date(t.last_message_at || t.updated_at),
+        p.member_id || shortId(t.user_id),
+        p.full_name || p.email || "Customer",
+        t.subject,
+        labelCell,
+        badge(t.status),
+        button(
+          "Open conversation",
+          () => showTicket(t, p),
+          "primary"
+        )
+      ]);
+    }
+  ));
+
+  // SUPABASE REALTIME UPDATES
+  if (supportRealtimeChannel) {
+    await sgecoreSupabase.removeChannel(supportRealtimeChannel);
+  }
+
+  supportRealtimeChannel = sgecoreSupabase
+    .channel("admin-support-inbox")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "support_tickets"
+      },
+      () => {
+        if (state.page === "support") loadPage("support");
+      }
+    )
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "support_messages"
+      },
+      () => {
+        if (state.page === "support") loadPage("support");
+      }
+    )
+    .subscribe();
+}
+
+
+async function renderTicketLabels(ticket) {
+  const [labels, memberships] = await Promise.all([
+    query(
+      "support_customer_labels",
+      "id,name,color",
+      { order: "name", limit: 500 }
+    ),
+    query(
+      "support_customer_label_members",
+      "label_id,user_id,created_at",
+      { eq: ["user_id", ticket.user_id], limit: 500 }
+    )
+  ]);
+
+  const assignedIds = new Set(
+    memberships.map(item => item.label_id)
+  );
+
+  const panel = el("div", undefined, "card");
+  panel.append(el("h2", "Customer Labels"));
+
+  panel.append(el(
+    "p",
+    "These labels are private admin notes. Customers cannot see them. You can assign multiple labels to this customer.",
+    "muted"
+  ));
+
+  const labelList = el("div");
+  labelList.style.cssText =
+    "display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 18px;";
+
+  if (!labels.length) {
+    labelList.append(el(
+      "div",
+      "No labels created yet. Create one below.",
+      "muted small"
+    ));
+  }
+
+  labels.forEach(label => {
+    const item = el("label");
+    item.style.cssText = [
+      "display:inline-flex",
+      "align-items:center",
+      "gap:8px",
+      "padding:9px 12px",
+      "border:1px solid " + (label.color || "#d9b45b"),
+      "border-radius:20px",
+      "background:#091626",
+      "cursor:pointer",
+      "margin:0"
+    ].join(";");
+
+    const checkbox = el("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = assignedIds.has(label.id);
+    checkbox.style.cssText =
+      "width:auto;margin:0;accent-color:#d9b45b;";
+
+    const dot = el("span");
+    dot.style.cssText =
+      "width:10px;height:10px;border-radius:50%;background:" +
+      (label.color || "#d9b45b");
+
+    const name = el("span", label.name);
+    name.style.color = "var(--text)";
+
+    checkbox.addEventListener("change", async () => {
+      checkbox.disabled = true;
+
+      try {
+        if (checkbox.checked) {
+          const { error } = await sgecoreSupabase
+            .from("support_customer_label_members")
+            .insert({
+              label_id: label.id,
+              user_id: ticket.user_id
+            });
 
           if (error) throw error;
 
-          const rows = Array.isArray(data) ? data : [];
+          assignedIds.add(label.id);
+        } else {
+          const { error } = await sgecoreSupabase
+            .from("support_customer_label_members")
+            .delete()
+            .eq("label_id", label.id)
+            .eq("user_id", ticket.user_id);
 
-          const resultTable = table(
-            ["Customer UID", "Win Percentage", "Status", "Last Updated", "Action"],
-            rows,
-            (item) => {
-              const row = el("tr");
+          if (error) throw error;
 
-              const uidCell = el("td", item.user_id);
-              const percentageCell = el(
-                "td",
-                Number(item.win_percentage).toFixed(2) + "%"
-              );
-              const statusCell = el(
-                "td",
-                item.enabled ? "Enabled" : "Disabled"
-              );
-              const updatedCell = el("td", date(item.updated_at));
-
-              const actionCell = el("td");
-              actionCell.append(button("Edit", () => {
-                uidInput.value = item.user_id;
-                percentageInput.value = item.win_percentage;
-                enabledInput.checked = item.enabled === true;
-
-                status.textContent = "Account settings loaded. Make your changes and save.";
-                status.className = "message";
-              }));
-
-              row.append(
-                uidCell,
-                percentageCell,
-                statusCell,
-                updatedCell,
-                actionCell
-              );
-
-              return row;
-            }
-          );
-
-          listContent.replaceChildren(resultTable);
+          assignedIds.delete(label.id);
         }
 
-        const saveButton = button("Save Team Trade Settings", async () => {
-          const uid = uidInput.value.trim();
-          const percentage = Number(percentageInput.value);
-
-          const uuidPattern =
-            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-          if (!uuidPattern.test(uid)) {
-            status.textContent = "Enter a valid customer Supabase UID.";
-            status.className = "message error";
-            return;
-          }
-
-          if (
-            percentageInput.value.trim() === "" ||
-            !Number.isFinite(percentage) ||
-            percentage < 0 ||
-            percentage > 100
-          ) {
-            status.textContent = "Win percentage must be between 0 and 100.";
-            status.className = "message error";
-            return;
-          }
-
-          saveButton.disabled = true;
-          status.textContent = "Saving settings...";
-          status.className = "message";
-
-          try {
-            const { error } = await sgecoreSupabase.rpc(
-              "set_sge_team_trade_control",
-              {
-                p_user_id: uid,
-                p_enabled: enabledInput.checked,
-                p_win_percentage: percentage
-              }
-            );
-
-            if (error) throw error;
-
-            status.textContent = "Team trade settings saved successfully.";
-            status.className = "message success";
-
-            await loadTeamTradeSettings();
-          } catch (e) {
-            status.textContent = e.message || "Unable to save settings.";
-            status.className = "message error";
-          } finally {
-            saveButton.disabled = false;
-          }
-        }, "primary");
-
-        settingsCard.append(
-          el("label", "Customer Supabase UID"),
-          uidInput,
-          el("label", "Win Percentage (0–100)"),
-          percentageInput,
-          el("label", "Enable settings for this account"),
-          enabledInput,
-          saveButton,
-          status
+        message(
+          "globalMessage",
+          checkbox.checked
+            ? "Label assigned to customer."
+            : "Label removed from customer.",
+          "success"
         );
 
-        content.append(settingsCard, listCard);
-
-        await loadTeamTradeSettings();
+      } catch (e) {
+        checkbox.checked = !checkbox.checked;
+        message("globalMessage", e.message, "error");
+      } finally {
+        checkbox.disabled = false;
       }
-      let supportRealtimeChannel = null;
+    });
 
-      async function renderSupport() {
-        const [tickets, profiles, settings] = await Promise.all([
-          query("support_tickets", "id,user_id,subject,status,assigned_to,assigned_admin,created_at,updated_at,last_message_at", { order: "last_message_at", limit: 500 }),
-          query("profiles", "id,member_id,full_name,email", { order: "created_at", limit: 500 }),
-          query("support_customer_settings", "user_id,support_enabled,display_heading,updated_at", { limit: 1000 })
-        ]);
-        const profileById = new Map(profiles.map(p => [p.id, p]));
-        const settingsById = new Map(settings.map(s => [s.user_id, s]));
+    item.append(checkbox, dot, name);
+    labelList.append(item);
+  });
 
-        const settingsCard = el("div", undefined, "card");
-        settingsCard.append(el("h2", "Customer support access"));
-        settingsCard.append(el("p", "Enable or disable support separately for each customer. The custom heading changes only the support title, not the customer's account name or Member ID.", "muted"));
-        const search = el("input"); search.type = "search"; search.placeholder = "Search by Member ID, name, email or user ID";
-        const customerSelect = el("select"); customerSelect.style.width = "100%";
-        const enabled = el("input"); enabled.type = "checkbox";
-        const headingInput = el("input"); headingInput.type = "text"; headingInput.maxLength = 100; headingInput.placeholder = "Customer Support"; headingInput.style.width = "100%";
-        const status = el("div", "", "message");
-        const save = button("Save customer support settings", async () => {
-          const userId = customerSelect.value;
-          if (!userId) { status.textContent = "Select a customer first."; status.className = "message error"; return; }
-          save.disabled = true; status.textContent = "Saving..."; status.className = "message";
-          try {
-            const { error } = await sgecoreSupabase.from("support_customer_settings").upsert({
-              user_id: userId,
-              support_enabled: enabled.checked,
-              display_heading: headingInput.value.trim() || null,
-              updated_at: new Date().toISOString()
-            }, { onConflict: "user_id" });
-            if (error) throw error;
-            status.textContent = "Support settings saved for this customer."; status.className = "message success";
-          } catch (e) { status.textContent = e.message; status.className = "message error"; }
-          finally { save.disabled = false; }
-        }, "primary");
+  panel.append(labelList);
 
-        function populateCustomerOptions(term = "") {
-          const previous = customerSelect.value;
-          customerSelect.replaceChildren();
-          const placeholder = el("option", "Select a customer..."); placeholder.value = ""; customerSelect.append(placeholder);
-          const q = term.trim().toLowerCase();
-          profiles.filter(p => !q || [p.member_id,p.full_name,p.email,p.id].some(v => String(v || "").toLowerCase().includes(q)))
-            .forEach(p => {
-              const label = [p.member_id || shortId(p.id), p.full_name || p.email || "Customer", p.email].filter(Boolean).join(" · ");
-              const opt = el("option", label); opt.value = p.id; customerSelect.append(opt);
-            });
-          if (profiles.some(p => p.id === previous)) customerSelect.value = previous;
-          if (!customerSelect.value && customerSelect.options.length > 1) customerSelect.selectedIndex = 1;
-          loadSelectedCustomerSettings();
-        }
-        function loadSelectedCustomerSettings() {
-          const row = settingsById.get(customerSelect.value);
-          enabled.checked = row?.support_enabled === true;
-          headingInput.value = row?.display_heading || "";
-        }
-        search.addEventListener("input", () => populateCustomerOptions(search.value));
-        customerSelect.addEventListener("change", loadSelectedCustomerSettings);
-        settingsCard.append(search, el("label", "Customer"), customerSelect, el("label", "Enable support for this customer"), enabled, el("label", "Custom support heading (optional)"), headingInput, save, status);
-        content.append(settingsCard);
-        populateCustomerOptions();
+  const createHeading = el("h3", "Create a new label");
+  panel.append(createHeading);
 
-        const toolbar = el("div", undefined, "toolbar");
-        const filter = el("select");
-        [["all", "All tickets"], ["open", "Open"], ["pending", "Pending"], ["closed", "Closed"], ["resolved", "Resolved"]]
-          .forEach(([v, label]) => { const opt = el("option", label); opt.value = v; filter.append(opt); });
-        filter.value = state.ticketFilter;
-        filter.addEventListener("change", () => { state.ticketFilter = filter.value; loadPage("support"); });
-        toolbar.append(filter); content.append(toolbar);
-        const filtered = state.ticketFilter === "all" ? tickets : tickets.filter(t => String(t.status || "").toLowerCase() === state.ticketFilter);
-        content.append(table(
-          ["Last activity", "Member ID", "Customer", "Subject", "Status", "Actions"],
-          filtered,
-          t => {
-            const p = profileById.get(t.user_id) || {};
-            return tr([date(t.last_message_at || t.updated_at), p.member_id || shortId(t.user_id), p.full_name || p.email || "Customer", t.subject, badge(t.status), button("Open conversation", () => showTicket(t, profileById.get(t.user_id)), "primary")]);
-          }
-        ));
-        if (supportRealtimeChannel) await sgecoreSupabase.removeChannel(supportRealtimeChannel);
-        supportRealtimeChannel = sgecoreSupabase.channel("admin-support-inbox")
-          .on("postgres_changes", { event: "*", schema: "public", table: "support_tickets" }, () => {
-            if (state.page === "support") loadPage("support");
-          })
-          .on("postgres_changes", { event: "INSERT", schema: "public", table: "support_messages" }, () => {
-            if (state.page === "support") loadPage("support");
-          })
-          .subscribe();
+  const createRow = el("div", undefined, "toolbar");
+
+  const nameInput = el("input");
+  nameInput.type = "text";
+  nameInput.maxLength = 50;
+  nameInput.placeholder = "New label name";
+  nameInput.style.flex = "1";
+  nameInput.style.minWidth = "180px";
+
+  const colorInput = el("input");
+  colorInput.type = "color";
+  colorInput.value = "#d9b45b";
+  colorInput.style.width = "65px";
+  colorInput.style.height = "42px";
+  colorInput.style.padding = "4px";
+
+  const createStatus = el("div", "", "message");
+
+  const createButton = button(
+    "Create and assign",
+    async () => {
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        createStatus.textContent = "Enter a label name.";
+        createStatus.className = "message error";
+        return;
       }
+
+      createButton.disabled = true;
+      createStatus.textContent = "Creating label...";
+      createStatus.className = "message";
+
+      try {
+        const { data, error } = await sgecoreSupabase
+          .from("support_customer_labels")
+          .insert({
+            name,
+            color: colorInput.value,
+            created_by: state.user.id
+          })
+          .select("id")
+          .single();
+
+        if (error) throw error;
+
+        const { error: assignError } = await sgecoreSupabase
+          .from("support_customer_label_members")
+          .insert({
+            label_id: data.id,
+            user_id: ticket.user_id
+          });
+
+        if (assignError) throw assignError;
+
+        message(
+          "globalMessage",
+          "New label created and assigned to this customer.",
+          "success"
+        );
+
+        await showTicket(ticket, null, false);
+
+      } catch (e) {
+        createStatus.textContent = e.message;
+        createStatus.className = "message error";
+      } finally {
+        createButton.disabled = false;
+      }
+    },
+    "primary"
+  );
+
+  createRow.append(nameInput, colorInput, createButton);
+  panel.append(createRow, createStatus);
+
+  return panel;
+}
 
       async function showTicket(ticket, profile = null, subscribe = true) {
         try {
@@ -1754,6 +3971,9 @@
           head.append(heading, button("Back to support", () => loadPage("support"))); box.append(head);
           [["Customer name", profile.full_name || "—"], ["Email", profile.email || "—"], ["Member ID", profile.member_id || "—"], ["User ID", ticket.user_id], ["Status", ticket.status], ["Created", date(ticket.created_at)], ["Last activity", date(ticket.last_message_at || ticket.updated_at)]]
             .forEach(([k,v]) => box.append(fieldLabel(k,v)));
+            // Customer labels panel
+          const customerLabelsPanel = await renderTicketLabels(ticket);
+          box.append(customerLabelsPanel);
           const statusRow = el("div", undefined, "toolbar");
           const statusSelect = el("select");
           ["open","pending","closed","resolved"].forEach(v => { const o=el("option",v); o.value=v; statusSelect.append(o); });
@@ -1924,26 +4144,138 @@
 
           content.append(msgBox);
 
-          const replyForm = el("form", undefined, "support-reply-form");
-          const reply = el("textarea"); reply.rows = 4; reply.maxLength = 5000; reply.required = true; reply.placeholder = "Write a reply to the customer..."; reply.style.width = "100%";
-          const send = el("button", "Send reply", "primary"); send.type = "submit";
-          replyForm.append(reply, send);
-          replyForm.addEventListener("submit", async event => {
-            event.preventDefault(); const text = reply.value.trim(); if (!text) return;
-            send.disabled = true;
-            try {
-              const { error } = await sgecoreSupabase.from("support_messages").insert({ ticket_id: ticket.id, sender_id: state.user.id, sender_role: "admin", message: text });
-              if (error) throw error;
-              if (ticket.status === "closed" || ticket.status === "resolved") {
-                const update = await sgecoreSupabase.from("support_tickets").update({ status: "open" }).eq("id", ticket.id);
-                if (update.error) throw update.error;
-                ticket.status = "open";
-              }
-              await showTicket(ticket, profile, false);
-            } catch (e) { message("globalMessage", e.message, "error"); }
-            finally { send.disabled = false; }
-          });
-          msgBox.append(replyForm); content.append(msgBox);
+          
+const replyForm = el("form", undefined, "support-reply-form");
+
+const reply = el("textarea");
+reply.rows = 4;
+reply.maxLength = 5000;
+reply.placeholder = "Write a reply to the customer...";
+reply.style.width = "100%";
+
+const attachLabel = el("label", "Attach image or PDF");
+attachLabel.style.cssText =
+  "display:block;margin:12px 0 8px;color:#e5c879;font-weight:600;";
+
+const fileInput = el("input");
+fileInput.type = "file";
+fileInput.accept = ".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf";
+fileInput.style.display = "block";
+fileInput.style.marginTop = "8px";
+
+attachLabel.append(fileInput);
+
+const send = el("button", "Send reply", "primary");
+send.type = "submit";
+
+const uploadStatus = el("div", "", "muted small");
+uploadStatus.style.marginTop = "8px";
+
+replyForm.append(reply, attachLabel, send, uploadStatus);
+
+replyForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const text = reply.value.trim();
+  const file = fileInput.files?.[0] || null;
+
+  if (!text && !file) {
+    uploadStatus.textContent = "Write a message or select a file first.";
+    return;
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf"
+  ];
+
+  const maxFileSize = 10 * 1024 * 1024;
+
+  if (file && !allowedTypes.includes(file.type)) {
+    uploadStatus.textContent = "Choose a JPG, PNG, WEBP or PDF file.";
+    return;
+  }
+
+  if (file && file.size > maxFileSize) {
+    uploadStatus.textContent = "Maximum attachment size is 10 MB.";
+    return;
+  }
+
+  send.disabled = true;
+  fileInput.disabled = true;
+  reply.disabled = true;
+  uploadStatus.textContent = "Sending...";
+
+  let uploadedPath = null;
+
+  try {
+    if (file) {
+      const safeName = file.name
+        .replace(/[^a-zA-Z0-9._-]/g, "_")
+        .slice(-100);
+
+      uploadedPath =
+        ticket.id + "/" + crypto.randomUUID() + "-" + safeName;
+
+      const { error: uploadError } = await sgecoreSupabase.storage
+        .from("support-attachments")
+        .upload(uploadedPath, file, {
+          contentType: file.type,
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+    }
+
+    const { error } = await sgecoreSupabase
+      .from("support_messages")
+      .insert({
+        ticket_id: ticket.id,
+        sender_id: state.user.id,
+        sender_role: "admin",
+        message: text || "Attachment: " + file.name,
+        attachment_path: uploadedPath
+      });
+
+    if (error) {
+      if (uploadedPath) {
+        await sgecoreSupabase.storage
+          .from("support-attachments")
+          .remove([uploadedPath]);
+      }
+
+      throw error;
+    }
+
+    if (ticket.status === "closed" || ticket.status === "resolved") {
+      const update = await sgecoreSupabase
+        .from("support_tickets")
+        .update({ status: "open" })
+        .eq("id", ticket.id);
+
+      if (update.error) throw update.error;
+
+      ticket.status = "open";
+    }
+
+    await showTicket(ticket, profile, false);
+
+  } catch (e) {
+    uploadStatus.textContent = e.message;
+    uploadStatus.className = "message error";
+
+  } finally {
+    send.disabled = false;
+    fileInput.disabled = false;
+    reply.disabled = false;
+  }
+});
+
+msgBox.append(replyForm);
+content.append(msgBox);
+
 
           if (subscribe) {
             if (supportRealtimeChannel) await sgecoreSupabase.removeChannel(supportRealtimeChannel);
