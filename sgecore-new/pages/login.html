@@ -905,7 +905,15 @@
           placeholder="Enter your password"
           autocomplete="current-password"
           required
-        >
+        >        <div style="text-align:right;margin:-8px 0 16px;">
+          <button
+            type="button"
+            id="forgot-password"
+            style="background:none;border:0;color:#d9b45d;font-size:13px;cursor:pointer;padding:4px 0;"
+          >Forgot Password?</button>
+        </div>
+
+
 
         <button
           class="login-submit"
@@ -954,6 +962,59 @@
     const loginMessage = document.getElementById("login-message");
     const loginButton = document.getElementById("login-submit");
     const registerLink = document.getElementById("register-link");
+    const forgotPasswordButton = document.getElementById("forgot-password");
+
+    if (forgotPasswordButton) {
+      forgotPasswordButton.addEventListener("click", async () => {
+        const emailInput = document.getElementById("email");
+        const email = emailInput.value.trim();
+
+        loginMessage.textContent = "";
+
+        if (!email || !emailInput.checkValidity()) {
+          loginMessage.textContent = "Please enter a valid email address first.";
+          emailInput.focus();
+          return;
+        }
+
+        if (
+          typeof sgecoreSupabase === "undefined" ||
+          !sgecoreSupabase.auth
+        ) {
+          loginMessage.textContent = "Supabase could not be loaded. Please try again.";
+          return;
+        }
+
+        forgotPasswordButton.disabled = true;
+        forgotPasswordButton.textContent = "Sending...";
+
+        try {
+          const redirectTo = new URL(
+            "reset-password.html",
+            window.location.href
+          ).href;
+
+          const { error } =
+            await sgecoreSupabase.auth.resetPasswordForEmail(email, {
+              redirectTo
+            });
+
+          if (error) throw error;
+
+          loginMessage.textContent =
+            "If this email is registered, a password reset link has been sent. Please check your inbox.";
+
+        } catch (error) {
+          console.error("Password recovery error:", error);
+          loginMessage.textContent =
+            error.message || "Unable to request a password reset. Please try again.";
+
+        } finally {
+          forgotPasswordButton.disabled = false;
+          forgotPasswordButton.textContent = "Forgot Password?";
+        }
+      });
+    }
 
 if (registerLink) {
   const params = new URLSearchParams(window.location.search);
@@ -1109,4 +1170,6 @@ if (registerLink) {
 <script src="../js/cookie-consent.js"></script>
 </body>
 </html>
+
+
 
