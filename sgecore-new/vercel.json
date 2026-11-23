@@ -28,7 +28,7 @@
   "rewrites": [
     {
       "source": "/secure-access-portal-Qwe123X9-admin-entry",
-      "destination": "/pages/admin.html"
+      "destination": "/pages/admin"
     }
   ]
 }
