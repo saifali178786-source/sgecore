@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -659,31 +659,7 @@
       text-shadow: 0 0 18px rgba(217,180,93,.35);
       transition: text-shadow .3s ease;
     }
-
-    .login-wrap .login-brand::before {
-      content: "S";
-      display: grid;
-      place-items: center;
-      width: 54px;
-      height: 54px;
-      margin: 0 auto 12px;
-      border: 1px solid rgba(217,180,93,.8);
-      border-radius: 16px;
-      background: linear-gradient(
-        145deg,
-        rgba(217,180,93,.25),
-        rgba(217,180,93,.04)
-      );
-      color: #f0d58c;
-      font-size: 28px;
-      letter-spacing: 0;
-      box-shadow:
-        0 0 22px rgba(217,180,93,.15),
-        inset 0 0 15px rgba(217,180,93,.08);
-      animation: logoGlow 3s ease-in-out infinite alternate;
-    }
-
-    .login-wrap .login-brand:hover {
+.login-wrap .login-brand:hover {
       text-shadow: 0 0 25px rgba(217,180,93,.65);
     }
 
@@ -860,11 +836,7 @@
       .login-wrap .login-card,
       .login-wrap .login-card::before,
       .login-wrap .login-card::after,
-      .login-wrap .login-brand::before {
-        animation: none !important;
-      }
-
-      .login-wrap .login-card {
+.login-wrap .login-card {
         border-color: rgba(217,180,93,.55);
       }
     }
@@ -905,11 +877,11 @@
           placeholder="Enter your password"
           autocomplete="current-password"
           required
-        >        <div style="text-align:right;margin:-8px 0 16px;">
+        >        <div style="text-align:left;margin:8px 0 16px;">
           <button
             type="button"
             id="forgot-password"
-            style="background:none;border:0;color:#d9b45d;font-size:13px;cursor:pointer;padding:4px 0;"
+            style="background:none;border:0;color:#d9b45d;font-size:13px;cursor:pointer;padding:4px 0;text-align:left;"
           >Forgot Password?</button>
         </div>
 
@@ -1170,6 +1142,3 @@ if (registerLink) {
 <script src="../js/cookie-consent.js"></script>
 </body>
 </html>
-
-
-

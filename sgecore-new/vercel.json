@@ -3,6 +3,16 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/pages/admin.html",
+      "destination": "/secure-access-portal-Qwe123X9-admin-entry",
+      "permanent": true
+    },
+    {
+      "source": "/pages/admin",
+      "destination": "/secure-access-portal-Qwe123X9-admin-entry",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {

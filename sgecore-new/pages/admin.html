@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -350,6 +350,16 @@
         <div class="field">
           <label for="loginPassword">Password</label>
           <input id="loginPassword" type="password" autocomplete="current-password" required>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <button type="button" id="toggleAdminPassword"
+              style="background:none;border:0;color:#d9b45d;font-size:13px;cursor:pointer;padding:4px 0;">
+              Show Password
+            </button>
+            <button type="button" id="forgotAdminPassword"
+              style="background:none;border:0;color:#d9b45d;font-size:13px;cursor:pointer;padding:4px 0;">
+              Forgot Password?
+            </button>
+          </div>
         </div>
         <button class="primary" style="width:100%" type="submit">Sign in</button>
       </form>
@@ -4314,6 +4324,51 @@ content.append(msgBox);
         ));
       }
 
+      $("toggleAdminPassword").addEventListener("click", () => {
+        const passwordInput = $("loginPassword");
+        const isHidden = passwordInput.type === "password";
+
+        passwordInput.type = isHidden ? "text" : "password";
+        $("toggleAdminPassword").textContent =
+          isHidden ? "Hide Password" : "Show Password";
+      });
+
+      $("forgotAdminPassword").addEventListener("click", async () => {
+        const email = $("loginEmail").value.trim();
+
+        if (!email) {
+          message("loginMessage", "Please enter your admin email address first.", "error");
+          $("loginEmail").focus();
+          return;
+        }
+
+        message("loginMessage", "Sending password recovery email…");
+
+        try {
+          const redirectTo = new URL(
+            "/pages/reset-password.html",
+            window.location.origin
+          ).href;
+
+          const { error } = await sgecoreSupabase.auth.resetPasswordForEmail(
+            email,
+            { redirectTo }
+          );
+
+          if (error) throw error;
+
+          message(
+            "loginMessage",
+            "If this email is registered, a password reset link has been sent. Please check your inbox."
+          );
+        } catch (error) {
+          message(
+            "loginMessage",
+            error.message || "Unable to send the recovery email.",
+            "error"
+          );
+        }
+      });
       $("loginForm").addEventListener("submit", async (event) => {
         event.preventDefault();
         message("loginMessage", "Signing in…");
