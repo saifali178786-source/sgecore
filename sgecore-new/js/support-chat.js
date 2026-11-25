@@ -125,8 +125,8 @@
           attachmentBox.replaceChildren();
 
           if (error || !data?.signedUrl) {
-            loading.textContent = "Attachment is currently unavailable.";
-            attachmentBox.appendChild(loading);
+            attachmentBox.textContent =
+              "Attachment is currently unavailable.";
             return;
           }
 
@@ -137,30 +137,41 @@
           const isImage = /\.(jpe?g|png|webp)$/i.test(filename);
 
           if (isImage) {
+            // Show the screenshot as an image, without a separate filename link.
+            const previewLink = document.createElement("a");
+
+            previewLink.href = url;
+            previewLink.target = "_blank";
+            previewLink.rel = "noopener noreferrer";
+            previewLink.style.cssText = "display:inline-block;";
+
             const image = document.createElement("img");
 
             image.src = url;
-            image.alt = filename;
+            image.alt = "Customer support screenshot";
             image.loading = "lazy";
 
             image.style.cssText =
-              "display:block;max-width:220px;max-height:180px;" +
-              "width:auto;height:auto;border-radius:7px;margin-bottom:7px;";
+              "display:block;max-width:260px;max-height:220px;" +
+              "width:auto;height:auto;object-fit:contain;" +
+              "border-radius:7px;cursor:pointer;";
 
-            attachmentBox.appendChild(image);
+            previewLink.appendChild(image);
+            attachmentBox.appendChild(previewLink);
+          } else {
+            // Keep PDF and other non-image attachments accessible.
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "Open " + filename;
+
+            link.style.cssText =
+              "color:#e5c878;font-size:12px;overflow-wrap:anywhere;";
+
+            attachmentBox.appendChild(link);
           }
-
-          const link = document.createElement("a");
-
-          link.href = url;
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-          link.textContent = "Open " + filename;
-
-          link.style.cssText =
-            "color:#e5c878;font-size:12px;overflow-wrap:anywhere;";
-
-          attachmentBox.appendChild(link);
         })
         .catch(error => {
           attachmentBox.textContent = "Attachment could not be loaded.";
@@ -170,7 +181,6 @@
 
     messagesBox.appendChild(wrapper);
   }
-
   function showWelcome(message) {
     messagesBox.replaceChildren();
 
@@ -218,11 +228,19 @@
     }, 5000);
   }
 
+  let renderedTicketId = null;
+  const renderedMessageIds = new Set();
+
   async function loadMessages() {
     if (!currentUser || !activeTicket) {
-      showWelcome(
-        "Welcome to SDE Core Support. Send us a message to start a conversation."
-      );
+      renderedTicketId = null;
+      renderedMessageIds.clear();
+
+      if (!messagesBox.querySelector(".sge-chat-welcome")) {
+        showWelcome(
+          "Welcome to SDE Core Support. Send us a message to start a conversation."
+        );
+      }
 
       setClosed(false);
       return;
@@ -230,28 +248,63 @@
 
     const { data, error } = await client
       .from("support_messages")
-      .select("message,sender_role,created_at,attachment_path")
+      .select("id,message,sender_role,created_at,attachment_path")
       .eq("ticket_id", activeTicket.id)
       .order("created_at", { ascending: true });
 
     if (error) throw error;
 
-    messagesBox.replaceChildren();
+    const ticketChanged = renderedTicketId !== activeTicket.id;
+
+    // Only clear the chat when switching to a different ticket.
+    if (ticketChanged) {
+      messagesBox.replaceChildren();
+      renderedMessageIds.clear();
+      renderedTicketId = activeTicket.id;
+    }
+
+    const wasAtBottom =
+      ticketChanged ||
+      messagesBox.scrollHeight -
+        messagesBox.scrollTop -
+        messagesBox.clientHeight < 80;
 
     if (!data || data.length === 0) {
-      showWelcome(
-        "Welcome to SDE Core Support. Send us a message and our team will reply here."
-      );
+      if (!messagesBox.querySelector(".sge-chat-welcome")) {
+        showWelcome(
+          "Welcome to SDE Core Support. Send us a message and our team will reply here."
+        );
+      }
     } else {
+      const welcome = messagesBox.querySelector(".sge-chat-welcome");
+
+      if (welcome) welcome.remove();
+
+      let addedNewMessage = false;
+
       data.forEach(item => {
+        const messageKey = item.id || (
+          item.created_at + "|" + item.sender_role + "|" + item.message
+        );
+
+        // Keep existing messages. Append only messages not already displayed.
+        if (renderedMessageIds.has(messageKey)) return;
+
+        renderedMessageIds.add(messageKey);
+
         showMessage(
           item.message,
           item.sender_role,
           item.attachment_path
         );
+
+        addedNewMessage = true;
       });
 
-      messagesBox.scrollTop = messagesBox.scrollHeight;
+      // Follow new messages only if the customer was already near the bottom.
+      if (addedNewMessage && wasAtBottom) {
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+      }
     }
 
     setClosed(
@@ -260,7 +313,6 @@
 
     status("");
   }
-
   async function loadLatestTicket() {
     activeTicket = null;
 
@@ -695,3 +747,5 @@
   );
 
 })();
+
+

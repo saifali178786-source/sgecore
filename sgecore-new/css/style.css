@@ -3266,91 +3266,6 @@ section {
     background: #f0d58c !important;
   }
 }
-
-/* SDE CORE - HEADER ALIGNMENT AND AUTH VISIBILITY FIX */
-@media (min-width: 900px) {
-  header.site-header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    min-height: 70px !important;
-    height: 70px !important;
-    padding: 8px clamp(22px, 3.5vw, 48px) !important;
-    gap: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  header.site-header > .brand {
-    flex: 0 0 auto !important;
-    margin: 0 !important;
-  }
-
-  header.site-header > .main-nav {
-    display: flex !important;
-    flex: 1 1 auto !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: clamp(12px, 1.5vw, 20px) !important;
-    margin: 0 0 0 28px !important;
-    padding: 0 !important;
-    min-width: 0 !important;
-    position: static !important;
-    transform: none !important;
-    background: transparent !important;
-  }
-
-  header.site-header > .main-nav > a {
-    display: inline-flex !important;
-    align-items: center !important;
-    min-height: 42px !important;
-    padding: 0 !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    white-space: nowrap !important;
-  }
-
-  /* Keep Login/Register at the far right when signed out */
-  header.site-header .main-nav > .header-actions {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    margin-left: auto !important;
-  }
-
-  /* Keep My Account at its existing far-right position */
-  header.site-header #sge-account-menu {
-    display: inline-flex !important;
-    align-items: center !important;
-    margin-left: auto !important;
-    flex: 0 0 auto !important;
-  }
-
-  header.site-header .login-btn,
-  header.site-header .register-btn,
-  header.site-header .sge-account-trigger {
-    min-height: 40px !important;
-    padding: 0 16px !important;
-    border: 1px solid rgba(217,180,93,.75) !important;
-    border-radius: 7px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    box-sizing: border-box !important;
-    white-space: nowrap !important;
-  }
-
-  header.site-header .login-btn,
-  header.site-header .sge-account-trigger {
-    color: #f0d58c !important;
-    background: #0d1a2b !important;
-  }
-
-  header.site-header .register-btn {
-    color: #07111f !important;
-    background: #d9b45d !important;
-    border-color: #d9b45d !important;
-  }
-}
-
 /* IMPORTANT: never let button styling override authentication visibility */
 header.site-header [hidden],
 header.site-header .header-actions [hidden] {
@@ -3564,93 +3479,6 @@ header.site-header .header-actions [hidden] {
     box-sizing: border-box !important;
   }
 }
-
-
-
-/* SDE CORE - HEADER ALIGNMENT AND AUTH VISIBILITY FIX */
-@media (min-width: 900px) {
-  header.site-header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    min-height: 70px !important;
-    height: 70px !important;
-    padding: 8px clamp(22px, 3.5vw, 48px) !important;
-    gap: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  header.site-header > .brand {
-    flex: 0 0 auto !important;
-    margin: 0 !important;
-  }
-
-  header.site-header > .main-nav {
-    display: flex !important;
-    flex: 1 1 auto !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: clamp(12px, 1.5vw, 20px) !important;
-    margin: 0 0 0 28px !important;
-    padding: 0 !important;
-    min-width: 0 !important;
-    position: static !important;
-    transform: none !important;
-    background: transparent !important;
-  }
-
-  header.site-header > .main-nav > a {
-    display: inline-flex !important;
-    align-items: center !important;
-    min-height: 42px !important;
-    padding: 0 !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    white-space: nowrap !important;
-  }
-
-  /* Keep Login/Register at the far right when signed out */
-  header.site-header .main-nav > .header-actions {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    margin-left: auto !important;
-  }
-
-  /* Keep My Account at its existing far-right position */
-  header.site-header #sge-account-menu {
-    display: inline-flex !important;
-    align-items: center !important;
-    margin-left: auto !important;
-    flex: 0 0 auto !important;
-  }
-
-  header.site-header .login-btn,
-  header.site-header .register-btn,
-  header.site-header .sge-account-trigger {
-    min-height: 40px !important;
-    padding: 0 16px !important;
-    border: 1px solid rgba(217,180,93,.75) !important;
-    border-radius: 7px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    box-sizing: border-box !important;
-    white-space: nowrap !important;
-  }
-
-  header.site-header .login-btn,
-  header.site-header .sge-account-trigger {
-    color: #f0d58c !important;
-    background: #0d1a2b !important;
-  }
-
-  header.site-header .register-btn {
-    color: #07111f !important;
-    background: #d9b45d !important;
-    border-color: #d9b45d !important;
-  }
-}
-
 /* IMPORTANT: never let button styling override authentication visibility */
 header.site-header [hidden],
 header.site-header .header-actions [hidden] {
@@ -4432,3 +4260,89 @@ main .contact-section {
 
 /* END SDE COOKIE NOTIFICATION STYLES */
 
+/* SDE CORE - HEADER ALIGNMENT AND AUTH VISIBILITY FIX */
+@media (min-width: 900px) {
+  header.site-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: 70px !important;
+    height: 70px !important;
+    padding: 8px clamp(22px, 3.5vw, 48px) !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  header.site-header > .brand {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  header.site-header > .main-nav {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: clamp(12px, 1.5vw, 20px) !important;
+    margin: 0 0 0 28px !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  header.site-header > .main-nav > a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header .main-nav > .header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+  }
+
+  header.site-header #sge-account-menu {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .register-btn,
+  header.site-header .sge-account-trigger {
+    min-height: 40px !important;
+    padding: 0 16px !important;
+    border: 1px solid rgba(217,180,93,.75) !important;
+    border-radius: 7px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  header.site-header .login-btn,
+  header.site-header .sge-account-trigger {
+    color: #f0d58c !important;
+    background: #0d1a2b !important;
+  }
+
+  header.site-header .register-btn {
+    color: #07111f !important;
+    background: #d9b45d !important;
+    border-color: #d9b45d !important;
+  }
+}
+
+header.site-header [hidden],
+header.site-header .header-actions [hidden] {
+  display: none !important;
+}

@@ -574,8 +574,8 @@
   }
 }
 </style>
+<link rel="stylesheet" href="css/support-chat.css">
 <style>
-
 /* SDE CORE - HEADER ALIGNMENT AND AUTH VISIBILITY FIX */
 @media (min-width: 900px) {
   header.site-header {
@@ -618,7 +618,6 @@
     white-space: nowrap !important;
   }
 
-  /* Keep Login/Register at the far right when signed out */
   header.site-header .main-nav > .header-actions {
     display: flex !important;
     align-items: center !important;
@@ -626,7 +625,6 @@
     margin-left: auto !important;
   }
 
-  /* Keep My Account at its existing far-right position */
   header.site-header #sge-account-menu {
     display: inline-flex !important;
     align-items: center !important;
@@ -660,14 +658,11 @@
   }
 }
 
-/* IMPORTANT: never let button styling override authentication visibility */
 header.site-header [hidden],
 header.site-header .header-actions [hidden] {
   display: none !important;
 }
-
 </style>
-<link rel="stylesheet" href="css/support-chat.css">
 </head>
 
 <body>

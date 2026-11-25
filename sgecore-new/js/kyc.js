@@ -436,18 +436,43 @@
         }
     }
 
+    
+    let uploadFormOpened = false;
+
     function showUploadForm(visible) {
         uploadFormVisible = visible;
 
-        form.hidden = !visible;
-        typeInput.disabled = !visible;
-        fileInput.disabled = !visible;
-        backInput.disabled = !visible;
-        optionalBackCheckbox.disabled = !visible;
+        const openFormButton = document.getElementById("kyc-open-form");
 
-        submitButton.disabled = !visible || loading;
+        if (!openFormButton) {
+            uploadFormOpened = visible;
+        }
+
+        form.hidden = !visible || !uploadFormOpened;
+
+        if (openFormButton) {
+            openFormButton.hidden = !visible || uploadFormOpened;
+        }
+
+        typeInput.disabled = !visible || !uploadFormOpened;
+        fileInput.disabled = !visible || !uploadFormOpened;
+        backInput.disabled = !visible || !uploadFormOpened;
+        optionalBackCheckbox.disabled = !visible || !uploadFormOpened;
+
+        submitButton.disabled = !visible || !uploadFormOpened || loading;
 
         updateBackField();
+    }
+
+    const openKYCButton = document.getElementById("kyc-open-form");
+
+    if (openKYCButton) {
+        openKYCButton.addEventListener("click", function () {
+            if (!uploadFormVisible || loading) return;
+
+            uploadFormOpened = true;
+            showUploadForm(true);
+        });
     }
 
     // --------------------------------------------------

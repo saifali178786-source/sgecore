@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1036,7 +1036,7 @@ if (row.document_back_path) {
         }));
         content.append(toolbar);
 
-        let rows = await query("profiles", "id,full_name,email,email_verified,member_id,created_at,updated_at", {
+        let rows = await query("profiles", "id,full_name,email,phone,email_verified,member_id,created_at,updated_at", {
           order: "created_at", limit: 500
         });
 
@@ -1049,12 +1049,13 @@ if (row.document_back_path) {
         }
 
         content.append(table(
-  ["Member ID", "Name", "Email", "Verified", "Joined", "Actions"],
+  ["Member ID", "Name", "Email", "Phone Number", "Verified", "Joined", "Actions"],
   rows,
   (p) => tr([
-    p.member_id || "Member ID unavailable",
+        p.member_id || "Member ID unavailable",
     p.full_name,
     p.email,
+    p.phone || "Not added",
     p.email_verified ? "Yes" : "No",
     date(p.created_at),
     actions(button("View account", () => showCustomer(p), "primary"))
@@ -1083,8 +1084,9 @@ if (row.document_back_path) {
 
           const details = el("div", undefined, "card");
           details.append(el("h3", "Profile"));
-          details.append(fieldLabel("Member ID", profile.member_id || "Member ID unavailable"));
+                    details.append(fieldLabel("Member ID", profile.member_id || "Member ID unavailable"));
           details.append(fieldLabel("Email", profile.email));
+          details.append(fieldLabel("Phone Number", profile.phone || "Not added"));
           details.append(fieldLabel("Email verified", profile.email_verified ? "Yes" : "No"));
           details.append(fieldLabel("Created", date(profile.created_at)));
           details.append(button("Manual USDT credit for this customer", () => {
@@ -2296,7 +2298,7 @@ customerIds = new Set(
       const customerHead = document.createElement("thead");
       const customerHeaderRow = document.createElement("tr");
 
-      ["Customer", "Email", "Member ID", "Assigned Team"].forEach(label => {
+      ["Customer", "Email", "Member ID", "Assigned Team", "Action"].forEach(label => {
         const th = document.createElement("th");
         th.textContent = label;
         th.style.cssText =
@@ -2327,13 +2329,65 @@ customerIds = new Set(
           team?.team_name || "Inactive or unavailable team"
         ];
 
-        values.forEach(value => {
+                values.forEach(value => {
           const td = document.createElement("td");
           td.textContent = String(value);
           td.style.cssText =
             "padding:12px;border-bottom:1px solid #26364a;overflow-wrap:anywhere;";
           row.append(td);
         });
+
+        // REMOVE CUSTOMER FROM TEAM
+        const actionCell = document.createElement("td");
+        actionCell.style.cssText =
+          "padding:12px;border-bottom:1px solid #26364a;";
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.textContent = "Remove";
+        removeButton.style.cssText =
+          "padding:7px 13px;border:1px solid #d66b6b;border-radius:6px;background:#351c25;color:#ffaaaa;cursor:pointer;font-weight:600;";
+
+        removeButton.addEventListener("click", async () => {
+          const customerName =
+            profile?.full_name || "this customer";
+
+          if (!confirm(
+            `Remove ${customerName} from this team? Their SDE Core account will not be deleted.`
+          )) {
+            return;
+          }
+
+          removeButton.disabled = true;
+          removeButton.textContent = "Removing...";
+
+          try {
+            const { data, error } = await sgecoreSupabase.rpc(
+              "sde_remove_team_customer",
+              {
+                p_team_id: assignment.team_id,
+                p_user_id: assignment.user_id
+              }
+            );
+
+            if (error) throw error;
+
+            if (data && data.success === false) {
+              throw new Error("Customer removal was not completed.");
+            }
+
+            alert("Customer removed from the team successfully.");
+            await loadTeams();
+
+          } catch (error) {
+            alert("Unable to remove customer: " + error.message);
+            removeButton.disabled = false;
+            removeButton.textContent = "Remove";
+          }
+        });
+
+        actionCell.append(removeButton);
+        row.append(actionCell);
 
         customerBody.append(row);
       });
@@ -2487,11 +2541,12 @@ customerIds = new Set(
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
 
-    [
+        [
       "Team Name",
       "Description",
       "Team Leader",
-      "Team ID"
+      "Team ID",
+      "Action"
     ].forEach(label => {
       const th = document.createElement("th");
       th.textContent = label;
@@ -2529,7 +2584,7 @@ customerIds = new Set(
         team.id || "—"
       ];
 
-      values.forEach(value => {
+            values.forEach(value => {
         const td = document.createElement("td");
         td.textContent = String(value);
         td.style.cssText =
@@ -2537,6 +2592,62 @@ customerIds = new Set(
         row.append(td);
       });
 
+      // REMOVE TEAM LEADER
+      const actionCell = document.createElement("td");
+      actionCell.style.cssText =
+        "padding:12px;border-bottom:1px solid #26364a;";
+
+      if (leader) {
+        const removeLeaderButton = document.createElement("button");
+        removeLeaderButton.type = "button";
+        removeLeaderButton.textContent = "Remove Leader";
+        removeLeaderButton.style.cssText =
+          "padding:7px 13px;border:1px solid #d66b6b;border-radius:6px;background:#351c25;color:#ffaaaa;cursor:pointer;font-weight:600;white-space:nowrap;";
+
+        removeLeaderButton.addEventListener("click", async () => {
+          const leaderName =
+            leaderProfile?.full_name || "this team leader";
+
+          if (!confirm(
+            `Remove ${leaderName} as leader of ${team.team_name}?`
+          )) {
+            return;
+          }
+
+          removeLeaderButton.disabled = true;
+          removeLeaderButton.textContent = "Removing...";
+
+          try {
+            const { data, error } = await sgecoreSupabase.rpc(
+              "sde_remove_team_leader",
+              {
+                p_team_id: team.id,
+                p_user_id: leader.user_id
+              }
+            );
+
+            if (error) throw error;
+
+            if (data && data.success === false) {
+              throw new Error("Team leader removal was not completed.");
+            }
+
+            alert("Team leader removed successfully.");
+            await loadTeams();
+
+          } catch (error) {
+            alert("Unable to remove team leader: " + error.message);
+            removeLeaderButton.disabled = false;
+            removeLeaderButton.textContent = "Remove Leader";
+          }
+        });
+
+        actionCell.append(removeLeaderButton);
+      } else {
+        actionCell.textContent = "—";
+      }
+
+      row.append(actionCell);
       tbody.append(row);
     });
 
@@ -3606,7 +3717,310 @@ async function renderSupport() {
   content.append(settingsCard);
   populateCustomerOptions();
 
-  // SUPPORT INBOX FILTERS
+  // AUTOMATIC SUPPORT REPLIES MANAGER
+const autoRepliesCard = el("div", "", "");
+autoRepliesCard.style.cssText = "background:#0d1a2b;border:1px solid rgba(217,180,93,.22);border-radius:12px;padding:18px;margin:18px 0;color:#e8edf5;";
+
+const autoRepliesHeader = el("div", "", "");
+autoRepliesHeader.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;";
+
+const autoRepliesTitle = el("div", "Automatic Support Replies", "");
+autoRepliesTitle.style.cssText = "font-size:17px;font-weight:700;color:#f0d58c;";
+autoRepliesHeader.append(autoRepliesTitle);
+
+const addAutoReplyButton = button("＋ Add New Reply", () => {
+    autoReplyEditingId = null;
+    autoReplyForm.reset();
+    autoReplyEnabled.checked = true;
+    autoReplyPriority.value = "10";
+    autoReplyDefault.checked = false;
+    autoReplyFormTitle.textContent = "Add Automatic Reply";
+    autoReplyForm.style.display = "block";
+    autoReplyName.focus();
+}, "");
+autoRepliesHeader.append(addAutoReplyButton);
+autoRepliesCard.append(autoRepliesHeader);
+
+const autoRepliesHelp = el(
+    "div",
+    "How it works: when a customer sends a message, the system checks the enabled keywords and sends the highest-priority matching reply. If no keyword matches, it sends the Default Reply.",
+    ""
+);
+autoRepliesHelp.style.cssText = "font-size:12px;line-height:1.6;color:#aebbd0;margin:9px 0 14px;";
+autoRepliesCard.append(autoRepliesHelp);
+
+const autoRepliesStatus = el("div", "", "");
+autoRepliesStatus.style.cssText = "font-size:12px;color:#aebbd0;margin:8px 0;";
+autoRepliesCard.append(autoRepliesStatus);
+
+let autoReplyEditingId = null;
+let autoRepliesCache = [];
+
+const autoReplyForm = el("div", "", "");
+autoReplyForm.style.cssText = "display:none;background:#07111f;border:1px solid rgba(217,180,93,.25);border-radius:9px;padding:14px;margin:12px 0;";
+
+const autoReplyFormTitle = el("div", "Add Automatic Reply", "");
+autoReplyFormTitle.style.cssText = "font-size:14px;font-weight:700;color:#f0d58c;margin-bottom:12px;";
+autoReplyForm.append(autoReplyFormTitle);
+
+function autoReplyField(labelText, inputElement) {
+    const wrap = el("label", "", "");
+    wrap.style.cssText = "display:block;margin:10px 0;font-size:12px;color:#c7d1df;";
+    const label = el("div", labelText, "");
+    label.style.cssText = "margin-bottom:5px;font-weight:600;";
+    inputElement.style.cssText = "width:100%;box-sizing:border-box;background:#0d1a2b;color:#eef3fa;border:1px solid #34445b;border-radius:6px;padding:9px;font:inherit;";
+    wrap.append(label, inputElement);
+    return wrap;
+}
+
+const autoReplyName = document.createElement("input");
+autoReplyName.type = "text";
+autoReplyName.placeholder = "Example: Withdrawal Questions";
+autoRepliesCard.appendChild(autoReplyForm);
+autoReplyForm.append(autoReplyField("Reply name", autoReplyName));
+
+const autoReplyKeywords = document.createElement("input");
+autoReplyKeywords.type = "text";
+autoReplyKeywords.placeholder = "withdraw, withdrawal, cash out";
+autoReplyForm.append(autoReplyField("Keywords (separate with commas)", autoReplyKeywords));
+
+const autoReplyResponse = document.createElement("textarea");
+autoReplyResponse.rows = 3;
+autoReplyResponse.placeholder = "Write the automatic response customers will receive";
+autoReplyResponse.style.resize = "vertical";
+autoReplyForm.append(autoReplyField("Automatic response", autoReplyResponse));
+
+const autoReplyPriority = document.createElement("input");
+autoReplyPriority.type = "number";
+autoReplyPriority.min = "1";
+autoReplyPriority.step = "1";
+autoReplyPriority.value = "10";
+autoReplyForm.append(autoReplyField("Priority (smaller number = higher priority)", autoReplyPriority));
+
+const autoReplyOptions = el("div", "", "");
+autoReplyOptions.style.cssText = "display:flex;gap:18px;flex-wrap:wrap;margin:12px 0;font-size:12px;color:#d5deea;";
+
+const autoReplyEnabledLabel = el("label", "", "");
+const autoReplyEnabled = document.createElement("input");
+autoReplyEnabled.type = "checkbox";
+autoReplyEnabled.checked = true;
+autoReplyEnabledLabel.append(autoReplyEnabled, document.createTextNode(" Enabled"));
+
+const autoReplyDefaultLabel = el("label", "", "");
+const autoReplyDefault = document.createElement("input");
+autoReplyDefault.type = "checkbox";
+autoReplyDefaultLabel.append(autoReplyDefault, document.createTextNode(" Use as Default Reply"));
+
+autoReplyOptions.append(autoReplyEnabledLabel, autoReplyDefaultLabel);
+autoReplyForm.append(autoReplyOptions);
+
+const autoReplyFormButtons = el("div", "", "");
+autoReplyFormButtons.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;";
+
+const saveAutoReplyButton = button("Save Reply", async () => {
+    const name = autoReplyName.value.trim();
+    const response = autoReplyResponse.value.trim();
+    const priority = Number(autoReplyPriority.value);
+    const keywords = autoReplyKeywords.value
+        .split(",")
+        .map(value => value.trim().toLowerCase())
+        .filter(Boolean);
+
+    if (!name || !response) {
+        alert("Please enter a reply name and response.");
+        return;
+    }
+
+    if (!Number.isInteger(priority) || priority < 1) {
+        alert("Priority must be a whole number greater than zero.");
+        return;
+    }
+
+    if (autoReplyDefault.checked && !autoReplyEnabled.checked) {
+        alert("The Default Reply must be enabled.");
+        return;
+    }
+
+    saveAutoReplyButton.disabled = true;
+    try {
+        if (autoReplyDefault.checked) {
+            const { error: defaultError } = await sgecoreSupabase
+                .from("support_auto_replies")
+                .update({ is_default: false })
+                .eq("is_default", true);
+
+            if (defaultError) throw defaultError;
+        }
+
+        const payload = {
+            name,
+            keywords,
+            response,
+            priority,
+            enabled: autoReplyEnabled.checked,
+            is_default: autoReplyDefault.checked,
+            updated_at: new Date().toISOString()
+        };
+
+        if (autoReplyEditingId) payload.id = autoReplyEditingId;
+
+        const { error } = await sgecoreSupabase
+            .from("support_auto_replies")
+            .upsert(payload);
+
+        if (error) throw error;
+
+        autoReplyForm.style.display = "none";
+        autoReplyForm.reset();
+        autoReplyEditingId = null;
+        await loadAutoReplies();
+        autoRepliesStatus.textContent = "Reply saved successfully.";
+    } catch (error) {
+        console.error("Save automatic reply:", error);
+        alert("Could not save the reply: " + (error.message || error));
+    } finally {
+        saveAutoReplyButton.disabled = false;
+    }
+}, "");
+
+const cancelAutoReplyButton = button("Cancel", () => {
+    autoReplyForm.style.display = "none";
+    autoReplyForm.reset();
+    autoReplyEditingId = null;
+}, "");
+
+autoReplyFormButtons.append(saveAutoReplyButton, cancelAutoReplyButton);
+autoReplyForm.append(autoReplyFormButtons);
+
+const autoRepliesList = el("div", "", "");
+autoRepliesList.style.cssText = "display:grid;gap:8px;margin-top:12px;";
+autoRepliesCard.append(autoRepliesList);
+
+async function loadAutoReplies() {
+    autoRepliesList.replaceChildren();
+    autoRepliesStatus.textContent = "Loading automatic replies...";
+
+    const { data, error } = await sgecoreSupabase
+        .from("support_auto_replies")
+        .select("*")
+        .order("priority", { ascending: true })
+        .order("name", { ascending: true });
+
+    if (error) {
+        console.error("Load automatic replies:", error);
+        autoRepliesStatus.textContent = "Could not load automatic replies: " + error.message;
+        return;
+    }
+
+    autoRepliesCache = data || [];
+    autoRepliesStatus.textContent = autoRepliesCache.length
+        ? autoRepliesCache.length + " replies configured"
+        : "No automatic replies have been added yet.";
+
+    if (!autoRepliesCache.length) return;
+
+    autoRepliesCache.forEach(reply => {
+        const item = el("div", "", "");
+        item.style.cssText = "background:#101f32;border:1px solid #263a52;border-radius:8px;padding:11px 12px;";
+
+        const top = el("div", "", "");
+        top.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;";
+
+        const name = el("div", reply.name, "");
+        name.style.cssText = "font-size:13px;font-weight:700;color:#f0d58c;";
+
+        const status = el(
+            "span",
+            reply.is_default ? "DEFAULT" : (reply.enabled ? "ENABLED" : "DISABLED"),
+            ""
+        );
+        status.style.cssText = "font-size:10px;font-weight:700;letter-spacing:.4px;padding:4px 7px;border-radius:5px;background:" +
+            (reply.is_default ? "#59451e" : (reply.enabled ? "#173c32" : "#45252b")) +
+            ";color:" + (reply.is_default ? "#f0d58c" : (reply.enabled ? "#8fe0b8" : "#f0a3a9")) + ";";
+
+        top.append(name, status);
+        item.append(top);
+
+        const keywordText = reply.keywords && reply.keywords.length
+            ? reply.keywords.join(", ")
+            : "No keywords — used as fallback";
+        const details = el(
+            "div",
+            "Priority: " + reply.priority + "  •  " + keywordText,
+            ""
+        );
+        details.style.cssText = "font-size:11px;color:#9eacc0;margin-top:6px;line-height:1.5;";
+        item.append(details);
+
+        const actions = el("div", "", "");
+        actions.style.cssText = "display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;";
+
+        actions.append(button("Edit", () => {
+            autoReplyEditingId = reply.id;
+            autoReplyName.value = reply.name || "";
+            autoReplyKeywords.value = (reply.keywords || []).join(", ");
+            autoReplyResponse.value = reply.response || "";
+            autoReplyPriority.value = reply.priority || 10;
+            autoReplyEnabled.checked = !!reply.enabled;
+            autoReplyDefault.checked = !!reply.is_default;
+            autoReplyFormTitle.textContent = "Edit Automatic Reply";
+            autoReplyForm.style.display = "block";
+            autoReplyForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            autoReplyName.focus();
+        }, ""));
+
+        actions.append(button(reply.enabled ? "Disable" : "Enable", async () => {
+            if (reply.is_default && reply.enabled) {
+                alert("Choose and save another Default Reply before disabling this one.");
+                return;
+            }
+
+            const { error: updateError } = await sgecoreSupabase
+                .from("support_auto_replies")
+                .update({
+                    enabled: !reply.enabled,
+                    updated_at: new Date().toISOString()
+                })
+                .eq("id", reply.id);
+
+            if (updateError) {
+                alert("Could not update this reply: " + updateError.message);
+                return;
+            }
+
+            await loadAutoReplies();
+        }, ""));
+
+        actions.append(button("Delete", async () => {
+            if (reply.is_default) {
+                alert("The Default Reply cannot be deleted. Edit it or set another reply as default first.");
+                return;
+            }
+
+            if (!confirm('Delete the automatic reply "' + reply.name + '"?')) return;
+
+            const { error: deleteError } = await sgecoreSupabase
+                .from("support_auto_replies")
+                .delete()
+                .eq("id", reply.id);
+
+            if (deleteError) {
+                alert("Could not delete this reply: " + deleteError.message);
+                return;
+            }
+
+            await loadAutoReplies();
+        }, ""));
+
+        item.append(actions);
+        autoRepliesList.append(item);
+    });
+}
+
+content.append(autoRepliesCard);
+loadAutoReplies();
+
+// SUPPORT INBOX FILTERS
   const toolbar = el("div", undefined, "toolbar");
 
   const filter = el("select");
@@ -4422,5 +4836,9 @@ content.append(msgBox);
       });
     })();
   </script>
+  <script src="../js/support-notifications.js"></script>
 </body>
 </html>
+
+
+

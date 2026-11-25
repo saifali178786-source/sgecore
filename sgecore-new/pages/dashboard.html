@@ -641,7 +641,68 @@
     font-size:13px;
     line-height:1.6;
 }
-.kyc-submit:disabled { opacity:.55; cursor:not-allowed; }</style>
+.kyc-submit:disabled { opacity:.55; cursor:not-allowed; }
+/* My Account profile and integrated KYC */
+.profile-avatar-area {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    margin:18px 0 22px;
+}
+.account-avatar-image {
+    width:88px;
+    height:88px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid var(--dash-gold);
+}
+.profile-avatar-upload {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 14px;
+    border:1px solid var(--dash-gold);
+    border-radius:6px;
+    color:var(--dash-gold-light);
+    cursor:pointer;
+    font-size:12px;
+    font-weight:700;
+}
+.profile-phone-edit {
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+}
+.profile-phone-edit input {
+    width: min(100%, 230px);
+    min-height:38px;
+    padding:8px 10px;
+    border:1px solid var(--dash-border);
+    border-radius:6px;
+    background:#091626;
+    color:var(--dash-text);
+}
+.profile-edit-message {
+    margin:5px 0 0;
+    color:var(--dash-muted);
+    font-size:12px;
+}
+.account-kyc-section {
+    margin-top:24px;
+    padding-top:20px;
+    border-top:1px solid var(--dash-border);
+}
+.account-kyc-title {
+    margin:0 0 8px;
+    color:var(--dash-gold-light);
+    font-size:17px;
+}
+.account-kyc-button {
+    margin-top:15px;
+}
+</style>
   <link rel="stylesheet" href="../css/support-chat.css">
 </head>
 
@@ -785,34 +846,117 @@
     </section>
 
     <div class="dashboard-grid">
-      <section class="dashboard-card" aria-labelledby="account-heading">
-        <h2 class="card-heading" id="account-heading">My Account</h2>
-        <p class="card-description">Your personal account details.</p>
+      <section class="dashboard-card account-card" aria-labelledby="account-heading">
+    <h2 class="card-heading" id="account-heading">My Account</h2>
+    <p class="card-description">Your personal account details and verification.</p>
+
+    <div class="profile-avatar-area">
+        <img id="account-avatar-image"
+             class="account-avatar-image"
+             alt="Your profile picture"
+             hidden>
         <div class="account-avatar" id="account-avatar" aria-hidden="true">S</div>
 
-        <dl class="account-details">
-          <div class="account-row">
+        <label class="profile-avatar-upload" for="profile-avatar-file">
+            Change Profile Picture
+        </label>
+        <input type="file" id="profile-avatar-file"
+               accept="image/jpeg,image/png,image/webp"
+               hidden>
+        <p id="profile-avatar-message" class="profile-edit-message"
+           role="status"></p>
+    </div>
+
+    <dl class="account-details">
+        <div class="account-row">
             <dt>Member ID</dt>
             <dd><span class="member-id" id="account-member-id">Loading...</span></dd>
-          </div>
-          <div class="account-row">
-            <dt>Full name</dt>
-            <dd id="account-name">Loading...</dd>
-          </div>
-          <div class="account-row">
-            <dt>Email address</dt>
-            <dd id="account-email">Loading...</dd>
-          </div>
-          <div class="account-row">
+        </div>
+        
+<div class="account-row">
             <dt>Account status</dt>
             <dd><span class="account-badge" id="account-badge">Checking</span></dd>
-          </div>
-          <div class="account-row">
+        </div>
+<div class="account-row">
+            <dt>Full name</dt>
+            <dd id="account-name">Loading...</dd>
+        </div>
+        <div class="account-row">
+            <dt>Email address</dt>
+            <dd id="account-email">Loading...</dd>
+        </div>
+        <div class="account-row">
             <dt>Email status</dt>
             <dd><span class="verification-badge" id="email-verification">Checking...</span></dd>
-          </div>
-        </dl>
-      </section>
+        </div>
+    <div class="account-row">
+            <dt>Phone number</dt>
+            <dd>
+                <div class="profile-phone-edit">
+                    <input type="tel" id="account-phone"
+                           placeholder="Enter your phone number"
+                           autocomplete="tel">
+                    <button type="button" id="save-account-phone"
+                            class="secondary-button">Save</button>
+                </div>
+                <p id="account-phone-message" class="profile-edit-message"
+                   role="status"></p>
+            </dd>
+        </div>
+</dl>
+
+    <div class="account-kyc-section">
+        <h3 class="account-kyc-title">Identity Verification (KYC)</h3>
+        <p class="card-description">
+            Verify your identity to complete your account verification.
+        </p>
+
+        <div class="kyc-status-row">
+            <div>
+                <strong>Verification status</strong>
+                <p class="kyc-status-label" id="kyc-status-date">Checking your verification...</p>
+            </div>
+            <span class="kyc-status-badge pending" id="kyc-status-badge">Loading</span>
+        </div>
+
+        <div id="kyc-admin-notes" class="kyc-admin-notes" hidden>
+            <strong>Administrator's remarks</strong>
+            <p id="kyc-admin-notes-text"></p>
+        </div>
+
+        <button type="button" id="kyc-open-form"
+                class="primary-button account-kyc-button" hidden>
+            Verify KYC
+        </button>
+
+        <form id="kyc-form" class="kyc-form" hidden>
+            <div class="form-field">
+                <label for="kyc-document-type">Document type</label>
+                <select id="kyc-document-type" required>
+                    <option value="">Select document type</option>
+                    <option value="government_id">National ID Card</option>
+                    <option value="passport">Passport</option>
+                    <option value="driving_license">Driving Licence</option>
+                    <option value="other">Other Government-Issued Document</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="kyc-document-file">Upload document</label>
+                <input type="file" id="kyc-document-file"
+                       accept=".jpg,.jpeg,.png,.webp,.pdf" required>
+                <p class="hint">Accepted formats: JPG, PNG, WebP and PDF. Maximum file size: 10 MB.</p>
+            </div>
+
+            <button type="submit" class="primary-button kyc-submit" id="kyc-submit">
+                Submit KYC Document
+            </button>
+
+            <p class="kyc-message" id="kyc-message"
+               role="status" aria-live="polite"></p>
+        </form>
+    </div>
+</section>
 
       <section class="dashboard-card" aria-labelledby="quick-links-heading">
         <h2 class="card-heading" id="quick-links-heading">Quick Access</h2>
@@ -859,52 +1003,6 @@
       </section>
     </div>
 
-    
-<!-- SDE CORE KYC VERIFICATION -->
-<section class="dashboard-card kyc-card" aria-labelledby="kyc-heading">
-    <h2 class="card-heading" id="kyc-heading">KYC Verification</h2>
-    <p class="card-description">Verify your identity by submitting a government-issued document.</p>
-
-    <div class="kyc-status-row">
-        <div>
-            <strong>Verification status</strong>
-            <p class="kyc-status-label" id="kyc-status-date">Checking your verification...</p>
-        </div>
-        <span class="kyc-status-badge pending" id="kyc-status-badge">Loading</span>
-    </div>
-
-    <div id="kyc-admin-notes" class="kyc-admin-notes" hidden>
-        <strong>Administrator's remarks</strong>
-        <p id="kyc-admin-notes-text"></p>
-    </div>
-
-    <form id="kyc-form" class="kyc-form">
-        <div class="form-field">
-            <label for="kyc-document-type">Document type</label>
-            <select id="kyc-document-type" required>
-                <option value="">Select document type</option>
-                <option value="government_id">National ID Card</option>
-                <option value="passport">Passport</option>
-                <option value="driving_license">Driving Licence</option>
-                <option value="other">Other Government-Issued Document</option>
-            </select>
-        </div>
-
-        <div class="form-field">
-            <label for="kyc-document-file">Upload document</label>
-            <input type="file" id="kyc-document-file"
-                accept=".jpg,.jpeg,.png,.webp,.pdf" required>
-            <p class="hint">Accepted formats: JPG, PNG, WebP and PDF. Maximum file size: 10 MB.</p>
-        </div>
-
-        <button type="submit" class="primary-button kyc-submit" id="kyc-submit">
-            Submit KYC Document
-        </button>
-
-        <p class="kyc-message" id="kyc-message" role="status" aria-live="polite"></p>
-    </form>
-</section>
-<!-- END KYC VERIFICATION -->
 <section class="dashboard-card transactions-card" aria-labelledby="transactions-heading">
       <div class="transactions-header">
         <div>
@@ -1429,18 +1527,21 @@
           user.user_metadata?.name ||
           "";
 
+        
         let memberId = null;
+        let profileData = null;
 
         try {
           const { data: profile, error: profileError } = await sgecoreSupabase
             .from("profiles")
-            .select("member_id, full_name, email")
+            .select("member_id, full_name, email, phone, avatar_url")
             .eq("id", user.id)
             .maybeSingle();
 
           if (profileError) {
             console.error("Profile loading error:", profileError);
           } else if (profile) {
+            profileData = profile;
             memberId = profile.member_id;
             if (profile.full_name) fullName = profile.full_name;
           }
@@ -1455,6 +1556,38 @@
         accountEmail.textContent = user.email || "Not available";
         accountAvatar.textContent = fullName.trim().charAt(0).toUpperCase() || "S";
         accountBadge.textContent = "Active";
+
+        const phoneInput = $("account-phone");
+        if (phoneInput) {
+          phoneInput.value =
+            profileData?.phone ||
+            user.phone ||
+            user.user_metadata?.phone ||
+            user.user_metadata?.phone_number ||
+            "";
+        }
+
+        const avatarImage = $("account-avatar-image");
+        const avatarUrl =
+          profileData?.avatar_url ||
+          user.user_metadata?.avatar_url ||
+          user.user_metadata?.picture ||
+          "";
+
+        if (avatarImage && avatarUrl) {
+          avatarImage.src = avatarUrl;
+          avatarImage.hidden = false;
+          accountAvatar.hidden = true;
+
+          avatarImage.onerror = function () {
+            avatarImage.hidden = true;
+            accountAvatar.hidden = false;
+          };
+        } else if (avatarImage) {
+          avatarImage.hidden = true;
+          accountAvatar.hidden = false;
+        }
+
 
         setEmailVerification(user);
         setStatus("Welcome back, " + fullName + ".");
@@ -1655,13 +1788,107 @@
       });
     }
 
+    // Save phone number
+    $("save-account-phone")?.addEventListener("click", async function () {
+      const phoneInput = $("account-phone");
+      const message = $("account-phone-message");
+      const phone = phoneInput?.value.trim() || "";
+
+      if (!activeUserId) return;
+
+      message.textContent = "Saving...";
+      this.disabled = true;
+
+      try {
+        const { error } = await sgecoreSupabase
+          .from("profiles")
+          .update({ phone })
+          .eq("id", activeUserId);
+
+        if (error) throw error;
+
+        message.textContent = "Phone number saved successfully.";
+      } catch (error) {
+        console.error("Phone update error:", error);
+        message.textContent = "Unable to save phone number: " + error.message;
+      } finally {
+        this.disabled = false;
+      }
+    });
+
+    // Upload profile picture
+    $("profile-avatar-file")?.addEventListener("change", async function () {
+      const file = this.files?.[0];
+      const message = $("profile-avatar-message");
+      const image = $("account-avatar-image");
+
+      if (!file || !activeUserId) return;
+
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        message.textContent = "Please choose a JPG, PNG, or WebP image.";
+        this.value = "";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        message.textContent = "The image must be smaller than 5 MB.";
+        this.value = "";
+        return;
+      }
+
+      message.textContent = "Uploading picture...";
+      this.disabled = true;
+
+      try {
+        const extension = file.name.split(".").pop().toLowerCase();
+        const safeName = `${activeUserId}/${Date.now()}.${extension}`;
+
+        const { error: uploadError } = await sgecoreSupabase.storage
+          .from("profile-avatars")
+          .upload(safeName, file, {
+            contentType: file.type,
+            upsert: false
+          });
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicData } = sgecoreSupabase.storage
+          .from("profile-avatars")
+          .getPublicUrl(safeName);
+
+        const avatarUrl = publicData.publicUrl;
+
+        const { error: profileError } = await sgecoreSupabase
+          .from("profiles")
+          .update({ avatar_url: avatarUrl })
+          .eq("id", activeUserId);
+
+        if (profileError) throw profileError;
+
+        image.src = avatarUrl;
+        image.hidden = false;
+        $("account-avatar").hidden = true;
+        message.textContent = "Profile picture updated successfully.";
+      } catch (error) {
+        console.error("Profile picture upload error:", error);
+        message.textContent = "Unable to update picture: " + error.message;
+      } finally {
+        this.disabled = false;
+        this.value = "";
+      }
+    });
+
     loadDashboard();
     loadExchangeRates();
   </script>
   <script src="../js/support-chat.js"></script>
+  <script src="../js/support-notifications.js"></script>
 <script src="../js/kyc.js"></script>
 </body>
 </html>
+
+
+
 
 
 
